@@ -211,8 +211,16 @@ async function executeTool(name, args = {}) {
     case "search_batch_roster": {
       const q = (args.query || '').toLowerCase().trim();
       const matches = Object.entries(BATCH_ROSTER)
-        .filter(([roll, s]) => roll.toLowerCase().includes(q) || s.name.toLowerCase().includes(q) || s.section.toLowerCase() === q)
-        .map(([roll, s]) => ({ roll, name: s.name, section: s.section }));
+        .filter(([roll, student]) => {
+          const name = (student.n || student.name || '').toLowerCase();
+          const sec = (student.s || student.section || '').toLowerCase();
+          return roll.toLowerCase().includes(q) || name.includes(q) || sec === q;
+        })
+        .map(([roll, student]) => ({
+          roll,
+          name: student.n || student.name,
+          section: student.s || student.section
+        }));
       return {
         query: args.query,
         matchCount: matches.length,
