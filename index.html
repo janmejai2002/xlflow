@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- PWA & Mobile Optimization -->
+    <meta name="theme-color" content="#F6F4EF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#15181D" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="XL-Flow" />
+    <meta name="description" content="Next-Generation Spatial Academic Command Centre for XLRI Term-5. Offline schedules, Bunk-O-Meter, and instant calendar sync." />
+    
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
+    
+    <!-- Editorial & Modern Typography Pairing -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
+
+    <title>XL-Flow | Academic Continuum</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(err => {
+            console.log('SW registration error:', err);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

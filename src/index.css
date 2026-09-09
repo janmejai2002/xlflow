@@ -1,0 +1,143 @@
+/* ============================================================
+   wAIbi-sabi Academic Design System & Theme Engine
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* Structural Grounds & Inks */
+  --paper: #F6F4EF;
+  --paper-subtle: #EFEBE3;
+  --card: #EDE9E0;
+  --card-hover: #E5E0D5;
+  --stone: #E4DFD4;
+  --border: #DCD4C7;
+  --border-soft: rgba(26, 38, 57, 0.08);
+
+  --ink: #1A2639;
+  --ink-soft: rgba(26, 38, 57, 0.72);
+  --ink-faint: rgba(26, 38, 57, 0.42);
+
+  /* The Five Earths + Indigo */
+  --mizu: #00A9B8;   /* Water - Active radar, countdowns */
+  --moss: #6E8C63;   /* Moss - Attendance >=85%, completed */
+  --ochre: #C2913A;  /* Clay Ochre - Warning 80-85%, due soon */
+  --hanko: #D2543F;  /* Seal Red - Danger <80%, urgent */
+  --plum: #8A6690;   /* Aubergine - Elective tags */
+  --indigo: #4E6E9C; /* Indigo - Core courses, institution */
+
+  /* Tinted Washes */
+  --wash-mizu: rgba(0, 169, 184, 0.10);
+  --wash-moss: rgba(110, 140, 99, 0.11);
+  --wash-ochre: rgba(194, 145, 58, 0.11);
+  --wash-hanko: rgba(210, 84, 63, 0.10);
+  --wash-plum: rgba(138, 102, 144, 0.10);
+  --wash-indigo: rgba(78, 110, 156, 0.10);
+
+  --shadow-sm: 0 1px 3px rgba(26, 38, 57, 0.05);
+  --shadow-md: 0 4px 14px rgba(26, 38, 57, 0.08);
+  --shadow-lg: 0 10px 28px -4px rgba(26, 38, 57, 0.12);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Fira Code', monospace;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --paper: #15181D;
+  --paper-subtle: #1B1F26;
+  --card: #1C2129;
+  --card-hover: #232933;
+  --stone: #202630;
+  --border: #2E343D;
+  --border-soft: rgba(233, 229, 220, 0.10);
+
+  --ink: #E9E5DC;
+  --ink-soft: rgba(233, 229, 220, 0.70);
+  --ink-faint: rgba(233, 229, 220, 0.40);
+
+  --mizu: #4ECDD8;
+  --moss: #9BBA8E;
+  --ochre: #DDB667;
+  --hanko: #E87A64;
+  --plum: #B694BC;
+  --indigo: #85A5D0;
+
+  --wash-mizu: rgba(78, 205, 216, 0.12);
+  --wash-moss: rgba(155, 186, 142, 0.12);
+  --wash-ochre: rgba(221, 182, 103, 0.12);
+  --wash-hanko: rgba(232, 122, 100, 0.12);
+  --wash-plum: rgba(182, 148, 188, 0.12);
+  --wash-indigo: rgba(133, 165, 208, 0.12);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom wAIbi-sabi Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-faint);
+}
+
+/* Typography Utilities */
+.font-serif {
+  font-family: var(--font-serif);
+}
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum";
+}
+
+/* Pulse Animation for Live Radar */
+@keyframes radar-pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 169, 184, 0.6); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(0, 169, 184, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 169, 184, 0); }
+}
+
+.radar-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--mizu);
+  animation: radar-pulse 2s infinite;
+}
+
+/* Safe Area Inset for Modern iPhones */
+.pb-safe {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}

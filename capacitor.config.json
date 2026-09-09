@@ -1,0 +1,9 @@
+{
+  "appId": "ac.in.xlri.campuspulse",
+  "appName": "XL-Flow",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

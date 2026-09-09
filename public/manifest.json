@@ -1,0 +1,20 @@
+{
+  "name": "XL-Flow | Academic Continuum",
+  "short_name": "XL-Flow",
+  "description": "The Next-Generation Spatial Academic Command Centre for XLRI Term-5",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#15181D",
+  "theme_color": "#15181D",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"]
+}
