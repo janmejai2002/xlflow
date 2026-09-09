@@ -54,7 +54,9 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
 
   return (
     <div style={{
-      width: '1060px',
+      width: 'min(1060px, calc(100vw - 80px))',
+      maxWidth: '100%',
+      boxSizing: 'border-box',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',

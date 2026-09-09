@@ -152,6 +152,24 @@ input, textarea, select {
   background: var(--ink-faint);
 }
 
+/* Scrollbar Suppression Utilities */
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+main.no-scrollbar::-webkit-scrollbar,
+.horizon-track::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* Typography Utilities */
 .font-brand {
   font-family: var(--font-brand);

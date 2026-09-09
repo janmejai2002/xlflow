@@ -77,7 +77,9 @@ export default function SectorRadar({
 
   return (
     <div style={{
-      width: '1140px',
+      width: 'min(1140px, calc(100vw - 80px))',
+      maxWidth: '100%',
+      boxSizing: 'border-box',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
@@ -341,7 +343,15 @@ export default function SectorRadar({
               </span>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              overflowY: 'auto',
+              maxHeight: '220px',
+              flex: 1,
+              minHeight: 0
+            }}>
               {schedule.slice(1, 5).map((s, idx) => {
                 const sColors = COURSE_COLORS[s.courseCode] || { accent: '#4E6E9C' };
                 return (

@@ -137,6 +137,40 @@ export default function DesktopHorizonDeck({
     }
   };
 
+  // Translate vertical wheel scroll to horizontal panning across the horizon track
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleNativeWheel = (e) => {
+      // Check if user is scrolling inside an element that is vertically scrollable and has room to scroll
+      let target = e.target;
+      let hasInnerScroll = false;
+      while (target && target !== container) {
+        const style = window.getComputedStyle(target);
+        const overflowY = style.overflowY;
+        const isScrollable = (overflowY === 'auto' || overflowY === 'scroll') && target.scrollHeight > target.clientHeight;
+        if (isScrollable) {
+          const atTop = target.scrollTop <= 1 && e.deltaY < 0;
+          const atBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 2 && e.deltaY > 0;
+          if (!atTop && !atBottom) {
+            hasInnerScroll = true;
+            break;
+          }
+        }
+        target = target.parentElement;
+      }
+
+      if (!hasInnerScroll && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY * 0.9;
+      }
+    };
+
+    container.addEventListener('wheel', handleNativeWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleNativeWheel);
+  }, []);
+
   // When a lecture or session is selected anywhere, open Context Inspector
   const handleSelectSession = (session) => {
     setSelectedSession(session);
@@ -180,6 +214,7 @@ export default function DesktopHorizonDeck({
       <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex' }}>
         <main
           ref={containerRef}
+          className="no-scrollbar"
           onScroll={handleScroll}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
@@ -194,13 +229,15 @@ export default function DesktopHorizonDeck({
             flexDirection: 'row',
             gap: '36px',
             padding: '20px 36px',
-            scrollSnapType: 'x mandatory',
+            scrollSnapType: 'x proximity',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
             cursor: 'grab'
           }}
         >
           {/* SECTOR 01: Chronos Radar & Live Flight Deck */}
-          <section data-sector-index="0" data-sector-id="radar" style={{ scrollSnapAlign: 'start', height: '100%' }}>
+          <section data-sector-index="0" data-sector-id="radar" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
             <SectorRadar
               schedule={dataPayload.schedule}
               courses={dataPayload.courses}
@@ -220,7 +257,7 @@ export default function DesktopHorizonDeck({
           }} />
 
           {/* SECTOR 02: Architectural Weekly Matrix Timetable */}
-          <section data-sector-index="1" data-sector-id="timetable" style={{ scrollSnapAlign: 'start', height: '100%' }}>
+          <section data-sector-index="1" data-sector-id="timetable" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
             <SectorTimetable
               schedule={dataPayload.schedule}
               onSelectSession={handleSelectSession}
@@ -238,7 +275,7 @@ export default function DesktopHorizonDeck({
           }} />
 
           {/* SECTOR 03: Bunk-O-Meter Statutory Debt Matrix */}
-          <section data-sector-index="2" data-sector-id="bunkmeter" style={{ scrollSnapAlign: 'start', height: '100%' }}>
+          <section data-sector-index="2" data-sector-id="bunkmeter" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
             <SectorBunkMeter
               courses={dataPayload.courses}
             />
@@ -254,7 +291,7 @@ export default function DesktopHorizonDeck({
           }} />
 
           {/* SECTOR 04: Getaways & Natural Travel Windows */}
-          <section data-sector-index="3" data-sector-id="trips" style={{ scrollSnapAlign: 'start', height: '100%' }}>
+          <section data-sector-index="3" data-sector-id="trips" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
             <SectorTrips
               schedule={dataPayload.schedule}
               deadlines={dataPayload.deadlines}
@@ -272,7 +309,7 @@ export default function DesktopHorizonDeck({
           }} />
 
           {/* SECTOR 05: Deadlines, Quizzes & Case Pipeline */}
-          <section data-sector-index="4" data-sector-id="deadlines" style={{ scrollSnapAlign: 'start', height: '100%' }}>
+          <section data-sector-index="4" data-sector-id="deadlines" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
             <SectorDeadlines
               initialDeadlines={dataPayload.deadlines}
               courses={dataPayload.courses}
@@ -289,7 +326,7 @@ export default function DesktopHorizonDeck({
           }} />
 
           {/* SECTOR 06: Batch Synergy & Free Window Matrix */}
-          <section data-sector-index="5" data-sector-id="synergy" style={{ scrollSnapAlign: 'start', height: '100%' }}>
+          <section data-sector-index="5" data-sector-id="synergy" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
             <SectorSynergy
               currentUser={dataPayload.student}
               schedule={dataPayload.schedule}
