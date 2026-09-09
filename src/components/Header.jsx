@@ -161,98 +161,6 @@ export default function Header({
           </span>
         </button>
 
-        {/* Student Manual / Instruction Booklet */}
-        <button
-          onClick={onOpenBooklet}
-          title="Student Guide & Instruction Booklet"
-          aria-label="Open student instruction booklet"
-          className="hide-below-500"
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            width: '34px',
-            height: '34px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--ink)',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-        >
-          <BookOpen size={14} style={{ color: 'var(--mizu)' }} />
-        </button>
-
-        {/* Share Academic Pass */}
-        <button
-          onClick={onOpenShareCard}
-          title="Generate Social Academic Pass"
-          aria-label="Generate shareable student pass"
-          className="hide-below-500"
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            width: '34px',
-            height: '34px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--mizu)',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-        >
-          <Share2 size={14} />
-        </button>
-
-        {/* Switch to Desktop Horizon Deck */}
-        <button
-          onClick={onToggleLayoutMode}
-          title="Switch to Panoramic Desktop View (Horizon Deck)"
-          aria-label="Switch to Panoramic Desktop View"
-          className="hide-below-500"
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            width: '34px',
-            height: '34px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--mizu)',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-        >
-          <Monitor size={14} />
-        </button>
-
-        {/* 432Hz Generative Campus Focus Soundscape */}
-        <button
-          onClick={onToggleAmbient}
-          title={isAmbientOn ? "Pause 432Hz Study Soundscape" : "Play 432Hz Meditative Study Soundscape"}
-          aria-label="Toggle 432Hz study focus audio"
-          className="hide-below-500"
-          style={{
-            background: isAmbientOn ? 'var(--wash-mizu)' : 'var(--card)',
-            border: `1px solid ${isAmbientOn ? 'rgba(0, 169, 184, 0.4)' : 'var(--border)'}`,
-            borderRadius: '8px',
-            width: '34px',
-            height: '34px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: isAmbientOn ? 'var(--mizu)' : 'var(--ink-soft)',
-            cursor: 'pointer',
-            transition: 'all 0.15s'
-          }}
-        >
-          <Headphones size={14} style={{ animation: isAmbientOn ? 'pulse 2s infinite' : 'none' }} />
-        </button>
-
         {/* Astra Neural Co-Pilot Trigger */}
         <button
           onClick={onOpenCopilot}
@@ -289,30 +197,6 @@ export default function Header({
           <span className="hide-below-380" style={{ color: 'var(--mizu)', fontWeight: 700 }}>Astra</span>
         </button>
 
-        {/* Refresh Sync */}
-        <button
-          onClick={onRefresh}
-          disabled={isSyncing}
-          title="Refresh Schedule"
-          aria-label="Refresh timetable and attendance sync"
-          className="hide-below-500"
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            width: '34px',
-            height: '34px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--ink)',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-        >
-          <RefreshCw size={14} style={{ animation: isSyncing ? 'spin 1s linear infinite' : 'none' }} />
-        </button>
-
         {/* Toggle Theme */}
         <button
           onClick={onToggleTheme}
@@ -335,31 +219,8 @@ export default function Header({
           {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
         </button>
 
-        {/* Switch / Logout */}
-        <button
-          onClick={onLogout}
-          title="Logout / Switch Account"
-          aria-label="Logout or switch student profile"
-          className="hide-below-500"
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '8px',
-            width: '34px',
-            height: '34px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--hanko)',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-        >
-          <LogOut size={14} />
-        </button>
-
-        {/* Mobile "More" Menu Toggle (visible only below 500px) */}
-        <div style={{ position: 'relative' }} ref={menuRef} className="hide-above-500">
+        {/* Mobile "More" Menu Toggle (Always accessible) */}
+        <div style={{ position: 'relative' }} ref={menuRef}>
           <button
             onClick={() => setIsMoreOpen(prev => !prev)}
             aria-label="More actions"
