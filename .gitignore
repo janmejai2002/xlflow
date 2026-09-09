@@ -6,6 +6,7 @@ node_modules/
 # Production build artifacts
 dist/
 dist-ssr/
+build_extension/
 *.local
 
 # Environment variables & secrets

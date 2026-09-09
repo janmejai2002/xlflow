@@ -3,6 +3,7 @@ import { ShieldCheck, AlertTriangle, AlertCircle, Check, SlidersHorizontal, User
 import NumberFlow from '@number-flow/react';
 import { COURSE_COLORS } from '../data/rosterData';
 import { STATUTORY_THRESHOLD } from '../services/bunkCalculator';
+import { playTactileClick } from '../services/soundEngine';
 
 /**
  * CourseSafetyCard: High-Aesthetic Academic Safety Cockpit
@@ -223,7 +224,7 @@ export default function CourseSafetyCard({
               <span style={{ fontSize: '11px', fontWeight: 600, marginLeft: '1px' }}>%</span>
             </div>
             <div style={{ fontSize: '10px', fontWeight: 700, color: statusTextColor, marginTop: '2px', letterSpacing: '0.02em' }}>
-              {inlineSkips > 0 ? `Sim -${inlineSkips}` : statusLabel}
+              {statusLabel}
             </div>
           </div>
         </div>
@@ -445,7 +446,10 @@ export default function CourseSafetyCard({
 
         {/* Detailed Course Standing Trigger */}
         <button
-          onClick={() => onOpenDeepSim?.(course.code)}
+          onClick={() => {
+            playTactileClick();
+            onOpenDeepSim?.(course.code);
+          }}
           title={`View Academic Standing for ${course.code}`}
           aria-label={`View academic standing for ${course.code}`}
           style={{

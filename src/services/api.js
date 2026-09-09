@@ -56,11 +56,17 @@ export async function fetchLiveStudentData(token) {
     let meData = SAMPLE_STUDENT;
     try {
       const meRes = await fetch(`${BASE_URL}/auth/me`, { headers });
+      if (meRes.status === 401) {
+        console.warn('[Security] Token expired (401). Evicting credentials.');
+        localStorage.removeItem(StorageKeys.TOKEN);
+        throw new Error('ERP session expired. Please re-authenticate.');
+      }
       if (meRes.ok) {
         const json = await meRes.json();
         if (json.data?.user) meData = json.data.user;
       }
     } catch (e) {
+      if (e.message && e.message.includes('session expired')) throw e;
       console.warn('Could not fetch student profile, using fallback:', e);
     }
 

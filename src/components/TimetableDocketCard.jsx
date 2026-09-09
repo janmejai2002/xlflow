@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Clock, MapPin, Calendar, User, Copy, Check, ExternalLink, ShieldCheck, AlertTriangle, Sparkles } from 'lucide-react';
 import { COURSE_COLORS } from '../data/rosterData';
 import { getGoogleCalendarUrl } from '../services/calendarExport';
+import { playTactileClick } from '../services/soundEngine';
 import { toast } from 'sonner';
 
 /**
@@ -59,7 +60,10 @@ export default function TimetableDocketCard({
   return (
     <div
       className="timetable-docket-card"
-      onClick={() => onSelectSession?.(session)}
+      onClick={() => {
+        playTactileClick();
+        onSelectSession?.(session);
+      }}
       style={{
         backgroundColor: 'var(--card)',
         border: '1px solid var(--border)',

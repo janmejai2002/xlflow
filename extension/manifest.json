@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "XL-Flow | Academic Continuum & Bunk-O-Meter",
+  "version": "1.0.0",
+  "description": "Next-Generation Spatial Academic Command Centre & Statutory Attendance Safeguard for XLRI students.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Open XL-Flow Command Centre",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://xlerp.xlri.ac.in/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://xlerp.xlri.ac.in/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://xlerp.xlri.ac.in"
+  }
+}
