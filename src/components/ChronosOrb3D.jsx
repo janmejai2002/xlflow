@@ -9,7 +9,14 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
   const canvasRef = useRef(null);
   const [hoveredNode, setHoveredNode] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [isAutoRotate, setIsAutoRotate] = useState(true);
+
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [isAutoRotate, setIsAutoRotate] = useState(!prefersReducedMotion);
+  const isAutoRotateRef = useRef(!prefersReducedMotion);
+
+  useEffect(() => {
+    isAutoRotateRef.current = isAutoRotate;
+  }, [isAutoRotate]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -25,14 +32,26 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
     camera.position.set(0, 4, 13);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance'
-    });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+    } catch (err) {
+      console.warn('WebGL initialization failed:', err);
+      return;
+    }
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const handleContextLost = (e) => {
+      e.preventDefault();
+      console.warn('WebGL context lost in ChronosOrb3D.');
+    };
+    canvas.addEventListener('webglcontextlost', handleContextLost, false);
 
     // 2. Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
@@ -231,12 +250,28 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
 
-    // 7. Animation Loop
+    // 7. Animation Loop & Visibility Observer
     let animId;
     let clock = new THREE.Clock();
+    let isVisible = true;
+
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    let observer;
+    if (typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting && !document.hidden;
+      }, { threshold: 0.05 });
+      observer.observe(container);
+    }
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
+      if (!isVisible) return; // Battery and GPU optimization when off-screen
+
       const elapsed = clock.getElapsedTime();
 
       // Nucleus respiration
@@ -246,7 +281,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
       wireMesh.rotation.x = -elapsed * 0.2;
 
       // Gentle auto-rotation of orbits
-      if (isAutoRotate && !isDragging) {
+      if (isAutoRotateRef.current && !isDragging) {
         ringGroup.rotation.y += 0.003;
       }
 
@@ -279,12 +314,29 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (observer && container) observer.disconnect();
       canvas.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+
+      // Deep GPU resource disposal to avoid memory leaks
+      scene.traverse((child) => {
+        if (child.isMesh || child.isPoints) {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) {
+            if (Array.isArray(child.material)) {
+              child.material.forEach(m => m.dispose());
+            } else {
+              child.material.dispose();
+            }
+          }
+        }
+      });
       renderer.dispose();
     };
-  }, [schedule, courses, isAutoRotate, onSelectSession]);
+  }, [schedule, courses, onSelectSession]);
 
   return (
     <div
@@ -343,6 +395,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
             playTactileClick();
             setIsAutoRotate(prev => !prev);
           }}
+          aria-label={isAutoRotate ? "Pause 3D orbital rotation" : "Resume 3D orbital rotation"}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -351,7 +404,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
             borderRadius: '9999px',
             border: '1px solid var(--border)',
             backgroundColor: isAutoRotate ? 'var(--wash-moss)' : 'var(--paper)',
-            color: isAutoRotate ? 'var(--moss)' : 'var(--ink-soft)',
+            color: isAutoRotate ? 'var(--moss-text)' : 'var(--ink-soft)',
             fontSize: '11px',
             fontWeight: 600,
             cursor: 'pointer'
@@ -371,7 +424,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
             height: '100%',
             display: 'block',
             cursor: 'grab',
-            touchAction: 'none'
+            touchAction: 'pan-y'
           }}
         />
 

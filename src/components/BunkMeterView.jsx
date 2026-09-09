@@ -83,8 +83,8 @@ export default function BunkMeterView({ courses = [] }) {
           padding: '12px',
           textAlign: 'center'
         }}>
-          <span style={{ fontSize: '11px', color: 'var(--moss)', fontWeight: 600 }}>Safe (&ge;85%)</span>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--moss)', marginTop: '2px' }}>
+          <span style={{ fontSize: '11px', color: 'var(--moss-text)', fontWeight: 600 }}>Safe (&ge;85%)</span>
+          <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--moss-text)', marginTop: '2px' }}>
             <NumberFlow value={safeCount} />
           </div>
         </div>
@@ -96,10 +96,10 @@ export default function BunkMeterView({ courses = [] }) {
           padding: '12px',
           textAlign: 'center'
         }}>
-          <span style={{ fontSize: '11px', color: warningOrDanger > 0 ? 'var(--hanko)' : 'var(--ink-soft)', fontWeight: 600 }}>
+          <span style={{ fontSize: '11px', color: warningOrDanger > 0 ? 'var(--hanko-text)' : 'var(--ink-soft)', fontWeight: 600 }}>
             Risk / Action
           </span>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: warningOrDanger > 0 ? 'var(--hanko)' : 'var(--ink)', marginTop: '2px' }}>
+          <div style={{ fontSize: '20px', fontWeight: 700, color: warningOrDanger > 0 ? 'var(--hanko-text)' : 'var(--ink)', marginTop: '2px' }}>
             <NumberFlow value={warningOrDanger} />
           </div>
         </div>
@@ -141,17 +141,20 @@ export default function BunkMeterView({ courses = [] }) {
           const isWarning = stats.tier === 'warning';
 
           let statusColor = 'var(--moss)';
+          let statusTextColor = 'var(--moss-text)';
           let washColor = 'var(--wash-moss)';
           let borderColor = 'rgba(110, 140, 99, 0.25)';
           let statusText = 'Safe Zone';
 
           if (isDanger) {
             statusColor = 'var(--hanko)';
+            statusTextColor = 'var(--hanko-text)';
             washColor = 'var(--wash-hanko)';
             borderColor = 'rgba(210, 84, 63, 0.25)';
             statusText = stats.isDebarredRisk ? 'Debarred Risk' : 'Below 80% Rule';
           } else if (isWarning) {
             statusColor = 'var(--ochre)';
+            statusTextColor = 'var(--ochre-text)';
             washColor = 'var(--wash-ochre)';
             borderColor = 'rgba(194, 145, 58, 0.25)';
             statusText = 'Caution Margin';
@@ -181,7 +184,7 @@ export default function BunkMeterView({ courses = [] }) {
                       padding: '2px 8px',
                       borderRadius: '5px',
                       backgroundColor: 'var(--wash-indigo)',
-                      color: 'var(--indigo)'
+                      color: 'var(--indigo-text)'
                     }}>
                       {course.code}
                     </span>
@@ -211,10 +214,10 @@ export default function BunkMeterView({ courses = [] }) {
                   backgroundColor: washColor,
                   border: `1px solid ${borderColor}`
                 }}>
-                  <div style={{ fontSize: '18px', fontWeight: 800, color: statusColor, lineHeight: 1 }}>
+                  <div style={{ fontSize: '18px', fontWeight: 800, color: statusTextColor, lineHeight: 1 }}>
                     {stats.currentPercentage}%
                   </div>
-                  <div style={{ fontSize: '10px', fontWeight: 600, color: statusColor, marginTop: '3px' }}>
+                  <div style={{ fontSize: '10px', fontWeight: 600, color: statusTextColor, marginTop: '3px' }}>
                     {statusText}
                   </div>
                 </div>
@@ -268,7 +271,7 @@ export default function BunkMeterView({ courses = [] }) {
 
                 <div>
                   <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'block' }}>Safe Bunks</span>
-                  <span style={{ fontWeight: 700, color: isDanger ? 'var(--hanko)' : 'var(--moss)' }}>
+                  <span style={{ fontWeight: 700, color: isDanger ? 'var(--hanko-text)' : 'var(--moss-text)' }}>
                     {isDanger ? '0 Safe' : `+${stats.safeBunksRemaining} Safe`}
                   </span>
                 </div>
@@ -277,7 +280,7 @@ export default function BunkMeterView({ courses = [] }) {
                   <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'block' }}>
                     {isDanger ? 'Recovery Req.' : 'Immediate Bunk'}
                   </span>
-                  <span style={{ fontWeight: 600, color: isDanger ? 'var(--hanko)' : 'var(--ink)' }}>
+                  <span style={{ fontWeight: 600, color: isDanger ? 'var(--hanko-text)' : 'var(--ink)' }}>
                     {isDanger
                       ? `${stats.recoveryRequired} Classes`
                       : (stats.safeImmediateBunks > 0 ? `Yes (${stats.safeImmediateBunks} cl)` : 'No')}

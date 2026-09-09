@@ -215,8 +215,10 @@ export default function App() {
       <div style={{
         width: '100%',
         maxWidth: '540px',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         backgroundColor: 'var(--paper)',
+        borderLeft: '1px solid var(--border-soft)',
+        borderRight: '1px solid var(--border-soft)',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
@@ -247,7 +249,7 @@ export default function App() {
             borderBottom: '1px solid rgba(194, 145, 58, 0.3)',
             padding: '6px 16px',
             fontSize: '12px',
-            color: 'var(--ochre)',
+            color: 'var(--ochre-text)',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
@@ -262,8 +264,9 @@ export default function App() {
         {/* Main Content Area */}
         <main style={{
           flex: 1,
-          padding: '16px 16px 84px 16px',
-          overflowY: 'auto'
+          padding: '16px 16px calc(88px + env(safe-area-inset-bottom, 16px)) 16px',
+          overflowY: 'auto',
+          WebkitOverflowScrolling: 'touch'
         }}>
           {activeTab === 'radar' && (
             <RadarView

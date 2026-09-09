@@ -40,7 +40,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '16px',
+      padding: 'max(16px, env(safe-area-inset-top, 16px)) 16px max(16px, env(safe-area-inset-bottom, 16px)) 16px',
+      overflowY: 'auto',
+      WebkitOverflowScrolling: 'touch',
       zIndex: 100
     }}>
       <div style={{
@@ -49,6 +51,9 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
         borderRadius: '20px',
         width: '100%',
         maxWidth: '420px',
+        maxHeight: 'calc(100dvh - 32px)',
+        overflowY: 'auto',
+        margin: 'auto 0',
         padding: '24px',
         boxShadow: 'var(--shadow-lg)',
         position: 'relative',
@@ -59,15 +64,21 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
         {onClose && (
           <button
             onClick={onClose}
+            aria-label="Close login modal"
             style={{
               position: 'absolute',
-              top: '16px',
-              right: '16px',
+              top: '12px',
+              right: '12px',
               background: 'none',
               border: 'none',
               color: 'var(--ink-soft)',
               cursor: 'pointer',
-              padding: '4px'
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '8px'
             }}
           >
             <X size={18} />
@@ -173,65 +184,76 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
           )}
 
           <div>
-            <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)', display: 'block', marginBottom: '4px' }}>
+            <label htmlFor="xlri-login-email" style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)', display: 'block', marginBottom: '4px' }}>
               Institute Email
             </label>
             <div style={{ position: 'relative' }}>
-              <Mail size={15} style={{ position: 'absolute', left: '10px', top: '11px', color: 'var(--ink-soft)' }} />
+              <Mail size={15} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--ink-soft)' }} />
               <input
+                id="xlri-login-email"
                 type="email"
+                autoComplete="email"
                 placeholder="b25349@astra.xlri.ac.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '9px 12px 9px 34px',
+                  padding: '10px 12px 10px 34px',
                   borderRadius: '8px',
                   border: '1px solid var(--border)',
                   backgroundColor: 'var(--paper)',
                   color: 'var(--ink)',
-                  fontSize: '13px'
+                  fontSize: '16px'
                 }}
               />
             </div>
           </div>
 
           <div>
-            <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)', display: 'block', marginBottom: '4px' }}>
+            <label htmlFor="xlri-login-password" style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)', display: 'block', marginBottom: '4px' }}>
               Password
             </label>
             <div style={{ position: 'relative' }}>
-              <Lock size={15} style={{ position: 'absolute', left: '10px', top: '11px', color: 'var(--ink-soft)' }} />
+              <Lock size={15} style={{ position: 'absolute', left: '10px', top: '12px', color: 'var(--ink-soft)' }} />
               <input
+                id="xlri-login-password"
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
                 placeholder="ERP Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '9px 36px 9px 34px',
+                  padding: '10px 42px 10px 34px',
                   borderRadius: '8px',
                   border: '1px solid var(--border)',
                   backgroundColor: 'var(--paper)',
                   color: 'var(--ink)',
-                  fontSize: '13px'
+                  fontSize: '16px'
                 }}
               />
               <button
                 type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
                 onClick={() => setShowPassword(!showPassword)}
                 style={{
                   position: 'absolute',
-                  right: '10px',
-                  top: '9px',
+                  right: '4px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
                   background: 'none',
                   border: 'none',
                   color: 'var(--ink-soft)',
                   cursor: 'pointer',
-                  padding: 0
+                  minWidth: '36px',
+                  minHeight: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '6px'
                 }}
               >
-                {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>

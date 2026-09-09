@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Headphones, Bot, BookOpen } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Headphones, Bot, BookOpen, MoreHorizontal, X } from 'lucide-react';
 import { fireStreakConfetti } from '../services/confetti';
 import { toast } from 'sonner';
 
@@ -18,6 +18,20 @@ export default function Header({
   onOpenCopilot,
   onOpenBooklet
 }) {
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsMoreOpen(false);
+      }
+    };
+    if (isMoreOpen) {
+      document.addEventListener('pointerdown', handleClickOutside);
+    }
+    return () => document.removeEventListener('pointerdown', handleClickOutside);
+  }, [isMoreOpen]);
   return (
     <header style={{
       position: 'sticky',
@@ -26,13 +40,14 @@ export default function Header({
       backgroundColor: 'var(--paper-subtle)',
       borderBottom: '1px solid var(--border)',
       backdropFilter: 'blur(10px)',
-      padding: '10px 16px',
+      padding: 'max(10px, env(safe-area-inset-top, 10px)) 12px 10px 12px',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      gap: '8px'
     }}>
       {/* Left: Brand & Student Meta */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
         <div style={{
           width: '32px',
           height: '32px',
@@ -41,18 +56,20 @@ export default function Header({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'var(--mizu)'
+          color: 'var(--mizu)',
+          flexShrink: 0
         }}>
           <Sparkles size={17} />
         </div>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'nowrap' }}>
             <span style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '18px',
+              fontSize: '17px',
               fontWeight: 600,
               letterSpacing: '-0.02em',
-              color: 'var(--ink)'
+              color: 'var(--ink)',
+              whiteSpace: 'nowrap'
             }}>
               XL-Flow
             </span>
@@ -60,11 +77,12 @@ export default function Header({
               <span style={{
                 fontSize: '10px',
                 fontWeight: 600,
-                padding: '1px 6px',
+                padding: '1px 5px',
                 borderRadius: '9999px',
                 backgroundColor: 'var(--wash-ochre)',
-                color: 'var(--ochre)',
-                border: '1px solid rgba(194, 145, 58, 0.25)'
+                color: 'var(--ochre-text)',
+                border: '1px solid rgba(194, 145, 58, 0.25)',
+                whiteSpace: 'nowrap'
               }}>
                 DEMO
               </span>
@@ -77,47 +95,54 @@ export default function Header({
                 });
               }}
               title="Click to celebrate streak!"
+              aria-label="Attendance streak: 8 days active"
               style={{
                 fontSize: '10px',
                 fontWeight: 600,
-                padding: '2px 8px',
+                padding: '2px 7px',
                 borderRadius: '9999px',
                 backgroundColor: 'var(--wash-moss)',
-                color: 'var(--moss)',
+                color: 'var(--moss-text)',
                 border: '1px solid rgba(110, 140, 99, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '3px',
                 cursor: 'pointer',
-                transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.06)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
-              <Flame size={11} style={{ fill: 'currentColor' }} /> 8d Streak
+              <Flame size={11} style={{ fill: 'currentColor' }} />
+              <span className="hide-below-380">8d Streak</span>
+              <span style={{ display: 'none' }} className="show-below-380">8d</span>
             </button>
           </div>
-          <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0 }}>
+          <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {student?.term || 'Term-5'} • {student?.campus || 'XLRI Delhi-NCR'}
           </p>
         </div>
       </div>
 
       {/* Right: Quick Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
         {/* Quick Batch Roster Search */}
         <button
           onClick={onOpenSearch}
           title="Search 178 batchmates (Ctrl+K)"
+          aria-label="Search batch roster"
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
             borderRadius: '8px',
-            padding: '0 8px',
-            height: '32px',
+            padding: '0 7px',
+            height: '34px',
+            minWidth: '34px',
             display: 'flex',
             alignItems: 'center',
-            gap: '5px',
+            justifyContent: 'center',
+            gap: '4px',
             color: 'var(--ink)',
             cursor: 'pointer',
             fontSize: '11px',
@@ -125,7 +150,7 @@ export default function Header({
           }}
         >
           <Search size={14} style={{ color: 'var(--ink-soft)' }} />
-          <span style={{
+          <span className="hide-below-480" style={{
             fontSize: '10px',
             color: 'var(--ink-soft)',
             backgroundColor: 'var(--paper)',
@@ -141,12 +166,14 @@ export default function Header({
         <button
           onClick={onOpenBooklet}
           title="Student Guide & Instruction Booklet"
+          aria-label="Open student instruction booklet"
+          className="hide-below-500"
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
             borderRadius: '8px',
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -162,12 +189,14 @@ export default function Header({
         <button
           onClick={onOpenShareCard}
           title="Generate Social Academic Pass"
+          aria-label="Generate shareable student pass"
+          className="hide-below-500"
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
             borderRadius: '8px',
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -183,12 +212,14 @@ export default function Header({
         <button
           onClick={onToggleAmbient}
           title={isAmbientOn ? "Pause 432Hz Study Soundscape" : "Play 432Hz Meditative Study Soundscape"}
+          aria-label="Toggle 432Hz study focus audio"
+          className="hide-below-500"
           style={{
             background: isAmbientOn ? 'var(--wash-mizu)' : 'var(--card)',
             border: `1px solid ${isAmbientOn ? 'rgba(0, 169, 184, 0.4)' : 'var(--border)'}`,
             borderRadius: '8px',
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -197,22 +228,25 @@ export default function Header({
             transition: 'all 0.15s'
           }}
         >
-          <Headphones size={15} style={{ animation: isAmbientOn ? 'pulse 2s infinite' : 'none' }} />
+          <Headphones size={14} style={{ animation: isAmbientOn ? 'pulse 2s infinite' : 'none' }} />
         </button>
 
         {/* Astra Neural Co-Pilot Trigger */}
         <button
           onClick={onOpenCopilot}
           title="Open Astra Neural Co-Pilot"
+          aria-label="Open Astra Neural Co-Pilot AI"
           style={{
             background: 'var(--ink)',
             border: 'none',
             borderRadius: '8px',
             padding: '0 8px',
-            height: '32px',
+            height: '34px',
+            minWidth: '34px',
             display: 'flex',
             alignItems: 'center',
-            gap: '5px',
+            justifyContent: 'center',
+            gap: '4px',
             color: 'var(--mizu)',
             cursor: 'pointer',
             fontSize: '11px',
@@ -224,7 +258,7 @@ export default function Header({
           onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
           <Sparkles size={13} />
-          <span style={{ color: 'var(--paper)' }}>Astra</span>
+          <span className="hide-below-380" style={{ color: 'var(--paper)' }}>Astra</span>
         </button>
 
         {/* Refresh Sync */}
@@ -232,12 +266,14 @@ export default function Header({
           onClick={onRefresh}
           disabled={isSyncing}
           title="Refresh Schedule"
+          aria-label="Refresh timetable and attendance sync"
+          className="hide-below-500"
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
             borderRadius: '8px',
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -253,12 +289,13 @@ export default function Header({
         <button
           onClick={onToggleTheme}
           title="Toggle Theme"
+          aria-label="Toggle light and dark theme mode"
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
             borderRadius: '8px',
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -274,12 +311,14 @@ export default function Header({
         <button
           onClick={onLogout}
           title="Logout / Switch Account"
+          aria-label="Logout or switch student profile"
+          className="hide-below-500"
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
             borderRadius: '8px',
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -290,6 +329,181 @@ export default function Header({
         >
           <LogOut size={14} />
         </button>
+
+        {/* Mobile "More" Menu Toggle (visible only below 500px) */}
+        <div style={{ position: 'relative' }} ref={menuRef} className="hide-above-500">
+          <button
+            onClick={() => setIsMoreOpen(prev => !prev)}
+            aria-label="More actions"
+            style={{
+              background: isMoreOpen ? 'var(--card-hover)' : 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              width: '34px',
+              height: '34px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--ink)',
+              cursor: 'pointer'
+            }}
+          >
+            <MoreHorizontal size={17} />
+          </button>
+
+          {/* Floating Dropdown for secondary mobile actions */}
+          {isMoreOpen && (
+            <div style={{
+              position: 'absolute',
+              top: '42px',
+              right: 0,
+              width: '210px',
+              backgroundColor: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              padding: '6px',
+              boxShadow: 'var(--shadow-lg)',
+              zIndex: 50,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              animation: 'fadeIn 0.15s ease-out'
+            }}>
+              <button
+                onClick={() => {
+                  setIsMoreOpen(false);
+                  onOpenBooklet();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'var(--ink)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--stone)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <BookOpen size={15} style={{ color: 'var(--mizu)' }} />
+                <span>Student Booklet</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMoreOpen(false);
+                  onOpenShareCard();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'var(--ink)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--stone)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <Share2 size={15} style={{ color: 'var(--mizu)' }} />
+                <span>Share Academic Pass</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMoreOpen(false);
+                  onToggleAmbient();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'transparent',
+                  color: isAmbientOn ? 'var(--mizu)' : 'var(--ink)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--stone)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <Headphones size={15} style={{ color: isAmbientOn ? 'var(--mizu)' : 'var(--ink-soft)' }} />
+                <span>{isAmbientOn ? 'Pause 432Hz Sound' : 'Play 432Hz Sound'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMoreOpen(false);
+                  onRefresh();
+                }}
+                disabled={isSyncing}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'var(--ink)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--stone)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <RefreshCw size={15} style={{ color: 'var(--indigo)', animation: isSyncing ? 'spin 1s linear infinite' : 'none' }} />
+                <span>Sync with ERP</span>
+              </button>
+
+              <div style={{ height: '1px', backgroundColor: 'var(--border)', margin: '2px 4px' }} />
+
+              <button
+                onClick={() => {
+                  setIsMoreOpen(false);
+                  onLogout();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'var(--hanko)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--wash-hanko)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <LogOut size={15} />
+                <span>Switch / Logout</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
