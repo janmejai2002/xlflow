@@ -338,6 +338,7 @@ export default function App() {
             {activeTab === 'timetable' && (
               <TimetableView
                 schedule={dataPayload.schedule}
+                courses={dataPayload.courses}
                 selectedDateProp={timetableSelectedDate}
               />
             )}
