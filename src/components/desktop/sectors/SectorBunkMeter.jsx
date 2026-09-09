@@ -2,21 +2,14 @@ import React, { useState } from 'react';
 import {
   ShieldCheck,
   AlertTriangle,
-  AlertCircle,
-  Sliders,
-  Check,
-  ArrowRight,
-  TrendingDown,
-  TrendingUp,
   FileText
 } from 'lucide-react';
-import { calculateBunkStats, simulateAttendance, STATUTORY_THRESHOLD } from '../../../services/bunkCalculator';
-import { COURSE_COLORS } from '../../../data/rosterData';
+import { calculateBunkStats } from '../../../services/bunkCalculator';
 import { toast } from 'sonner';
+import CourseSafetyCard from '../../CourseSafetyCard';
 
 export default function SectorBunkMeter({ courses = [] }) {
   const [filterTerm, setFilterTerm] = useState('all');
-  const [simulations, setSimulations] = useState({});
 
   const evaluatedCourses = courses.map(course => {
     const stats = calculateBunkStats(course.attended, course.conducted, course.totalPlanned);
@@ -34,14 +27,6 @@ export default function SectorBunkMeter({ courses = [] }) {
   const totalCourses = evaluatedCourses.length;
   const safeCount = evaluatedCourses.filter(c => c.stats.tier === 'safe').length;
   const riskCount = evaluatedCourses.filter(c => c.stats.tier === 'warning' || c.stats.tier === 'danger').length;
-
-  const handleSimulateChange = (code, deltaSkips) => {
-    setSimulations(prev => {
-      const current = prev[code] || 0;
-      const next = Math.max(0, Math.min(10, current + deltaSkips));
-      return { ...prev, [code]: next };
-    });
-  };
 
   const handleExportAuditPdf = () => {
     window.print();
@@ -210,174 +195,16 @@ export default function SectorBunkMeter({ courses = [] }) {
         gap: '14px',
         alignContent: 'start'
       }}>
-        {filteredCourses.map(course => {
-          const simSkips = simulations[course.code] || 0;
-          const projectedPct = simSkips > 0
-            ? simulateAttendance(course.attended, course.conducted, 0, simSkips)
-            : course.stats.currentPercentage;
-          const colors = COURSE_COLORS[course.code] || { accent: '#4E6E9C' };
-          const isSafe = projectedPct >= STATUTORY_THRESHOLD * 100;
-
-          return (
-            <div
-              key={course.id || course.code}
-              style={{
-                backgroundColor: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: '14px',
-                padding: '16px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                boxShadow: 'var(--shadow-card)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              {/* Color accent header */}
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '3px',
-                backgroundColor: colors.accent
-              }} />
-
-              {/* Title row */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: colors.accent,
-                  backgroundColor: 'var(--paper)',
-                  padding: '2px 6px',
-                  borderRadius: '6px',
-                  border: '1px solid var(--border)'
-                }}>
-                  {course.code}
-                </span>
-
-                <span style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: isSafe ? 'var(--moss)' : 'var(--hanko)',
-                  backgroundColor: isSafe ? 'var(--wash-moss)' : 'var(--wash-hanko)',
-                  padding: '2px 8px',
-                  borderRadius: '10px'
-                }}>
-                  {projectedPct.toFixed(1)}% {simSkips > 0 ? `(Sim -${simSkips})` : ''}
-                </span>
-              </div>
-
-              <div>
-                <h4 style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                  margin: '0 0 2px 0',
-                  lineHeight: 1.2
-                }}>
-                  {course.name}
-                </h4>
-                <div style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-                  {course.faculty} • {course.credits || 3.0} Credits
-                </div>
-              </div>
-
-              {/* Statutory 80% Bar */}
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: 'var(--ink-soft)', marginBottom: '4px' }}>
-                  <span>Conducted: {course.attended}/{course.conducted}</span>
-                  <span>Min 80.0% Required</span>
-                </div>
-                <div style={{
-                  width: '100%',
-                  height: '6px',
-                  backgroundColor: 'var(--paper)',
-                  borderRadius: '999px',
-                  overflow: 'hidden',
-                  position: 'relative'
-                }}>
-                  <div style={{
-                    width: `${Math.min(100, projectedPct)}%`,
-                    height: '100%',
-                    backgroundColor: isSafe ? 'var(--moss)' : 'var(--hanko)',
-                    borderRadius: '999px',
-                    transition: 'width 0.2s'
-                  }} />
-                </div>
-              </div>
-
-              {/* Safe bunks indicator */}
-              <div style={{
-                fontSize: '11px',
-                color: 'var(--ink-soft)',
-                backgroundColor: 'var(--paper)',
-                padding: '6px 10px',
-                borderRadius: '8px',
-                border: '1px solid var(--border)'
-              }}>
-                {course.stats.safeBunksRemaining > 0 ? (
-                  <span>✅ <strong style={{ color: 'var(--moss)' }}>+{course.stats.safeBunksRemaining} safe bunks</strong> remaining</span>
-                ) : (
-                  <span>⚠️ <strong style={{ color: 'var(--hanko)' }}>Must attend {course.stats.recoveryRequired} classes</strong> to recover</span>
-                )}
-              </div>
-
-              {/* Interactive What-If Slider */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: '8px',
-                borderTop: '1px solid var(--border)',
-                fontSize: '11px'
-              }}>
-                <span style={{ color: 'var(--ink-soft)' }}>Simulate skip:</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <button
-                    onClick={() => handleSimulateChange(course.code, -1)}
-                    disabled={simSkips <= 0}
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--paper)',
-                      color: 'var(--ink)',
-                      cursor: simSkips <= 0 ? 'default' : 'pointer',
-                      opacity: simSkips <= 0 ? 0.3 : 1
-                    }}
-                  >
-                    -
-                  </button>
-                  <span style={{ minWidth: '18px', textAlign: 'center', fontWeight: 700, color: 'var(--ink)' }}>
-                    {simSkips}
-                  </span>
-                  <button
-                    onClick={() => handleSimulateChange(course.code, 1)}
-                    disabled={simSkips >= 5}
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--paper)',
-                      color: 'var(--ink)',
-                      cursor: simSkips >= 5 ? 'default' : 'pointer',
-                      opacity: simSkips >= 5 ? 0.3 : 1
-                    }}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          );
-        })}
+        {filteredCourses.map(course => (
+          <CourseSafetyCard
+            key={course.id || course.code}
+            course={course}
+            isCompact={true}
+            onOpenDeepSim={(code) => {
+              toast.info(`Opening detailed scenario planner for ${code}`);
+            }}
+          />
+        ))}
       </div>
     </div>
   );
