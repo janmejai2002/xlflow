@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShieldCheck, AlertTriangle, AlertCircle, Info, Calculator, Check, ArrowRight, Sliders, ChevronDown, ChevronUp } from 'lucide-react';
 import { calculateBunkStats, simulateAttendance, STATUTORY_THRESHOLD } from '../services/bunkCalculator';
 import NumberFlow from '@number-flow/react';
+import CourseSafetyCard from './CourseSafetyCard';
 
 export default function BunkMeterView({ courses = [] }) {
   const [filterTerm, setFilterTerm] = useState('all'); // 'all' | 'Term-5' | 'Term-4'
@@ -44,10 +45,10 @@ export default function BunkMeterView({ courses = [] }) {
       {/* Title & Statutory Banner */}
       <div>
         <h2 style={{
-          fontFamily: 'var(--font-serif)',
+          fontFamily: 'var(--font-brand)',
           fontSize: '24px',
-          fontWeight: 600,
-          letterSpacing: '-0.02em',
+          fontWeight: 800,
+          letterSpacing: '-0.025em',
           color: 'var(--ink)'
         }}>
           Bunk-O-Meter
@@ -134,188 +135,17 @@ export default function BunkMeterView({ courses = [] }) {
       </div>
 
       {/* Course Cards List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {filteredCourses.map(course => {
-          const { stats } = course;
-          const isDanger = stats.tier === 'danger';
-          const isWarning = stats.tier === 'warning';
-
-          let statusColor = 'var(--moss)';
-          let statusTextColor = 'var(--moss-text)';
-          let washColor = 'var(--wash-moss)';
-          let borderColor = 'rgba(110, 140, 99, 0.25)';
-          let statusText = 'Safe Zone';
-
-          if (isDanger) {
-            statusColor = 'var(--hanko)';
-            statusTextColor = 'var(--hanko-text)';
-            washColor = 'var(--wash-hanko)';
-            borderColor = 'rgba(210, 84, 63, 0.25)';
-            statusText = stats.isDebarredRisk ? 'Debarred Risk' : 'Below 80% Rule';
-          } else if (isWarning) {
-            statusColor = 'var(--ochre)';
-            statusTextColor = 'var(--ochre-text)';
-            washColor = 'var(--wash-ochre)';
-            borderColor = 'rgba(194, 145, 58, 0.25)';
-            statusText = 'Caution Margin';
-          }
-
-          return (
-            <div
-              key={course.code}
-              style={{
-                backgroundColor: 'var(--card)',
-                border: '1px solid var(--border)',
-                borderRadius: '14px',
-                padding: '16px',
-                boxShadow: 'var(--shadow-card)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px'
-              }}
-            >
-              {/* Header: Course Code + Status Badge */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      padding: '2px 8px',
-                      borderRadius: '5px',
-                      backgroundColor: 'var(--wash-indigo)',
-                      color: 'var(--indigo-text)'
-                    }}>
-                      {course.code}
-                    </span>
-                    <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-                      {course.credits} Credits • {course.term}
-                    </span>
-                  </div>
-                  <h3 style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    color: 'var(--ink)',
-                    marginTop: '4px'
-                  }}>
-                    {course.name}
-                  </h3>
-                  <p style={{ fontSize: '12px', color: 'var(--ink-soft)' }}>
-                    {course.faculty}
-                  </p>
-                </div>
-
-                {/* Percentage Badge */}
-                <div style={{
-                  textAlign: 'right',
-                  padding: '6px 10px',
-                  borderRadius: '10px',
-                  backgroundColor: washColor,
-                  border: `1px solid ${borderColor}`
-                }}>
-                  <div style={{ fontSize: '18px', fontWeight: 800, color: statusTextColor, lineHeight: 1 }}>
-                    {stats.currentPercentage}%
-                  </div>
-                  <div style={{ fontSize: '10px', fontWeight: 600, color: statusTextColor, marginTop: '3px' }}>
-                    {statusText}
-                  </div>
-                </div>
-              </div>
-
-              {/* Visual Progress Bar with 80% Marker */}
-              <div>
-                <div style={{ position: 'relative', width: '100%', height: '8px', backgroundColor: 'var(--border)', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{
-                    width: `${Math.min(100, stats.currentPercentage)}%`,
-                    height: '100%',
-                    backgroundColor: statusColor,
-                    borderRadius: '4px',
-                    transition: 'width 0.5s ease-out'
-                  }} />
-                  {/* 80% statutory needle */}
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    bottom: 0,
-                    left: '80%',
-                    width: '2px',
-                    backgroundColor: 'var(--ink)',
-                    opacity: 0.8,
-                    zIndex: 2
-                  }} />
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--ink-soft)', marginTop: '4px' }}>
-                  <span>0%</span>
-                  <span style={{ fontWeight: 600, color: 'var(--ink)' }}>80% Statutory Rule</span>
-                  <span>100%</span>
-                </div>
-              </div>
-
-              {/* Metric Chips */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '8px',
-                paddingTop: '10px',
-                borderTop: '1px solid var(--border)',
-                fontSize: '12px'
-              }}>
-                <div>
-                  <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'block' }}>Conducted</span>
-                  <span style={{ fontWeight: 600, color: 'var(--ink)' }}>
-                    {course.attended} / {course.conducted}
-                  </span>
-                </div>
-
-                <div>
-                  <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'block' }}>Safe Bunks</span>
-                  <span style={{ fontWeight: 700, color: isDanger ? 'var(--hanko-text)' : 'var(--moss-text)' }}>
-                    {isDanger ? '0 Safe' : `+${stats.safeBunksRemaining} Safe`}
-                  </span>
-                </div>
-
-                <div>
-                  <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'block' }}>
-                    {isDanger ? 'Recovery Req.' : 'Immediate Bunk'}
-                  </span>
-                  <span style={{ fontWeight: 600, color: isDanger ? 'var(--hanko-text)' : 'var(--ink)' }}>
-                    {isDanger
-                      ? `${stats.recoveryRequired} Classes`
-                      : (stats.safeImmediateBunks > 0 ? `Yes (${stats.safeImmediateBunks} cl)` : 'No')}
-                  </span>
-                </div>
-              </div>
-
-              {/* Quick Simulate Button */}
-              <button
-                onClick={() => {
-                  setSelectedCourseForSim(course.code);
-                  setShowSimDrawer(true);
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--paper)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--ink)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s'
-                }}
-              >
-                <Calculator size={13} style={{ color: 'var(--mizu)' }} />
-                <span>Simulate Bunks for {course.code}</span>
-              </button>
-            </div>
-          );
-        })}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {filteredCourses.map(course => (
+          <CourseSafetyCard
+            key={course.code}
+            course={course}
+            onOpenDeepSim={(code) => {
+              setSelectedCourseForSim(code);
+              setShowSimDrawer(true);
+            }}
+          />
+        ))}
       </div>
 
       {/* Interactive What-If Simulator Widget */}
