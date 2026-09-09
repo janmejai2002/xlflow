@@ -31,7 +31,9 @@ export default function HorizonTopBar({
   onToggleAmbient,
   onOpenAiSettings,
   onToggleLayoutMode,
-  isDesktop
+  isDesktop,
+  isInspectorOpen,
+  onToggleInspector
 }) {
   return (
     <header style={{
@@ -256,6 +258,29 @@ export default function HorizonTopBar({
           }}
         >
           Manual
+        </button>
+
+        {/* Astra Copilot & Inspector Trigger */}
+        <button
+          onClick={onToggleInspector}
+          title="Toggle Astra Neural Co-Pilot & Inspector"
+          style={{
+            padding: '6px 12px',
+            backgroundColor: isInspectorOpen ? 'var(--ink)' : 'var(--wash-mizu)',
+            border: isInspectorOpen ? '1px solid var(--ink)' : '1px solid rgba(0, 169, 184, 0.35)',
+            borderRadius: '8px',
+            color: isInspectorOpen ? 'var(--paper)' : 'var(--mizu)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '11px',
+            fontWeight: 700,
+            transition: 'all 0.15s'
+          }}
+        >
+          <Sparkles size={13} color={isInspectorOpen ? 'var(--mizu)' : 'currentColor'} />
+          <span>Astra Copilot</span>
         </button>
 
         {/* Free AI Engine & Key Vault Modal Trigger */}

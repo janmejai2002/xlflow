@@ -13,20 +13,49 @@ export function processCopilotMessage(input, context) {
 
   // 1. Simulate Bunk Intent
   if (query.includes('bunk') || query.includes('skip') || query.includes('miss')) {
-    let matchedCourse = courses.find(c => query.includes(c.code.toLowerCase()) || query.includes(c.name.toLowerCase())) || courses[0];
-    const skipsMatch = query.match(/(\d+)\s*(classes|class|bunk|bunks|times)/);
+    let matchedCourse = courses.find(c => {
+      const codeMatch = c.code && query.includes(c.code.toLowerCase());
+      const nameMatch = c.name && query.includes(c.name.toLowerCase());
+      return codeMatch || nameMatch;
+    }) || courses[0];
+
+    const skipsMatch = query.match(/(\d+)\s*(classes|class|bunk|bunks|times|sessions)/);
     const skips = skipsMatch ? parseInt(skipsMatch[1], 10) : 1;
 
-    const stats = calculateBunkStats(matchedCourse.attended, matchedCourse.conducted, matchedCourse.totalPlanned);
-    const projected = simulateAttendance(matchedCourse.attended, matchedCourse.conducted, 0, skips);
-    const isSafe = projected >= STATUTORY_THRESHOLD * 100;
+    const A = Number(matchedCourse.attended) || 0;
+    const C = Number(matchedCourse.conducted) || 0;
+    const N = Math.max(Number(matchedCourse.totalPlanned) || 20, C);
+    const R = Math.max(0, N - C);
+
+    const stats = calculateBunkStats(A, C, N);
+    const safeBunks = stats.safeBunksRemaining;
+    let reply = '';
+    const isSafe = skips <= safeBunks;
+
+    if (C === 0) {
+      // Early-term / Term-5 Kickoff where 0 classes have been conducted so far
+      const remainingAttended = Math.max(0, N - skips);
+      const projectedTermPct = Number(((remainingAttended / N) * 100).toFixed(1));
+
+      if (isSafe) {
+        reply = `For **${matchedCourse.code} (${matchedCourse.name})**, 0 sessions have been conducted so far (Term-5 kickoff).\n\nAcross the **${N} planned sessions**, you have **${safeBunks} safe bunks** in reserve under XLRI's 80% statutory rule.\n\nSkipping **${skips} class${skips > 1 ? 'es' : ''}** projects your term attendance to **${projectedTermPct}%** (${remainingAttended}/${N} attended).\n\n🛡️ **Safe**: You remain comfortably above the mandatory 80.0% threshold.`;
+      } else {
+        reply = `For **${matchedCourse.code} (${matchedCourse.name})**, 0 sessions have been conducted so far.\n\nSkipping **${skips} classes** exceeds your statutory allowance of **${safeBunks} safe bunks** and drops your projected term attendance to **${projectedTermPct}%**.\n\n⚠️ **Debarment Risk**: This breaches the mandatory 80.0% statutory threshold.`;
+      }
+    } else {
+      // In-progress course
+      const projectedImmediate = Number(((A / (C + skips)) * 100).toFixed(1));
+      const projectedTerm = Number((((A + Math.max(0, R - skips)) / N) * 100).toFixed(1));
+
+      if (isSafe) {
+        reply = `For **${matchedCourse.code} (${matchedCourse.name})**, your current attendance is **${A}/${C} (${stats.currentPercentage}%)** with **${safeBunks} safe bunks** in reserve.\n\nSkipping **${skips} class${skips > 1 ? 'es' : ''}** adjusts your immediate standing to **${projectedImmediate}%** and term projection to **${projectedTerm}%**.\n\n🛡️ **Safe**: You remain above the mandatory 80.0% statutory threshold.`;
+      } else {
+        reply = `For **${matchedCourse.code} (${matchedCourse.name})**, your current attendance is **${A}/${C} (${stats.currentPercentage}%)**.\n\nSkipping **${skips} class${skips > 1 ? 'es' : ''}** drops your immediate standing to **${projectedImmediate}%** and term trajectory to **${projectedTerm}%**.\n\n⚠️ **Danger**: This breaches the mandatory 80.0% threshold! You will need to attend **${stats.recoveryRequired || 1}** consecutive sessions to recover.`;
+      }
+    }
 
     return {
-      reply: `For **${matchedCourse.code} (${matchedCourse.name})**, skipping **${skips} class${skips > 1 ? 'es' : ''}** will adjust your projected attendance to **${projected.toFixed(1)}%**. ${
-        isSafe
-          ? `You have **${stats.safeBunks} safe bunks** remaining in reserve. You are within the statutory 80% safety margin.`
-          : `⚠️ **Danger**: This drops you below the mandatory 80.0% threshold! Immediate recovery required.`
-      }`,
+      reply,
       action: {
         type: 'NAVIGATE_AND_SIMULATE',
         tab: 'bunkmeter',

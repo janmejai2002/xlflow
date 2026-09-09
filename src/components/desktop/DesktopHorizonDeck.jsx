@@ -172,6 +172,8 @@ export default function DesktopHorizonDeck({
         onOpenAiSettings={() => setIsAiSettingsOpen(true)}
         onToggleLayoutMode={onToggleLayoutMode}
         isDesktop={isDesktop}
+        isInspectorOpen={isInspectorOpen}
+        onToggleInspector={() => setIsInspectorOpen(prev => !prev)}
       />
 
       {/* 2. Panoramic Horizontal Horizon Track (Zero Vertical Scroll) */}
