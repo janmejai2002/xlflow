@@ -13,6 +13,11 @@ import AstraCopilotDrawer from './components/AstraCopilotDrawer';
 import McpHudIndicator from './components/McpHudIndicator';
 import InstructionBookletModal from './components/InstructionBookletModal';
 import OnboardingModal from './components/OnboardingModal';
+import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
+import DesktopCommandDeck from './components/desktop/DesktopCommandDeck';
+import GroupCollaborationModal from './components/desktop/GroupCollaborationModal';
+import { useBreakpoint } from './hooks/useBreakpoint';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useMcpBridge } from './hooks/useMcpBridge';
 import { StorageKeys, fetchLiveStudentData, getSampleDataPayload } from './services/api';
 import { calculateBunkStats } from './services/bunkCalculator';
@@ -22,12 +27,15 @@ import { WifiOff } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 
 export default function App() {
+  const { isDesktop } = useBreakpoint();
   const [activeTab, setActiveTab] = useState('radar');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isShareCardModalOpen, setIsShareCardModalOpen] = useState(false);
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
   const [isBookletOpen, setIsBookletOpen] = useState(false);
+  const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
+  const [isGroupSynergyOpen, setIsGroupSynergyOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
     return !localStorage.getItem('has_seen_onboarding_v1');
   });
@@ -200,6 +208,16 @@ export default function App() {
   const warningCount = coursesWithStats.filter(c => c.stats.tier === 'warning' || c.stats.tier === 'danger').length;
   const pendingDeadlinesCount = (dataPayload.deadlines || []).filter(d => !d.completed).length;
 
+  // Global Desktop Keyboard Shortcuts Bus (1-5, Cmd+K, ?, T, M, Cmd+\)
+  useKeyboardShortcuts({
+    onSelectTab: setActiveTab,
+    onOpenSearch: () => setIsSearchModalOpen(prev => !prev),
+    onToggleTheme: toggleTheme,
+    onToggleAmbient: handleToggleAmbient,
+    onOpenShortcuts: () => setIsShortcutsModalOpen(prev => !prev),
+    onOpenCopilot: () => setIsCopilotOpen(prev => !prev)
+  });
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -211,110 +229,137 @@ export default function App() {
       position: 'relative'
     }}>
       
-      {/* Centered Mobile-App Shell container */}
-      <div style={{
-        width: '100%',
-        maxWidth: '540px',
-        minHeight: '100dvh',
-        backgroundColor: 'var(--paper)',
-        borderLeft: '1px solid var(--border-soft)',
-        borderRight: '1px solid var(--border-soft)',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'relative',
-        boxShadow: '0 0 40px rgba(0,0,0,0.06)'
-      }}>
-        
-        {/* Top Header with Cmd+K & Share Pass Triggers */}
-        <Header
-          student={dataPayload.student}
+      {isDesktop ? (
+        /* Expansive 3-Pane Desktop Command Centre (1024px+) */
+        <DesktopCommandDeck
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
+          dataPayload={dataPayload}
           isDemo={isDemo}
           theme={theme}
           onToggleTheme={toggleTheme}
           onRefresh={handleRefresh}
           onLogout={handleLogout}
           isSyncing={isSyncing}
-          onOpenSearch={() => setIsSearchModalOpen(true)}
-          onOpenShareCard={() => setIsShareCardModalOpen(true)}
-          isAmbientOn={isAmbientOn}
-          onToggleAmbient={handleToggleAmbient}
-          onOpenCopilot={() => setIsCopilotOpen(true)}
-          onOpenBooklet={() => setIsBookletOpen(true)}
-        />
-
-        {/* Offline Alert Ribbon if disconnected */}
-        {!isOnline && (
-          <div style={{
-            backgroundColor: 'var(--wash-ochre)',
-            borderBottom: '1px solid rgba(194, 145, 58, 0.3)',
-            padding: '6px 16px',
-            fontSize: '12px',
-            color: 'var(--ochre-text)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            justifyContent: 'center',
-            fontWeight: 600
-          }}>
-            <WifiOff size={14} />
-            <span>Offline mode active. Using cached schedule & attendance.</span>
-          </div>
-        )}
-
-        {/* Main Content Area */}
-        <main style={{
-          flex: 1,
-          padding: '16px 16px calc(88px + env(safe-area-inset-bottom, 16px)) 16px',
-          overflowY: 'auto',
-          WebkitOverflowScrolling: 'touch'
-        }}>
-          {activeTab === 'radar' && (
-            <RadarView
-              schedule={dataPayload.schedule}
-              courses={dataPayload.courses}
-              deadlines={dataPayload.deadlines}
-              onSelectTab={setActiveTab}
-              onSelectDate={handleSelectDateFromHeatmap}
-            />
-          )}
-
-          {activeTab === 'bunkmeter' && (
-            <BunkMeterView
-              courses={dataPayload.courses}
-            />
-          )}
-
-          {activeTab === 'timetable' && (
-            <TimetableView
-              schedule={dataPayload.schedule}
-              selectedDateProp={timetableSelectedDate}
-            />
-          )}
-
-          {activeTab === 'trips' && (
-            <TripPlannerView
-              schedule={dataPayload.schedule}
-              deadlines={dataPayload.deadlines}
-              courses={dataPayload.courses}
-            />
-          )}
-
-          {activeTab === 'deadlines' && (
-            <DeadlinesView
-              initialDeadlines={dataPayload.deadlines}
-              courses={dataPayload.courses}
-            />
-          )}
-        </main>
-
-        {/* Bottom Navigation with 5 Tabs */}
-        <Navigation
-          activeTab={activeTab}
-          onSelectTab={setActiveTab}
           warningCount={warningCount}
           pendingDeadlinesCount={pendingDeadlinesCount}
+          onOpenSearch={() => setIsSearchModalOpen(true)}
+          onOpenShareCard={() => setIsShareCardModalOpen(true)}
+          onOpenBooklet={() => setIsBookletOpen(true)}
+          onOpenGroupSynergy={() => setIsGroupSynergyOpen(true)}
+          onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
+          isAmbientOn={isAmbientOn}
+          onToggleAmbient={handleToggleAmbient}
+          onExecuteAction={handleExecuteCopilotAction}
+          timetableSelectedDate={timetableSelectedDate}
+          onSelectDateFromHeatmap={handleSelectDateFromHeatmap}
         />
-      </div>
+      ) : (
+        /* Centered Mobile-App Shell container (<1024px) */
+        <div style={{
+          width: '100%',
+          maxWidth: '540px',
+          minHeight: '100dvh',
+          backgroundColor: 'var(--paper)',
+          borderLeft: '1px solid var(--border-soft)',
+          borderRight: '1px solid var(--border-soft)',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          boxShadow: '0 0 40px rgba(0,0,0,0.06)'
+        }}>
+          
+          {/* Top Header with Cmd+K & Share Pass Triggers */}
+          <Header
+            student={dataPayload.student}
+            isDemo={isDemo}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            onRefresh={handleRefresh}
+            onLogout={handleLogout}
+            isSyncing={isSyncing}
+            onOpenSearch={() => setIsSearchModalOpen(true)}
+            onOpenShareCard={() => setIsShareCardModalOpen(true)}
+            isAmbientOn={isAmbientOn}
+            onToggleAmbient={handleToggleAmbient}
+            onOpenCopilot={() => setIsCopilotOpen(true)}
+            onOpenBooklet={() => setIsBookletOpen(true)}
+          />
+
+          {/* Offline Alert Ribbon if disconnected */}
+          {!isOnline && (
+            <div style={{
+              backgroundColor: 'var(--wash-ochre)',
+              borderBottom: '1px solid rgba(194, 145, 58, 0.3)',
+              padding: '6px 16px',
+              fontSize: '12px',
+              color: 'var(--ochre-text)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              justifyContent: 'center',
+              fontWeight: 600
+            }}>
+              <WifiOff size={14} />
+              <span>Offline mode active. Using cached schedule & attendance.</span>
+            </div>
+          )}
+
+          {/* Main Content Area */}
+          <main style={{
+            flex: 1,
+            padding: '16px 16px calc(88px + env(safe-area-inset-bottom, 16px)) 16px',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch'
+          }}>
+            {activeTab === 'radar' && (
+              <RadarView
+                schedule={dataPayload.schedule}
+                courses={dataPayload.courses}
+                deadlines={dataPayload.deadlines}
+                onSelectTab={setActiveTab}
+                onSelectDate={handleSelectDateFromHeatmap}
+              />
+            )}
+
+            {activeTab === 'bunkmeter' && (
+              <BunkMeterView
+                courses={dataPayload.courses}
+              />
+            )}
+
+            {activeTab === 'timetable' && (
+              <TimetableView
+                schedule={dataPayload.schedule}
+                selectedDateProp={timetableSelectedDate}
+              />
+            )}
+
+            {activeTab === 'trips' && (
+              <TripPlannerView
+                schedule={dataPayload.schedule}
+                deadlines={dataPayload.deadlines}
+                courses={dataPayload.courses}
+              />
+            )}
+
+            {activeTab === 'deadlines' && (
+              <DeadlinesView
+                initialDeadlines={dataPayload.deadlines}
+                courses={dataPayload.courses}
+              />
+            )}
+          </main>
+
+          {/* Bottom Navigation with 5 Tabs */}
+          <Navigation
+            activeTab={activeTab}
+            onSelectTab={setActiveTab}
+            warningCount={warningCount}
+            pendingDeadlinesCount={pendingDeadlinesCount}
+          />
+        </div>
+      )}
 
       {/* Login & Demo Modal */}
       <LoginModal
@@ -357,7 +402,21 @@ export default function App() {
         student={dataPayload.student}
       />
 
-      {/* Astra Neural Co-Pilot Drawer */}
+      {/* Keyboard Shortcuts Cheat Sheet Modal (?) */}
+      <KeyboardShortcutsModal
+        isOpen={isShortcutsModalOpen}
+        onClose={() => setIsShortcutsModalOpen(false)}
+      />
+
+      {/* Group Synergy & Collaboration Matrix Modal */}
+      <GroupCollaborationModal
+        isOpen={isGroupSynergyOpen}
+        onClose={() => setIsGroupSynergyOpen(false)}
+        currentUser={dataPayload.student}
+        schedule={dataPayload.schedule}
+      />
+
+      {/* Astra Neural Co-Pilot Drawer (Mobile Drawer) */}
       <AstraCopilotDrawer
         isOpen={isCopilotOpen}
         onClose={() => setIsCopilotOpen(false)}
