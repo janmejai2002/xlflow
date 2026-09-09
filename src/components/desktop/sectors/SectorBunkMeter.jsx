@@ -64,11 +64,13 @@ export default function SectorBunkMeter({ courses = [] }) {
             width: '32px',
             height: '32px',
             borderRadius: '8px',
-            backgroundColor: 'var(--ink)',
+            background: 'var(--wash-moss)',
+            border: '1px solid rgba(110, 140, 99, 0.3)',
             color: 'var(--moss)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(110, 140, 99, 0.15)'
           }}>
             <ShieldCheck size={16} />
           </div>
@@ -81,12 +83,12 @@ export default function SectorBunkMeter({ courses = [] }) {
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Statutory Attendance Safety & Risk Simulation</span>
             </div>
             <h2 style={{
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-brand)',
               fontSize: '22px',
-              fontWeight: 600,
+              fontWeight: 800,
               color: 'var(--ink)',
               margin: '2px 0 0 0',
-              letterSpacing: '-0.02em'
+              letterSpacing: '-0.025em'
             }}>
               Bunk-O-Meter Safety Matrix
             </h2>

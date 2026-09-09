@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Headphones, Bot, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
 import { fireStreakConfetti } from '../services/confetti';
 import { toast } from 'sonner';
+import XlFlowLogo from './XlFlowLogo';
 
 export default function Header({
   student,
@@ -48,31 +49,28 @@ export default function Header({
       gap: '8px'
     }}>
       {/* Left: Brand & Student Meta */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-        <div style={{
-          width: '32px',
-          height: '32px',
-          borderRadius: '8px',
-          backgroundColor: 'var(--ink)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--mizu)',
-          flexShrink: 0
-        }}>
-          <Sparkles size={17} />
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '9px', minWidth: 0 }}>
+        <XlFlowLogo size={32} />
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'nowrap' }}>
             <span style={{
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-brand)',
               fontSize: '17px',
-              fontWeight: 600,
-              letterSpacing: '-0.02em',
+              fontWeight: 800,
+              letterSpacing: '-0.035em',
               color: 'var(--ink)',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              display: 'inline-flex',
+              alignItems: 'baseline'
             }}>
-              XL-Flow
+              <span>XL</span>
+              <span style={{ color: 'var(--mizu)', opacity: 0.5, margin: '0 0.5px', fontWeight: 600 }}>-</span>
+              <span style={{
+                background: 'linear-gradient(135deg, var(--mizu) 0%, #4E6E9C 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontWeight: 800
+              }}>Flow</span>
             </span>
             {isDemo && (
               <span style={{
@@ -97,6 +95,7 @@ export default function Header({
               }}
               title="Click to celebrate streak!"
               aria-label="Attendance streak: 8 days active"
+              className="hide-below-520"
               style={{
                 fontSize: '10px',
                 fontWeight: 600,
@@ -116,8 +115,7 @@ export default function Header({
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
               <Flame size={11} style={{ fill: 'currentColor' }} />
-              <span className="hide-below-380">8d Streak</span>
-              <span style={{ display: 'none' }} className="show-below-380">8d</span>
+              <span>8d Streak</span>
             </button>
           </div>
           <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -261,28 +259,34 @@ export default function Header({
           title="Open Astra Neural Co-Pilot"
           aria-label="Open Astra Neural Co-Pilot AI"
           style={{
-            background: 'var(--ink)',
-            border: 'none',
+            background: 'var(--wash-mizu)',
+            border: '1px solid rgba(0, 169, 184, 0.35)',
             borderRadius: '8px',
-            padding: '0 8px',
+            padding: '0 9px',
             height: '34px',
             minWidth: '34px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '4px',
+            gap: '5px',
             color: 'var(--mizu)',
             cursor: 'pointer',
             fontSize: '11px',
             fontWeight: 700,
-            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.25)',
-            transition: 'transform 0.15s ease'
+            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)',
+            transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'scale(1.04)';
+            e.currentTarget.style.borderColor = 'rgba(0, 169, 184, 0.6)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.borderColor = 'rgba(0, 169, 184, 0.35)';
+          }}
         >
-          <Sparkles size={13} />
-          <span className="hide-below-380" style={{ color: 'var(--paper)' }}>Astra</span>
+          <Sparkles size={13} color="var(--mizu)" />
+          <span className="hide-below-380" style={{ color: 'var(--mizu)', fontWeight: 700 }}>Astra</span>
         </button>
 
         {/* Refresh Sync */}

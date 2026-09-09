@@ -14,6 +14,7 @@ import {
   Smartphone,
   Monitor
 } from 'lucide-react';
+import XlFlowLogo from '../XlFlowLogo';
 
 export default function HorizonTopBar({
   student,
@@ -49,29 +50,26 @@ export default function HorizonTopBar({
       {/* Left: Brand + Student Identity Dossier */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '8px',
-            backgroundColor: 'var(--ink)',
-            color: 'var(--mizu)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.25)'
-          }}>
-            <Sparkles size={16} />
-          </div>
+          <XlFlowLogo size={32} />
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{
-                fontFamily: 'var(--font-serif)',
+                fontFamily: 'var(--font-brand)',
                 fontSize: '18px',
-                fontWeight: 600,
-                letterSpacing: '-0.02em',
-                color: 'var(--ink)'
+                fontWeight: 800,
+                letterSpacing: '-0.035em',
+                color: 'var(--ink)',
+                display: 'inline-flex',
+                alignItems: 'baseline'
               }}>
-                XL-Flow
+                <span>XL</span>
+                <span style={{ color: 'var(--mizu)', opacity: 0.5, margin: '0 0.5px', fontWeight: 600 }}>-</span>
+                <span style={{
+                  background: 'linear-gradient(135deg, var(--mizu) 0%, #4E6E9C 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontWeight: 800
+                }}>Flow</span>
               </span>
               <span style={{
                 fontSize: '10px',

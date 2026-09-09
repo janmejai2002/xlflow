@@ -50,6 +50,7 @@
   --card-subtle: #F3EFE7;
   --border-strong: rgba(26, 38, 57, 0.18);
 
+  --font-brand: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'Newsreader', Georgia, serif;
   --font-mono: ui-monospace, 'SF Mono', 'Fira Code', monospace;
@@ -149,6 +150,9 @@ input, textarea, select {
 }
 
 /* Typography Utilities */
+.font-brand {
+  font-family: var(--font-brand);
+}
 .font-serif {
   font-family: var(--font-serif);
 }
@@ -247,4 +251,36 @@ input, textarea, select {
     max-width: 220px !important;
   }
 }
+
+/* Mobile Header Responsive Utilities */
+@media (max-width: 520px) {
+  .hide-below-520 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .hide-below-500 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hide-below-480 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 440px) {
+  .hide-below-440 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .hide-below-380 {
+    display: none !important;
+  }
+}
+
 

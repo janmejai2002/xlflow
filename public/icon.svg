@@ -1,11 +1,55 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="xlf-icon-cyan" x1="85" y1="427" x2="427" y2="85" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00A9B8" />
+      <stop offset="50%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#38E1F0" />
+    </linearGradient>
+    <linearGradient id="xlf-icon-indigo" x1="85" y1="85" x2="427" y2="427" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C5295" />
+      <stop offset="50%" stop-color="#4E6E9C" />
+      <stop offset="100%" stop-color="#00A9B8" />
+    </linearGradient>
+    <radialGradient id="xlf-icon-glow" cx="256" cy="256" r="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="rgba(0, 169, 184, 0.35)" />
+      <stop offset="100%" stop-color="rgba(21, 24, 29, 0)" />
+    </radialGradient>
+  </defs>
+
+  <!-- Base Dark Canvas -->
   <rect width="512" height="512" rx="128" fill="#15181D" />
-  <circle cx="256" cy="256" r="160" fill="none" stroke="#00A9B8" stroke-width="16" stroke-dasharray="24 16" opacity="0.6"/>
-  <circle cx="256" cy="256" r="110" fill="none" stroke="#8A6690" stroke-width="12" opacity="0.8"/>
-  <circle cx="256" cy="256" r="60" fill="none" stroke="#6E8C63" stroke-width="8"/>
-  <circle cx="256" cy="256" r="32" fill="#00A9B8"/>
-  <!-- Stardust dots -->
-  <circle cx="360" cy="180" r="10" fill="#E9E5DC"/>
-  <circle cx="160" cy="340" r="8" fill="#00A9B8"/>
-  <circle cx="380" cy="320" r="12" fill="#8A6690"/>
+  <rect width="512" height="512" rx="128" fill="url(#xlf-icon-glow)" />
+  <rect x="8" y="8" width="496" height="496" rx="120" fill="none" stroke="rgba(0, 169, 184, 0.25)" stroke-width="6" />
+
+  <!-- Aerodynamic Ribbon 2: Counter Wave (Descending) -->
+  <path
+    d="M 128 128 C 185 128, 213 213, 256 256 C 299 299, 327 384, 384 384"
+    stroke="url(#xlf-icon-indigo)"
+    stroke-width="48"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.85"
+  />
+
+  <!-- Aerodynamic Ribbon 1: Primary Ascending Kinetic Wave -->
+  <path
+    d="M 128 384 C 185 384, 213 299, 256 256 C 299 213, 327 128, 384 128"
+    stroke="url(#xlf-icon-cyan)"
+    stroke-width="48"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Momentum Trailing Flair -->
+  <path
+    d="M 185 256 C 213 200, 242 156, 298 142"
+    stroke="#38E1F0"
+    stroke-width="20"
+    stroke-linecap="round"
+    opacity="0.6"
+  />
+
+  <!-- Central Luminous Focus Node -->
+  <circle cx="256" cy="256" r="64" fill="rgba(0, 169, 184, 0.28)" />
+  <circle cx="256" cy="256" r="34" fill="#38E1F0" />
 </svg>
