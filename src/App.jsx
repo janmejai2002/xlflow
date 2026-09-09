@@ -17,6 +17,7 @@ import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
 import DesktopCommandDeck from './components/desktop/DesktopCommandDeck';
 import DesktopHorizonDeck from './components/desktop/DesktopHorizonDeck';
 import GroupCollaborationModal from './components/desktop/GroupCollaborationModal';
+import AiSettingsModal from './components/AiSettingsModal';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useMcpBridge } from './hooks/useMcpBridge';
@@ -41,6 +42,7 @@ export default function App() {
     return !localStorage.getItem('has_seen_onboarding_v1');
   });
   const [isAmbientOn, setIsAmbientOn] = useState(false);
+  const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const [timetableSelectedDate, setTimetableSelectedDate] = useState(null);
 
   const [isSyncing, setIsSyncing] = useState(false);
@@ -417,6 +419,13 @@ export default function App() {
         onClose={() => setIsCopilotOpen(false)}
         context={dataPayload}
         onExecuteAction={handleExecuteCopilotAction}
+        onOpenAiSettings={() => setIsAiSettingsOpen(true)}
+      />
+
+      {/* Free AI Engine & Key Vault Modal */}
+      <AiSettingsModal
+        isOpen={isAiSettingsOpen}
+        onClose={() => setIsAiSettingsOpen(false)}
       />
 
       {/* Universal MCP Live Bridge HUD Indicator */}

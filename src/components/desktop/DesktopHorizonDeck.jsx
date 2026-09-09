@@ -8,6 +8,7 @@ import SectorTrips from './sectors/SectorTrips';
 import SectorDeadlines from './sectors/SectorDeadlines';
 import SectorSynergy from './sectors/SectorSynergy';
 import DesktopInspectorDock from './DesktopInspectorDock';
+import AiSettingsModal from '../AiSettingsModal';
 import { playTactileClick } from '../../services/soundEngine';
 
 export default function DesktopHorizonDeck({
@@ -31,6 +32,7 @@ export default function DesktopHorizonDeck({
   const [activeSectorIndex, setActiveSectorIndex] = useState(0);
   const [selectedSession, setSelectedSession] = useState(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+  const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
 
   // Mouse Drag-to-Scroll state
   const isDraggingRef = useRef(false);
@@ -165,6 +167,7 @@ export default function DesktopHorizonDeck({
         onOpenBooklet={onOpenBooklet}
         isAmbientOn={isAmbientOn}
         onToggleAmbient={onToggleAmbient}
+        onOpenAiSettings={() => setIsAiSettingsOpen(true)}
       />
 
       {/* 2. Panoramic Horizontal Horizon Track (Zero Vertical Scroll) */}
@@ -307,6 +310,7 @@ export default function DesktopHorizonDeck({
               onExecuteAction={onExecuteAction}
               student={dataPayload.student}
               onClose={() => setIsInspectorOpen(false)}
+              onOpenAiSettings={() => setIsAiSettingsOpen(true)}
             />
           </div>
         )}
@@ -318,6 +322,12 @@ export default function DesktopHorizonDeck({
         onJumpToSector={jumpToSector}
         onPrevSector={handlePrevSector}
         onNextSector={handleNextSector}
+      />
+
+      {/* 5. Free AI Key Vault & Provider Selection Modal */}
+      <AiSettingsModal
+        isOpen={isAiSettingsOpen}
+        onClose={() => setIsAiSettingsOpen(false)}
       />
     </div>
   );

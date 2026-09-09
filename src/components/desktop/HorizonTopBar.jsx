@@ -25,7 +25,8 @@ export default function HorizonTopBar({
   onOpenShortcuts,
   onOpenBooklet,
   isAmbientOn,
-  onToggleAmbient
+  onToggleAmbient,
+  onOpenAiSettings
 }) {
   return (
     <header style={{
@@ -225,6 +226,28 @@ export default function HorizonTopBar({
           }}
         >
           Manual
+        </button>
+
+        {/* Free AI Engine & Key Vault Modal Trigger */}
+        <button
+          onClick={onOpenAiSettings}
+          title="Configure Free AI Providers (Gemini, Groq, OpenRouter)"
+          style={{
+            padding: '6px 10px',
+            backgroundColor: 'var(--paper)',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            color: 'var(--mizu)',
+            cursor: 'pointer',
+            fontSize: '11px',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}
+        >
+          <Sparkles size={12} />
+          <span>AI Engine</span>
         </button>
 
         {/* Shortcuts Helper */}

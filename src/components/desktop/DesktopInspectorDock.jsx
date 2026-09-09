@@ -20,12 +20,13 @@ import {
   Layers,
   Flame,
   ArrowRight,
-  X
+  X,
+  Settings
 } from 'lucide-react';
 import { COURSE_COLORS } from '../../data/rosterData';
 import { calculateBunkStats, simulateAttendance, STATUTORY_THRESHOLD } from '../../services/bunkCalculator';
 import { getGoogleCalendarUrl, downloadIcsFile } from '../../services/calendarExport';
-import { processCopilotMessage } from '../../services/copilotEngine';
+import { queryAstraAi, getStoredAiConfig, AI_PROVIDERS } from '../../services/aiProviderEngine';
 import { playTactileClick } from '../../services/soundEngine';
 import { toast } from 'sonner';
 
@@ -37,7 +38,8 @@ export default function DesktopInspectorDock({
   onSelectTab,
   onExecuteAction,
   student,
-  onClose
+  onClose,
+  onOpenAiSettings
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dockTab, setDockTab] = useState('lecture'); // 'lecture' | 'copilot'
@@ -52,6 +54,7 @@ export default function DesktopInspectorDock({
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Auto-scroll copilot messages
@@ -59,7 +62,47 @@ export default function DesktopInspectorDock({
     if (dockTab === 'copilot') {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [copilotMessages, dockTab]);
+  }, [copilotMessages, dockTab, isAiLoading]);
+
+  // Handle Copilot send with multi-provider free AI
+  const handleSendCopilot = async (textToSend) => {
+    const query = (textToSend || inputValue).trim();
+    if (!query || isAiLoading) return;
+
+    playTactileClick(700);
+
+    const userMsg = { role: 'user', text: query };
+    setCopilotMessages(prev => [...prev, userMsg]);
+    setInputValue('');
+    setIsAiLoading(true);
+
+    try {
+      const res = await queryAstraAi(query, {
+        courses,
+        schedule,
+        deadlines,
+        student
+      });
+
+      setCopilotMessages(prev => [...prev, {
+        role: 'assistant',
+        text: res.reply,
+        action: res.action,
+        providerName: res.providerName
+      }]);
+
+      if (res.action && onExecuteAction) {
+        onExecuteAction(res.action);
+      }
+    } catch (err) {
+      setCopilotMessages(prev => [...prev, {
+        role: 'assistant',
+        text: "I encountered an error connecting to the AI provider. Switching to offline solver."
+      }]);
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
 
   // When a session is selected externally, switch dock tab to 'lecture'
   useEffect(() => {
@@ -118,29 +161,6 @@ export default function DesktopInspectorDock({
   const handleDownloadSessionIcs = () => {
     downloadIcsFile([activeSession], `${activeSession.courseCode}_session.ics`);
     toast.success('Session saved (.ics)');
-  };
-
-  const handleSendCopilot = (text) => {
-    const q = text || inputValue;
-    if (!q.trim()) return;
-
-    playTactileClick(700);
-    const newMsgs = [...copilotMessages, { role: 'user', text: q }];
-    setCopilotMessages(newMsgs);
-    setInputValue('');
-
-    setTimeout(() => {
-      const res = processCopilotMessage(q, { courses, schedule, deadlines });
-      setCopilotMessages(prev => [...prev, {
-        role: 'assistant',
-        text: res.reply,
-        action: res.action
-      }]);
-
-      if (res.action && onExecuteAction) {
-        onExecuteAction(res.action);
-      }
-    }, 300);
   };
 
   if (isCollapsed) {
@@ -561,7 +581,46 @@ export default function DesktopInspectorDock({
         )}
 
         {dockTab === 'copilot' && (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '10px' }}>
+            {/* AI Engine Status & Key Vault Trigger */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '6px 10px',
+              backgroundColor: 'var(--paper)',
+              borderRadius: '8px',
+              border: '1px solid var(--border)',
+              fontSize: '11px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Bot size={13} style={{ color: 'var(--mizu)' }} />
+                <span style={{ fontWeight: 600, color: 'var(--ink)' }}>
+                  {getStoredAiConfig().provider === 'gemini-free' ? 'Gemini 2.0 Flash' :
+                   getStoredAiConfig().provider === 'groq-free' ? 'Groq LLaMA 3.3' :
+                   getStoredAiConfig().provider === 'openrouter-free' ? 'OpenRouter Free' : 'Astra Instant (0ms)'}
+                </span>
+              </div>
+              <button
+                onClick={() => onOpenAiSettings?.()}
+                title="Configure Free AI Providers & Keys"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--mizu)',
+                  cursor: 'pointer',
+                  fontSize: '10px',
+                  fontWeight: 600
+                }}
+              >
+                <Settings size={11} />
+                <span>AI Vault</span>
+              </button>
+            </div>
+
             {/* Suggestions Chips */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
               {[
@@ -622,6 +681,22 @@ export default function DesktopInspectorDock({
                   </div>
                 </div>
               ))}
+              {isAiLoading && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '8px 12px',
+                  borderRadius: '12px',
+                  backgroundColor: 'var(--paper)',
+                  border: '1px solid var(--border)',
+                  fontSize: '11px',
+                  color: 'var(--ink-soft)'
+                }}>
+                  <Sparkles size={13} style={{ color: 'var(--mizu)', animation: 'pulse 1.5s infinite' }} />
+                  <span>Astra is analyzing academic schedule & formulas...</span>
+                </div>
+              )}
               <div ref={messagesEndRef} />
             </div>
 
