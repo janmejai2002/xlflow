@@ -5,7 +5,6 @@ import { calculateBunkStats } from '../services/bunkCalculator';
 import { COURSE_COLORS } from '../data/rosterData';
 import HorizonHeatmap from './HorizonHeatmap';
 import ClassDetailDrawer from './ClassDetailDrawer';
-import ChronosOrb3D from './ChronosOrb3D';
 import TemporalScrubber from './TemporalScrubber';
 import { playTactileClick } from '../services/soundEngine';
 import { toast } from 'sonner';
@@ -14,7 +13,6 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
   const [copiedRoom, setCopiedRoom] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedDrawerSession, setSelectedDrawerSession] = useState(null);
-  const [spatialMode, setSpatialMode] = useState('2d'); // '2d' | '3d'
   const [simulatedHour, setSimulatedHour] = useState(10.5);
   const [isLiveTime, setIsLiveTime] = useState(true);
 
@@ -148,73 +146,6 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
           {isOngoing ? 'Class In Session' : 'Campus Live'}
         </span>
       </div>
-
-      {/* View Mode Switcher: 2D Tactical vs 3D Celestial Continuum */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'var(--paper)',
-        border: '1px solid var(--border)',
-        borderRadius: '12px',
-        padding: '3px'
-      }}>
-        <button
-          onClick={() => {
-            playTactileClick();
-            setSpatialMode('2d');
-          }}
-          style={{
-            flex: 1,
-            padding: '7px 12px',
-            borderRadius: '8px',
-            border: 'none',
-            backgroundColor: spatialMode === '2d' ? 'var(--ink)' : 'transparent',
-            color: spatialMode === '2d' ? 'var(--paper)' : 'var(--ink-soft)',
-            fontSize: '12px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            transition: 'all 0.15s'
-          }}
-        >
-          2D Tactical View
-        </button>
-
-        <button
-          onClick={() => {
-            playTactileClick(900);
-            setSpatialMode('3d');
-          }}
-          style={{
-            flex: 1,
-            padding: '7px 12px',
-            borderRadius: '8px',
-            border: 'none',
-            backgroundColor: spatialMode === '3d' ? 'var(--ink)' : 'transparent',
-            color: spatialMode === '3d' ? 'var(--mizu)' : 'var(--ink-soft)',
-            fontSize: '12px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            transition: 'all 0.15s'
-          }}
-        >
-          <Sparkles size={13} />
-          <span>3D Celestial Continuum</span>
-        </button>
-      </div>
-
-      {/* When in 3D Mode, Render ChronosOrb3D */}
-      {spatialMode === '3d' && (
-        <ChronosOrb3D
-          schedule={schedule}
-          courses={courses}
-          onSelectSession={setSelectedDrawerSession}
-        />
-      )}
 
       {/* Temporal Scrubber: Time Travel through Campus Hours */}
       <TemporalScrubber
