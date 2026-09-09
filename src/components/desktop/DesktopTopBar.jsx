@@ -25,7 +25,7 @@ export default function DesktopTopBar({
   const getTabTitle = () => {
     switch (activeTab) {
       case 'radar': return { title: 'Today Radar', desc: 'Live Academic HUD & Celestial Chronos Continuum' };
-      case 'bunkmeter': return { title: 'Bunk-O-Meter', desc: 'Statutory Attendance Debt & Risk Simulation Engine' };
+      case 'bunkmeter': return { title: 'Bunk-O-Meter', desc: 'Statutory Attendance Safety & Compliance Monitor' };
       case 'timetable': return { title: 'Weekly Timetable Matrix', desc: '6-Day Academic Schedule & Conflict Navigator' };
       case 'trips': return { title: 'Getaways & Trips', desc: 'Long Weekend Vacation Optimizer & Attendance Arbitrage' };
       case 'deadlines': return { title: 'Deadlines & Quizzes', desc: 'Academic Deliverables, Midterms & Case Tracker' };

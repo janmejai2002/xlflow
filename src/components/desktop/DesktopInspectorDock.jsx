@@ -451,7 +451,7 @@ export default function DesktopInspectorDock({
               </div>
             </div>
 
-            {/* Attendance Risk & Simulation Card */}
+            {/* Attendance Safety Status Card */}
             <div style={{
               backgroundColor: 'var(--card)',
               border: '1px solid var(--border)',
