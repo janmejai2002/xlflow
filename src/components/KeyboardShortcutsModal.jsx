@@ -24,6 +24,7 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
     { key: '⌘ + K', action: 'Search 178 Batchmates & Roster', category: 'Omni-Search' },
     { key: '⌘ + \\', action: 'Toggle Astra Neural Co-Pilot Dock', category: 'AI Assistant' },
     { key: 'T', action: 'Toggle Light / wAIbi-sabi Dark Theme', category: 'Appearance' },
+    { key: 'V', action: 'Toggle Desktop Horizon Deck / Mobile Shell View', category: 'Layout' },
     { key: 'M', action: 'Toggle 432Hz Generative Focus Soundscape', category: 'Audio' },
     { key: '?', action: 'Open this Keyboard Shortcuts cheat sheet', category: 'Help' },
     { key: 'Esc', action: 'Close open modal, drawer, or search', category: 'System' },

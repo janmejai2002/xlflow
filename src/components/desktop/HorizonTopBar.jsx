@@ -130,6 +130,30 @@ export default function HorizonTopBar({
             <span>8-Day Streak</span>
           </div>
         </div>
+
+        {/* Guaranteed Visible Mobile Shell Switcher */}
+        <button
+          onClick={onToggleLayoutMode}
+          title="Switch to Mobile Phone View (V)"
+          aria-label="Switch to Mobile Phone View"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '5px 10px',
+            backgroundColor: 'var(--wash-mizu)',
+            border: '1px solid rgba(2, 132, 199, 0.35)',
+            borderRadius: '8px',
+            color: 'var(--mizu)',
+            fontSize: '11px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            flexShrink: 0
+          }}
+        >
+          <Smartphone size={13} />
+          <span>Mobile View</span>
+        </button>
       </div>
 
       {/* Center: Omni-Search Bar (⌘K) */}

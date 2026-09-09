@@ -218,7 +218,11 @@ export default function App() {
     onToggleTheme: toggleTheme,
     onToggleAmbient: handleToggleAmbient,
     onOpenShortcuts: () => setIsShortcutsModalOpen(prev => !prev),
-    onOpenCopilot: () => setIsCopilotOpen(prev => !prev)
+    onOpenCopilot: () => setIsCopilotOpen(prev => !prev),
+    onToggleLayoutMode: () => {
+      const next = toggleLayoutMode();
+      toast(`Switched to ${next === 'desktop' ? 'Desktop Horizon Deck' : 'Mobile Shell'}`);
+    }
   });
 
   return (

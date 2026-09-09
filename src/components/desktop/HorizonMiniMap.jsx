@@ -7,7 +7,8 @@ import {
   CheckSquare,
   Users,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Smartphone
 } from 'lucide-react';
 import { playTactileClick } from '../../services/soundEngine';
 
@@ -25,7 +26,8 @@ export default function HorizonMiniMap({
   onJumpToSector,
   onPrevSector,
   onNextSector,
-  scrollProgress = 0
+  scrollProgress = 0,
+  onToggleLayoutMode
 }) {
   const handleNodeClick = (idx) => {
     playTactileClick(600);
@@ -46,8 +48,36 @@ export default function HorizonMiniMap({
       userSelect: 'none',
       backdropFilter: 'blur(16px)'
     }}>
-      {/* Left: Quick Prev/Next Arrow Buttons */}
+      {/* Left: Quick Prev/Next Arrow Buttons & Mobile Switcher */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        {onToggleLayoutMode && (
+          <button
+            onClick={() => {
+              playTactileClick();
+              onToggleLayoutMode();
+            }}
+            title="Switch back to Mobile View"
+            aria-label="Switch to Mobile View"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              padding: '6px 10px',
+              borderRadius: '8px',
+              backgroundColor: 'var(--mizu)',
+              color: '#FFFFFF',
+              border: 'none',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              flexShrink: 0,
+              boxShadow: '0 2px 6px rgba(2, 132, 199, 0.3)'
+            }}
+          >
+            <Smartphone size={13} />
+            <span>Mobile</span>
+          </button>
+        )}
         <button
           onClick={onPrevSector}
           disabled={activeSectorIndex <= 0}

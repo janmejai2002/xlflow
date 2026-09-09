@@ -271,7 +271,7 @@ export default function SectorRadar({
                 }}
               >
                 <MapPin size={13} color={colors.accent} />
-                <span>📍 {nextSession.venue}</span>
+                <span>{nextSession.venue}</span>
                 {copiedVenue ? <Check size={12} color="var(--moss)" /> : <Copy size={12} color="var(--ink-soft)" />}
               </button>
 

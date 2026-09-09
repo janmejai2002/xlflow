@@ -6,7 +6,8 @@ export function useKeyboardShortcuts({
   onToggleTheme,
   onToggleAmbient,
   onOpenShortcuts,
-  onOpenCopilot
+  onOpenCopilot,
+  onToggleLayoutMode
 }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -41,6 +42,9 @@ export function useKeyboardShortcuts({
         } else if (e.key.toLowerCase() === 'm') {
           e.preventDefault();
           onToggleAmbient?.();
+        } else if (e.key.toLowerCase() === 'v') {
+          e.preventDefault();
+          onToggleLayoutMode?.();
         } else if (e.key === '?') {
           e.preventDefault();
           onOpenShortcuts?.();
