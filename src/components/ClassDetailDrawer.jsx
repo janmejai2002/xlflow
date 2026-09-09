@@ -70,9 +70,10 @@ export default function ClassDetailDrawer({ isOpen, onClose, session, course }) 
                 {session.courseCode}
               </span>
               <Drawer.Title style={{
-                fontFamily: 'var(--font-serif)',
+                fontFamily: 'var(--font-brand)',
                 fontSize: '18px',
-                fontWeight: 600,
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
                 color: 'var(--ink)',
                 margin: 0
               }}>
