@@ -18,20 +18,28 @@
 
 ## ✨ Key Features
 
-1. **The 3D "Chronos Continuum" (Three.js)**:
-   - Interactive celestial sphere mapping Term-5 courses (`OMCR`, `BDM`, `B2B`, `IMCE`) with floating lecture satellites, translucent student energy nucleus, and raycasted click-to-inspect gestures.
-2. **The "Temporal Scrubber"**:
-   - Tactile hour-by-hour campus dial ($08:00 \to 20:00$) that dynamically shifts atmospheric lighting (`Morning Light`, `Midday Zenith`, `Twilight Amber`, `Night Study`) and active class states.
+1. **The Desktop Horizon Deck (100vh Zero-Vertical-Scroll Panorama)**:
+   - Ultra-wide 6-sector continuous horizontal track with snap-to-sector gliders, fluid glide controls, and zero vertical document scroll on desktop monitors.
+2. **Multi-Provider Free AI Engine & Key Vault**:
+   - Integrated Astra AI Co-Pilot dock running on **100% Free Tiers**:
+     * **Astra Instant Solver**: 0ms deterministic offline attendance math with zero API keys.
+     * **Google Gemini 2.0 Flash**: Free via Google AI Studio (15 RPM, 1,500 req/day).
+     * **Groq Cloud (LLaMA 3.3 70B)**: Free ultrafast inference (<300ms, 30 RPM).
+     * **OpenRouter Free Tier**: DeepSeek R1 & LLaMA 3.2 free endpoints.
+     * **Custom Local Endpoints**: Ollama & LM Studio support.
+     * In-app secure Key Vault with live connection latency probes and 1-click API key acquisition links.
 3. **80.0% Statutory Bunk-O-Meter**:
    - Mathematically verified formula calculating safe bunks remaining under XLRI's strict attendance handbook rule with an interactive degradation simulator.
-4. **1-Click Google & Apple Calendar Sync**:
+4. **Architectural Weekly Matrix**:
+   - 6-day (Mon–Sat) time-grid visualization with live cursor needles, slot collision detection, and slide-over lecture inspector docks.
+5. **1-Click Google & Apple Calendar Sync**:
    - Generates standardized RFC-5545 `.ics` calendar events with classroom codes and faculty names.
-5. **Instant 178-Student Batch Roster (`Ctrl+K`)**:
+6. **Instant 178-Student Batch Roster (`Ctrl+K`)**:
    - Instant search indexing all batchmates across Sections E, F, and G by name, roll number, or section.
-6. **Universal Model Context Protocol (MCP) Bridge**:
-   - Built with `@modelcontextprotocol/sdk`. Connects Claude Desktop, Cursor, or ChatGPT directly to your timetable and allows external AI to remotely control your open browser tab.
-7. **Mobile App (PWA)**:
-   - Installs to iPhone (Safari) and Android (Chrome) with 1 tap. Works fully offline in basement halls.
+7. **Universal Model Context Protocol (MCP) & Serverless Online Endpoint**:
+   - Built with `@modelcontextprotocol/sdk`. Exposes tools via local Stdio, SSE (`bun mcp-server/server.js`), and serverless JSON-RPC 2.0 at `/api/mcp` on Vercel/Cloudflare for remote web AI agents (Claude, ChatGPT Actions).
+8. **Mobile PWA & Soundscape**:
+   - Installs to iPhone (Safari) and Android (Chrome) with 1 tap; includes an ambient 432Hz binaural campus focus audio generator.
 
 ---
 

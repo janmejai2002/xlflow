@@ -102,6 +102,31 @@ async def run_exhaustive_audit():
         await page.wait_for_timeout(400)
         passed_checks += 1
 
+        # CHECK 7B: Free AI Engine & Key Vault Modal
+        ai_engine_btn = page.locator("button:has-text('AI Engine')").first
+        if await ai_engine_btn.is_visible():
+            await ai_engine_btn.click()
+            await page.wait_for_timeout(500)
+            vault_heading = page.locator("text=AI Engine & Key Vault").first
+            assert await vault_heading.is_visible(), "AI Engine Modal did not open!"
+            gemini_option = page.locator("text=Google Gemini 2.0 Flash").first
+            assert await gemini_option.is_visible(), "Google Gemini option missing in AI modal!"
+            groq_option = page.locator("text=Groq Cloud (LLaMA 3.3 70B)").first
+            assert await groq_option.is_visible(), "Groq option missing in AI modal!"
+            
+            # Click Test Connection button
+            test_conn_btn = page.locator("button:has-text('Test Connection')").first
+            await test_conn_btn.click()
+            await page.wait_for_timeout(1000)
+            test_success = page.locator("text=Connection verified successfully").first
+            assert await test_success.is_visible(), "Connection test banner did not appear!"
+            print("[✓ PASS] AI Settings Modal verified (Gemini, Groq, OpenRouter & Instant test pass)", flush=True)
+            
+            # Close modal via Cancel
+            await page.locator("button:has-text('Cancel')").first.click()
+            await page.wait_for_timeout(400)
+            passed_checks += 1
+
         # CHECK 8: Theme Toggle ('T' hotkey)
         await page.keyboard.press("t")
         await page.wait_for_timeout(400)

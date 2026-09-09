@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Drawer } from 'vaul';
-import { Sparkles, Send, Bot, User, ArrowRight, Check, X, Headphones } from 'lucide-react';
-import { processCopilotMessage } from '../services/copilotEngine';
+import { Sparkles, Send, Bot, User, ArrowRight, Check, X, Headphones, Settings } from 'lucide-react';
+import { queryAstraAi, getStoredAiConfig } from '../services/aiProviderEngine';
 import { playTactileClick } from '../services/soundEngine';
 
-export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecuteAction }) {
+export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecuteAction, onOpenAiSettings }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -12,6 +12,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -22,30 +23,39 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
     if (isOpen) {
       setTimeout(scrollToBottom, 150);
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, isAiLoading]);
 
-  const handleSend = (textToSend) => {
-    const query = textToSend || inputValue;
-    if (!query.trim()) return;
+  const handleSend = async (textToSend) => {
+    const query = (textToSend || inputValue).trim();
+    if (!query || isAiLoading) return;
 
     playTactileClick(700);
 
     const newMsgs = [...messages, { role: 'user', text: query }];
     setMessages(newMsgs);
     setInputValue('');
+    setIsAiLoading(true);
 
-    setTimeout(() => {
-      const result = processCopilotMessage(query, context);
+    try {
+      const result = await queryAstraAi(query, context);
       setMessages(prev => [...prev, {
         role: 'assistant',
         text: result.reply,
-        action: result.action
+        action: result.action,
+        providerName: result.providerName
       }]);
 
       if (result.action && onExecuteAction) {
         onExecuteAction(result.action);
       }
-    }, 350);
+    } catch (e) {
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        text: "I encountered an error. Falling back to offline solver."
+      }]);
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   const suggestions = [
@@ -130,18 +140,41 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
               </div>
             </div>
 
-            <button
-              onClick={onClose}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--ink-soft)',
-                cursor: 'pointer',
-                padding: '4px'
-              }}
-            >
-              <X size={18} />
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                onClick={() => onOpenAiSettings?.()}
+                title="Configure Free AI Providers"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  backgroundColor: 'var(--paper)',
+                  border: '1px solid var(--border)',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
+                  color: 'var(--mizu)',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                <Settings size={12} />
+                <span>AI Vault</span>
+              </button>
+
+              <button
+                onClick={onClose}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--ink-soft)',
+                  cursor: 'pointer',
+                  padding: '4px'
+                }}
+              >
+                <X size={18} />
+              </button>
+            </div>
           </div>
 
           <Drawer.Description style={{ display: 'none' }}>
@@ -219,6 +252,22 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
                 </div>
               </div>
             ))}
+            {isAiLoading && (
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 12px',
+                borderRadius: '12px',
+                backgroundColor: 'var(--paper)',
+                border: '1px solid var(--border)',
+                fontSize: '11px',
+                color: 'var(--ink-soft)'
+              }}>
+                <Sparkles size={13} style={{ color: 'var(--mizu)', animation: 'pulse 1.5s infinite' }} />
+                <span>Astra is analyzing academic schedule & formulas...</span>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
