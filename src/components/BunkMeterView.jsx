@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShieldCheck, AlertTriangle, AlertCircle, Info, Calculator, Check } from 'lucide-react';
 import { calculateBunkStats, STATUTORY_THRESHOLD } from '../services/bunkCalculator';
+import NumberFlow from '@number-flow/react';
 import CourseSafetyCard from './CourseSafetyCard';
 
 export default function BunkMeterView({ courses = [] }) {
@@ -126,10 +127,6 @@ export default function BunkMeterView({ courses = [] }) {
           <CourseSafetyCard
             key={course.code}
             course={course}
-            onOpenDeepSim={(code) => {
-              setSelectedCourseForSim(code);
-              setShowSimDrawer(true);
-            }}
           />
         ))}
       </div>

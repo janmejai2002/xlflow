@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Clock, Copy, Check, Calendar, ArrowRight, User, AlertCircle, Sparkles, Palmtree } from 'lucide-react';
+import { MapPin, Clock, Copy, Check, Calendar, ArrowRight, User, AlertCircle, Sparkles, Palmtree, Globe, CalendarDays } from 'lucide-react';
 import { getGoogleCalendarUrl } from '../services/calendarExport';
 import { calculateBunkStats } from '../services/bunkCalculator';
 import { COURSE_COLORS } from '../data/rosterData';
 import HorizonHeatmap from './HorizonHeatmap';
+import ChronosOrb3D from './ChronosOrb3D';
 import ClassDetailDrawer from './ClassDetailDrawer';
 import { playTactileClick } from '../services/soundEngine';
 import { toast } from 'sonner';
@@ -12,6 +13,7 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
   const [copiedRoom, setCopiedRoom] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedDrawerSession, setSelectedDrawerSession] = useState(null);
+  const [spatialMode, setSpatialMode] = useState('heatmap'); // 'heatmap' | '3d'
 
   // Tick clock every minute for live countdown
   useEffect(() => {
@@ -248,8 +250,8 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
                 transition: 'all 0.15s'
               }}
             >
-              <MapPin size={15} style={{ color: 'var(--mizu)' }} />
-              <span>📍 {featuredClass.venue}</span>
+              <MapPin size={14} style={{ color: 'var(--mizu)' }} />
+              <span>{featuredClass.venue}</span>
               {copiedRoom ? <Check size={13} style={{ color: 'var(--moss)' }} /> : <Copy size={13} style={{ color: 'var(--ink-soft)' }} />}
               <span style={{ fontSize: '11px', color: copiedRoom ? 'var(--moss)' : 'var(--ink-soft)' }}>
                 {copiedRoom ? 'Copied!' : 'Copy'}
@@ -327,12 +329,88 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
         </div>
       )}
 
-      {/* Horizon Calendar Heatmap */}
-      <HorizonHeatmap
-        schedule={schedule}
-        deadlines={deadlines}
-        onSelectDate={onSelectDate}
-      />
+      {/* Visual Spatial / Heatmap Deck */}
+      <div style={{
+        backgroundColor: 'var(--card)',
+        borderRadius: '16px',
+        border: '1px solid var(--border)',
+        padding: '14px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid var(--border-soft)',
+          paddingBottom: '8px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <button
+              onClick={() => { playTactileClick(); setSpatialMode('heatmap'); }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '5px 10px',
+                borderRadius: '7px',
+                backgroundColor: spatialMode === 'heatmap' ? 'var(--wash-mizu)' : 'transparent',
+                border: spatialMode === 'heatmap' ? '1px solid rgba(0, 169, 184, 0.3)' : '1px solid transparent',
+                color: spatialMode === 'heatmap' ? 'var(--mizu)' : 'var(--ink-soft)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              <CalendarDays size={12} />
+              <span>Horizon Heatmap</span>
+            </button>
+
+            <button
+              onClick={() => { playTactileClick(); setSpatialMode('3d'); }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '5px 10px',
+                borderRadius: '7px',
+                backgroundColor: spatialMode === '3d' ? 'var(--wash-mizu)' : 'transparent',
+                border: spatialMode === '3d' ? '1px solid rgba(0, 169, 184, 0.3)' : '1px solid transparent',
+                color: spatialMode === '3d' ? 'var(--mizu)' : 'var(--ink-soft)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              <Globe size={12} />
+              <span>3D Chronos Continuum</span>
+            </button>
+          </div>
+
+          <span style={{ fontSize: '10px', color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)' }}>
+            {spatialMode === '3d' ? 'Three.js Spatial View' : 'Campus Density Grid'}
+          </span>
+        </div>
+
+        <div>
+          {spatialMode === 'heatmap' ? (
+            <HorizonHeatmap
+              schedule={schedule}
+              deadlines={deadlines}
+              onSelectDate={onSelectDate}
+            />
+          ) : (
+            <div style={{ height: '360px', width: '100%', overflow: 'hidden' }}>
+              <ChronosOrb3D
+                schedule={schedule}
+                courses={courses}
+                onSelectSession={(s) => setSelectedDrawerSession(s)}
+              />
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Long-Weekend / Getaways Quick Teaser */}
       <div
@@ -458,9 +536,13 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
                     backgroundColor: 'var(--paper)',
                     border: '1px solid var(--border)',
                     padding: '3px 8px',
-                    borderRadius: '6px'
+                    borderRadius: '6px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
                   }}>
-                    📍 {session.venue}
+                    <MapPin size={11} style={{ color: 'var(--mizu)' }} />
+                    <span>{session.venue}</span>
                   </span>
                 </div>
               </div>
