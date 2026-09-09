@@ -427,10 +427,13 @@ export default function SectorRadar({
             padding: '14px 18px'
           }}>
             <TemporalScrubber
-              value={simulatedHour}
-              onChange={setSimulatedHour}
+              simulatedHour={simulatedHour}
+              onChangeHour={setSimulatedHour}
               isLive={isLiveTime}
-              onToggleLive={() => setIsLiveTime(!isLiveTime)}
+              onResetLive={() => {
+                setSimulatedHour(10.5);
+                setIsLiveTime(true);
+              }}
             />
           </div>
 

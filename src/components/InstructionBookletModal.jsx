@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BookOpen, X, Smartphone, ShieldCheck, Calendar, Calculator, 
   Search, Bot, Sparkles, CheckCircle2, ChevronRight, HelpCircle, 
@@ -19,6 +19,15 @@ const SECTIONS = [
 export default function InstructionBookletModal({ isOpen, onClose }) {
   const [activeSection, setActiveSection] = useState('quickstart');
   const [copiedCode, setCopiedCode] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -89,6 +98,7 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
 
           <button
             onClick={onClose}
+            aria-label="Close"
             style={{
               background: 'none',
               border: 'none',

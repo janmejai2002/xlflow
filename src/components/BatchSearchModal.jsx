@@ -17,6 +17,15 @@ export default function BatchSearchModal({ isOpen, onClose }) {
   }, [isOpen]);
 
   useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
     if (query.trim()) {
       setResults(searchRoster(query));
     } else {
@@ -25,20 +34,25 @@ export default function BatchSearchModal({ isOpen, onClose }) {
   }, [query]);
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      backgroundColor: 'rgba(21, 24, 29, 0.65)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-      padding: '16px',
-      paddingTop: '60px',
-      zIndex: 100
-    }}>
-      <div style={{
-        backgroundColor: 'var(--card)',
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(21, 24, 29, 0.65)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: '16px',
+        paddingTop: '60px',
+        zIndex: 100
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          backgroundColor: 'var(--card)',
         border: '1px solid var(--border)',
         borderRadius: '16px',
         width: '100%',
@@ -76,6 +90,7 @@ export default function BatchSearchModal({ isOpen, onClose }) {
           />
           <button
             onClick={onClose}
+            aria-label="Close search"
             style={{
               background: 'none',
               border: 'none',
