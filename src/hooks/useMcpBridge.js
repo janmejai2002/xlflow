@@ -23,12 +23,25 @@ export function useMcpBridge({ onExecuteAction, localData }) {
   }, [localData]);
 
   useEffect(() => {
+    // Only establish WebSocket if explicitly enabled or requested
+    // Prevents net::ERR_CONNECTION_REFUSED log noise in standard preview, production and automated test suites
+    const isBridgeRequested = typeof window !== 'undefined' && (
+      window.__ENABLE_MCP_BRIDGE__ === true ||
+      (typeof window.location !== 'undefined' && window.location.search && window.location.search.includes('mcp=true')) ||
+      (typeof localStorage !== 'undefined' && localStorage.getItem('xlflow_enable_mcp') === 'true')
+    );
+
+    if (!isBridgeRequested) {
+      return;
+    }
+
     let socket = null;
     let reconnectTimer = null;
     let isUnmounted = false;
+    let retryCount = 0;
 
     const connect = () => {
-      if (isUnmounted) return;
+      if (isUnmounted || retryCount >= 3) return;
       try {
         socket = new WebSocket('ws://localhost:3100/ws');
         socketRef.current = socket;
@@ -48,7 +61,10 @@ export function useMcpBridge({ onExecuteAction, localData }) {
         socket.onclose = () => {
           if (isUnmounted) return;
           setIsConnected(false);
-          reconnectTimer = setTimeout(connect, 3000);
+          retryCount++;
+          if (retryCount < 3) {
+            reconnectTimer = setTimeout(connect, 3000);
+          }
         };
 
         socket.onerror = () => {

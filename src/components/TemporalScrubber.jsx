@@ -2,7 +2,18 @@ import React, { useState } from 'react';
 import { Clock, RotateCcw, Sun, Moon, Sunset, Sunrise } from 'lucide-react';
 import { playTactileClick } from '../services/soundEngine';
 
-export default function TemporalScrubber({ simulatedHour, onChangeHour, onResetLive, isLive }) {
+export default function TemporalScrubber({
+  simulatedHour,
+  value,
+  onChangeHour,
+  onChange,
+  onResetLive,
+  onToggleLive,
+  isLive = true
+}) {
+  const currentHour = simulatedHour !== undefined ? simulatedHour : (value !== undefined ? value : 10.5);
+  const triggerChange = onChangeHour || onChange || (() => {});
+  const triggerReset = onResetLive || onToggleLive || (() => {});
   const hours = [8, 10, 12, 14, 16, 18, 20];
 
   const getMood = (h) => {
@@ -12,7 +23,7 @@ export default function TemporalScrubber({ simulatedHour, onChangeHour, onResetL
     return { label: 'Night Study', icon: <Moon size={13} />, color: 'var(--indigo)' };
   };
 
-  const mood = getMood(simulatedHour);
+  const mood = getMood(currentHour);
 
   return (
     <div style={{
@@ -52,7 +63,7 @@ export default function TemporalScrubber({ simulatedHour, onChangeHour, onResetL
           <button
             onClick={() => {
               playTactileClick(1100);
-              onResetLive();
+              triggerReset();
             }}
             style={{
               display: 'flex',
@@ -80,10 +91,10 @@ export default function TemporalScrubber({ simulatedHour, onChangeHour, onResetL
           min="8"
           max="20"
           step="0.5"
-          value={simulatedHour}
+          value={currentHour}
           onChange={(e) => {
             playTactileClick(600 + (parseFloat(e.target.value) - 8) * 40);
-            onChangeHour(parseFloat(e.target.value));
+            triggerChange(parseFloat(e.target.value));
           }}
           style={{
             width: '100%',
@@ -105,13 +116,13 @@ export default function TemporalScrubber({ simulatedHour, onChangeHour, onResetL
             <span
               key={h}
               style={{
-                color: Math.abs(simulatedHour - h) < 0.6 ? 'var(--mizu)' : 'var(--ink-soft)',
-                fontWeight: Math.abs(simulatedHour - h) < 0.6 ? 700 : 500,
+                color: Math.abs(currentHour - h) < 0.6 ? 'var(--mizu)' : 'var(--ink-soft)',
+                fontWeight: Math.abs(currentHour - h) < 0.6 ? 700 : 500,
                 cursor: 'pointer'
               }}
               onClick={() => {
                 playTactileClick();
-                onChangeHour(h);
+                triggerChange(h);
               }}
             >
               {h}:00
