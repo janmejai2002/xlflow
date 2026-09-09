@@ -320,12 +320,13 @@ export default function DesktopHorizonDeck({
         )}
       </div>
 
-      {/* 4. Panoramic Bottom Spatial Mini-Map Scrubber */}
+      {/* 4. Panoramic Bottom Spatial Mini-Map Scrubber with Mobile Switcher */}
       <HorizonMiniMap
         activeSectorIndex={activeSectorIndex}
         onJumpToSector={jumpToSector}
         onPrevSector={handlePrevSector}
         onNextSector={handleNextSector}
+        onToggleLayoutMode={onToggleLayoutMode}
       />
 
       {/* 5. Free AI Key Vault & Provider Selection Modal */}
