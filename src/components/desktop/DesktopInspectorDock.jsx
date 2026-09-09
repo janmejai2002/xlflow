@@ -19,7 +19,8 @@ import {
   Info,
   Layers,
   Flame,
-  ArrowRight
+  ArrowRight,
+  X
 } from 'lucide-react';
 import { COURSE_COLORS } from '../../data/rosterData';
 import { calculateBunkStats, simulateAttendance, STATUTORY_THRESHOLD } from '../../services/bunkCalculator';
@@ -35,7 +36,8 @@ export default function DesktopInspectorDock({
   deadlines = [],
   onSelectTab,
   onExecuteAction,
-  student
+  student,
+  onClose
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dockTab, setDockTab] = useState('lecture'); // 'lecture' | 'copilot'
@@ -225,18 +227,24 @@ export default function DesktopInspectorDock({
           </div>
 
           <button
-            onClick={() => setIsCollapsed(true)}
-            title="Collapse Inspector"
+            onClick={() => {
+              if (onClose) onClose();
+              else setIsCollapsed(true);
+            }}
+            title="Close Inspector"
             style={{
               background: 'none',
               border: 'none',
               color: 'var(--ink-soft)',
               cursor: 'pointer',
               padding: '4px',
-              borderRadius: '6px'
+              borderRadius: '6px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            <ChevronRight size={16} />
+            <X size={16} />
           </button>
         </div>
 

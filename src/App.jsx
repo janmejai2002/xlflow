@@ -15,6 +15,7 @@ import InstructionBookletModal from './components/InstructionBookletModal';
 import OnboardingModal from './components/OnboardingModal';
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
 import DesktopCommandDeck from './components/desktop/DesktopCommandDeck';
+import DesktopHorizonDeck from './components/desktop/DesktopHorizonDeck';
 import GroupCollaborationModal from './components/desktop/GroupCollaborationModal';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
@@ -230,10 +231,8 @@ export default function App() {
     }}>
       
       {isDesktop ? (
-        /* Expansive 3-Pane Desktop Command Centre (1024px+) */
-        <DesktopCommandDeck
-          activeTab={activeTab}
-          onSelectTab={setActiveTab}
+        /* The Horizon Deck: Avant-Garde Horizontal Panoramic Spatial Dashboard */
+        <DesktopHorizonDeck
           dataPayload={dataPayload}
           isDemo={isDemo}
           theme={theme}
@@ -241,17 +240,13 @@ export default function App() {
           onRefresh={handleRefresh}
           onLogout={handleLogout}
           isSyncing={isSyncing}
-          warningCount={warningCount}
-          pendingDeadlinesCount={pendingDeadlinesCount}
           onOpenSearch={() => setIsSearchModalOpen(true)}
           onOpenShareCard={() => setIsShareCardModalOpen(true)}
           onOpenBooklet={() => setIsBookletOpen(true)}
-          onOpenGroupSynergy={() => setIsGroupSynergyOpen(true)}
           onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
           isAmbientOn={isAmbientOn}
           onToggleAmbient={handleToggleAmbient}
           onExecuteAction={handleExecuteCopilotAction}
-          timetableSelectedDate={timetableSelectedDate}
           onSelectDateFromHeatmap={handleSelectDateFromHeatmap}
         />
       ) : (
