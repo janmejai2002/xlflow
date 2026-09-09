@@ -197,6 +197,24 @@ main.no-scrollbar::-webkit-scrollbar,
   animation: radar-pulse 2s infinite;
 }
 
+/* Equalizer Visualizer Animations for 432Hz Ambient Audio */
+@keyframes eq-bounce-1 {
+  0%, 100% { height: 4px; }
+  50% { height: 13px; }
+}
+@keyframes eq-bounce-2 {
+  0%, 100% { height: 14px; }
+  50% { height: 5px; }
+}
+@keyframes eq-bounce-3 {
+  0%, 100% { height: 6px; }
+  50% { height: 12px; }
+}
+
+.equalizer-bar-1 { animation: eq-bounce-1 0.75s ease-in-out infinite; }
+.equalizer-bar-2 { animation: eq-bounce-2 0.65s ease-in-out infinite; }
+.equalizer-bar-3 { animation: eq-bounce-3 0.85s ease-in-out infinite; }
+
 /* Safe Area Utility */
 .pb-safe {
   padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
