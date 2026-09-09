@@ -26,7 +26,9 @@ export default function DesktopHorizonDeck({
   isAmbientOn,
   onToggleAmbient,
   onExecuteAction,
-  onSelectDateFromHeatmap
+  onSelectDateFromHeatmap,
+  onToggleLayoutMode,
+  isDesktop
 }) {
   const containerRef = useRef(null);
   const [activeSectorIndex, setActiveSectorIndex] = useState(0);
@@ -168,6 +170,8 @@ export default function DesktopHorizonDeck({
         isAmbientOn={isAmbientOn}
         onToggleAmbient={onToggleAmbient}
         onOpenAiSettings={() => setIsAiSettingsOpen(true)}
+        onToggleLayoutMode={onToggleLayoutMode}
+        isDesktop={isDesktop}
       />
 
       {/* 2. Panoramic Horizontal Horizon Track (Zero Vertical Scroll) */}

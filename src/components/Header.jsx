@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Headphones, Bot, BookOpen, MoreHorizontal, X } from 'lucide-react';
+import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Headphones, Bot, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
 import { fireStreakConfetti } from '../services/confetti';
 import { toast } from 'sonner';
 
@@ -16,7 +16,8 @@ export default function Header({
   isAmbientOn,
   onToggleAmbient,
   onOpenCopilot,
-  onOpenBooklet
+  onOpenBooklet,
+  onToggleLayoutMode
 }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const menuRef = useRef(null);
@@ -206,6 +207,29 @@ export default function Header({
           }}
         >
           <Share2 size={14} />
+        </button>
+
+        {/* Switch to Desktop Horizon Deck */}
+        <button
+          onClick={onToggleLayoutMode}
+          title="Switch to Panoramic Desktop View (Horizon Deck)"
+          aria-label="Switch to Panoramic Desktop View"
+          className="hide-below-500"
+          style={{
+            background: 'var(--card)',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            width: '34px',
+            height: '34px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--mizu)',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+        >
+          <Monitor size={14} />
         </button>
 
         {/* 432Hz Generative Campus Focus Soundscape */}
@@ -445,6 +469,32 @@ export default function Header({
               >
                 <Headphones size={15} style={{ color: isAmbientOn ? 'var(--mizu)' : 'var(--ink-soft)' }} />
                 <span>{isAmbientOn ? 'Pause 432Hz Sound' : 'Play 432Hz Sound'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsMoreOpen(false);
+                  onToggleLayoutMode?.();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'var(--ink)',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--stone)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <Monitor size={15} style={{ color: 'var(--mizu)' }} />
+                <span>Desktop Panoramic View</span>
               </button>
 
               <button

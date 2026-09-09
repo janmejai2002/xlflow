@@ -139,12 +139,15 @@ export default function HorizonMiniMap({
 
               <Icon size={14} color={isActive ? 'var(--mizu)' : 'currentColor'} />
 
-              <span style={{
-                fontSize: '11.5px',
-                fontWeight: isActive ? 700 : 500,
-                letterSpacing: '-0.01em',
-                whiteSpace: 'nowrap'
-              }}>
+              <span
+                className="topbar-hide-980"
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: isActive ? 700 : 500,
+                  letterSpacing: '-0.01em',
+                  whiteSpace: 'nowrap'
+                }}
+              >
                 {sector.name}
               </span>
             </button>
@@ -153,7 +156,10 @@ export default function HorizonMiniMap({
       </div>
 
       {/* Right: Interaction Helper */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--ink-soft)' }}>
+      <div
+        className="minimap-hide-1120"
+        style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--ink-soft)' }}
+      >
         <span>Pan: <kbd style={{ padding: '2px 5px', backgroundColor: 'var(--paper)', border: '1px solid var(--border)', borderRadius: '4px', fontFamily: 'var(--font-mono)' }}>Shift + Wheel</kbd> or <kbd style={{ padding: '2px 5px', backgroundColor: 'var(--paper)', border: '1px solid var(--border)', borderRadius: '4px', fontFamily: 'var(--font-mono)' }}>← / →</kbd></span>
       </div>
     </nav>

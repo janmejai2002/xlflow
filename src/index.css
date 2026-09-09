@@ -46,6 +46,9 @@
   --shadow-sm: 0 1px 3px rgba(26, 38, 57, 0.05);
   --shadow-md: 0 4px 14px rgba(26, 38, 57, 0.08);
   --shadow-lg: 0 10px 28px -4px rgba(26, 38, 57, 0.12);
+  --shadow-card: 0 4px 16px rgba(26, 38, 57, 0.06), 0 1px 3px rgba(26, 38, 57, 0.04);
+  --card-subtle: #F3EFE7;
+  --border-strong: rgba(26, 38, 57, 0.18);
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-serif: 'Newsreader', Georgia, serif;
@@ -59,9 +62,11 @@
   --paper-subtle: #1B1F26;
   --card: #1C2129;
   --card-hover: #232933;
+  --card-subtle: #181C22;
   --stone: #202630;
   --border: #2E343D;
   --border-soft: rgba(233, 229, 220, 0.10);
+  --border-strong: rgba(233, 229, 220, 0.22);
 
   --ink: #E9E5DC;
   --ink-soft: rgba(233, 229, 220, 0.75);
@@ -93,6 +98,7 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
   --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.55);
+  --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.40), 0 1px 3px rgba(0, 0, 0, 0.20);
 }
 
 * {
@@ -214,6 +220,31 @@ input, textarea, select {
   }
   .radar-dot {
     animation: none !important;
+  }
+}
+
+/* TopBar & MiniMap Laptop Responsive Utilities */
+@media (max-width: 1280px) {
+  .topbar-hide-1280 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1120px) {
+  .topbar-hide-1120 {
+    display: none !important;
+  }
+  .minimap-hide-1120 {
+    display: none !important;
+  }
+}
+
+@media (max-width: 980px) {
+  .topbar-hide-980 {
+    display: none !important;
+  }
+  .topbar-compact-search {
+    max-width: 220px !important;
   }
 }
 

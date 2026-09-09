@@ -11,7 +11,9 @@ export default function Navigation({ activeTab, onSelectTab, warningCount, pendi
   ];
 
   return (
-    <nav style={{
+    <nav
+      aria-label="Main Navigation"
+      style={{
       position: 'fixed',
       bottom: 0,
       left: '50%',

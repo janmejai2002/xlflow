@@ -29,7 +29,7 @@ import { WifiOff } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 
 export default function App() {
-  const { isDesktop } = useBreakpoint();
+  const { isDesktop, layoutPreference, toggleLayoutMode } = useBreakpoint();
   const [activeTab, setActiveTab] = useState('radar');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -250,9 +250,14 @@ export default function App() {
           onToggleAmbient={handleToggleAmbient}
           onExecuteAction={handleExecuteCopilotAction}
           onSelectDateFromHeatmap={handleSelectDateFromHeatmap}
+          onToggleLayoutMode={() => {
+            const next = toggleLayoutMode();
+            toast(`Switched to ${next === 'desktop' ? 'Desktop Horizon Deck' : 'Mobile Shell'}`);
+          }}
+          isDesktop={true}
         />
       ) : (
-        /* Centered Mobile-App Shell container (<1024px) */
+        /* Centered Mobile-App Shell container */
         <div style={{
           width: '100%',
           maxWidth: '540px',
@@ -281,6 +286,11 @@ export default function App() {
             onToggleAmbient={handleToggleAmbient}
             onOpenCopilot={() => setIsCopilotOpen(true)}
             onOpenBooklet={() => setIsBookletOpen(true)}
+            onToggleLayoutMode={() => {
+              const next = toggleLayoutMode();
+              toast(`Switched to ${next === 'desktop' ? 'Desktop Horizon Deck' : 'Mobile Shell'}`);
+            }}
+            isDesktop={false}
           />
 
           {/* Offline Alert Ribbon if disconnected */}
