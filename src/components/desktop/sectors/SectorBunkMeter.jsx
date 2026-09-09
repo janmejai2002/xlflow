@@ -35,7 +35,9 @@ export default function SectorBunkMeter({ courses = [] }) {
 
   return (
     <div style={{
-      width: '1200px',
+      width: 'min(1200px, calc(100vw - 80px))',
+      maxWidth: '100%',
+      boxSizing: 'border-box',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',

@@ -18,7 +18,9 @@ export default function SectorTimetable({
 
   return (
     <div style={{
-      width: '1260px',
+      width: 'min(1260px, calc(100vw - 80px))',
+      maxWidth: '100%',
+      boxSizing: 'border-box',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
