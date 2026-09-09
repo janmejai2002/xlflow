@@ -5,7 +5,6 @@ import { calculateBunkStats } from '../services/bunkCalculator';
 import { COURSE_COLORS } from '../data/rosterData';
 import HorizonHeatmap from './HorizonHeatmap';
 import ClassDetailDrawer from './ClassDetailDrawer';
-import TemporalScrubber from './TemporalScrubber';
 import { playTactileClick } from '../services/soundEngine';
 import { toast } from 'sonner';
 
@@ -13,8 +12,6 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
   const [copiedRoom, setCopiedRoom] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedDrawerSession, setSelectedDrawerSession] = useState(null);
-  const [simulatedHour, setSimulatedHour] = useState(10.5);
-  const [isLiveTime, setIsLiveTime] = useState(true);
 
   // Tick clock every minute for live countdown
   useEffect(() => {
@@ -146,20 +143,6 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
           {isOngoing ? 'Class In Session' : 'Campus Live'}
         </span>
       </div>
-
-      {/* Temporal Scrubber: Time Travel through Campus Hours */}
-      <TemporalScrubber
-        simulatedHour={simulatedHour}
-        onChangeHour={(h) => {
-          setSimulatedHour(h);
-          setIsLiveTime(false);
-        }}
-        onResetLive={() => {
-          setSimulatedHour(10.5);
-          setIsLiveTime(true);
-        }}
-        isLive={isLiveTime}
-      />
 
       {/* Hero Card: Next / Active Class with Left Course Ribbon */}
       {featuredClass ? (

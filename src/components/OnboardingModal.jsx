@@ -156,7 +156,7 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
               cursor: 'pointer'
             }}
           >
-            Explore with Demo Student (Ananya Roy)
+            Enter Student Command Centre (Janmejai Singh • Term-5)
           </button>
         </div>
 

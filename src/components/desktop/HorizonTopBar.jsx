@@ -74,12 +74,12 @@ export default function HorizonTopBar({
               <span style={{
                 fontSize: '10px',
                 fontWeight: 700,
-                color: isDemo ? 'var(--ochre)' : 'var(--moss)',
-                backgroundColor: isDemo ? 'var(--wash-ochre)' : 'var(--wash-moss)',
+                color: 'var(--moss)',
+                backgroundColor: 'var(--wash-moss)',
                 padding: '1px 5px',
                 borderRadius: '4px'
               }}>
-                {isDemo ? 'DEMO' : 'LIVE'}
+                LIVE
               </span>
             </div>
             <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>

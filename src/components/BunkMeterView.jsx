@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
-import { ShieldCheck, AlertTriangle, AlertCircle, Info, Calculator, Check, ArrowRight, Sliders, ChevronDown, ChevronUp } from 'lucide-react';
-import { calculateBunkStats, simulateAttendance, STATUTORY_THRESHOLD } from '../services/bunkCalculator';
-import NumberFlow from '@number-flow/react';
+import { ShieldCheck, AlertTriangle, AlertCircle, Info, Calculator, Check } from 'lucide-react';
+import { calculateBunkStats, STATUTORY_THRESHOLD } from '../services/bunkCalculator';
 import CourseSafetyCard from './CourseSafetyCard';
 
 export default function BunkMeterView({ courses = [] }) {
   const [filterTerm, setFilterTerm] = useState('all'); // 'all' | 'Term-5' | 'Term-4'
-  const [selectedCourseForSim, setSelectedCourseForSim] = useState(courses[0]?.code || 'OMCR');
-  const [skipCount, setSkipCount] = useState(1);
-  const [attendCount, setAttendCount] = useState(2);
-  const [showSimDrawer, setShowSimDrawer] = useState(false);
 
   // Compute stats for all courses
   const evaluatedCourses = courses.map(course => {
@@ -30,15 +25,6 @@ export default function BunkMeterView({ courses = [] }) {
   const totalCourses = evaluatedCourses.length;
   const warningOrDanger = evaluatedCourses.filter(c => c.stats.tier === 'warning' || c.stats.tier === 'danger').length;
   const safeCount = evaluatedCourses.filter(c => c.stats.tier === 'safe').length;
-
-  // Course selected for simulation
-  const simCourse = evaluatedCourses.find(c => c.code === selectedCourseForSim) || evaluatedCourses[0];
-  const simOriginalStats = simCourse ? simCourse.stats : null;
-  const simProjectedPct = simCourse
-    ? simulateAttendance(simCourse.attended, simCourse.conducted, attendCount, attendCount + skipCount)
-    : 100.0;
-
-  const simIsSafe = simProjectedPct >= STATUTORY_THRESHOLD * 100;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingBottom: '32px' }}>
@@ -148,7 +134,7 @@ export default function BunkMeterView({ courses = [] }) {
         ))}
       </div>
 
-      {/* Interactive What-If Simulator Widget */}
+      {/* Statutory Attendance Policy Reference */}
       <div style={{
         backgroundColor: 'var(--card)',
         border: '1px solid var(--border)',
@@ -157,185 +143,55 @@ export default function BunkMeterView({ courses = [] }) {
         boxShadow: 'var(--shadow-card)',
         marginTop: '8px'
       }}>
-        <div
-          onClick={() => setShowSimDrawer(!showSimDrawer)}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '7px',
-              backgroundColor: 'var(--wash-ochre)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--ochre)'
-            }}>
-              <Sliders size={16} />
-            </div>
-            <div>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 600, color: 'var(--ink)' }}>
-                What-If Attendance Simulator
-              </h3>
-              <p style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-                Plan your leaves without risking debarment
-              </p>
-            </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            backgroundColor: 'var(--wash-mizu)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--mizu)'
+          }}>
+            <ShieldCheck size={18} />
           </div>
-          {showSimDrawer ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          <div>
+            <h3 style={{ fontFamily: 'var(--font-brand)', fontSize: '15px', fontWeight: 700, color: 'var(--ink)' }}>
+              XLRI Statutory Attendance Policy (80.0% Rule)
+            </h3>
+            <p style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
+              Academic Committee Regulations & Debarment Protocol
+            </p>
+          </div>
         </div>
 
-        {showSimDrawer && (
-          <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {/* Select Course Dropdown */}
-            <div>
-              <label style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)', display: 'block', marginBottom: '4px' }}>
-                Select Course to Simulate:
-              </label>
-              <select
-                value={selectedCourseForSim}
-                onChange={(e) => setSelectedCourseForSim(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--paper)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--ink)',
-                  fontSize: '13px',
-                  fontWeight: 600
-                }}
-              >
-                {evaluatedCourses.map(c => (
-                  <option key={c.code} value={c.code}>
-                    {c.code} - {c.name} ({c.stats.currentPercentage}%)
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Steppers: Skips vs Attends */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div style={{
-                backgroundColor: 'var(--paper)',
-                border: '1px solid var(--border)',
-                borderRadius: '10px',
-                padding: '10px',
-                textAlign: 'center'
-              }}>
-                <span style={{ fontSize: '11px', color: 'var(--hanko)', fontWeight: 600, display: 'block' }}>
-                  Classes to Skip
-                </span>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginTop: '6px' }}>
-                  <button
-                    onClick={() => setSkipCount(Math.max(0, skipCount - 1))}
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      cursor: 'pointer',
-                      fontWeight: 700
-                    }}
-                  >-</button>
-                  <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
-                    <NumberFlow value={skipCount} />
-                  </span>
-                  <button
-                    onClick={() => setSkipCount(skipCount + 1)}
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      cursor: 'pointer',
-                      fontWeight: 700
-                    }}
-                  >+</button>
-                </div>
-              </div>
-
-              <div style={{
-                backgroundColor: 'var(--paper)',
-                border: '1px solid var(--border)',
-                borderRadius: '10px',
-                padding: '10px',
-                textAlign: 'center'
-              }}>
-                <span style={{ fontSize: '11px', color: 'var(--moss)', fontWeight: 600, display: 'block' }}>
-                  Classes to Attend
-                </span>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginTop: '6px' }}>
-                  <button
-                    onClick={() => setAttendCount(Math.max(0, attendCount - 1))}
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      cursor: 'pointer',
-                      fontWeight: 700
-                    }}
-                  >-</button>
-                  <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
-                    <NumberFlow value={attendCount} />
-                  </span>
-                  <button
-                    onClick={() => setAttendCount(attendCount + 1)}
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      borderRadius: '6px',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--card)',
-                      cursor: 'pointer',
-                      fontWeight: 700
-                    }}
-                  >+</button>
-                </div>
-              </div>
-            </div>
-
-            {/* Projection Output */}
-            <div style={{
-              padding: '14px',
-              borderRadius: '10px',
-              backgroundColor: simIsSafe ? 'var(--wash-moss)' : 'var(--wash-hanko)',
-              border: `1px solid ${simIsSafe ? 'rgba(110, 140, 99, 0.3)' : 'rgba(210, 84, 63, 0.3)'}`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <div>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: simIsSafe ? 'var(--moss)' : 'var(--hanko)' }}>
-                  Projected Attendance:
-                </span>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginTop: '2px' }}>
-                  <span style={{ fontSize: '14px', color: 'var(--ink-soft)', textDecoration: 'line-through' }}>
-                    {simOriginalStats?.currentPercentage}%
-                  </span>
-                  <ArrowRight size={14} style={{ color: 'var(--ink-soft)' }} />
-                  <span style={{ fontSize: '20px', fontWeight: 800, color: simIsSafe ? 'var(--moss)' : 'var(--hanko)' }}>
-                    <NumberFlow value={simProjectedPct} format={{ minimumFractionDigits: 1, maximumFractionDigits: 1 }} />%
-                  </span>
-                </div>
-              </div>
-
-              <div style={{
-                textAlign: 'right',
-                fontSize: '12px',
-                fontWeight: 700,
-                color: simIsSafe ? 'var(--moss)' : 'var(--hanko)'
-              }}>
-                {simIsSafe ? 'Safe to Proceed' : 'Debarment Danger!'}
-              </div>
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px', color: 'var(--ink-soft)', lineHeight: 1.5 }}>
+          <div style={{
+            padding: '10px 12px',
+            borderRadius: '10px',
+            backgroundColor: 'var(--paper)',
+            border: '1px solid var(--border)'
+          }}>
+            <strong style={{ color: 'var(--ink)' }}>• Mandatory Threshold:</strong> Students must maintain a minimum of <strong>80.0% physical presence</strong> across all enrolled courses to qualify for end-term examinations.
           </div>
-        )}
+          <div style={{
+            padding: '10px 12px',
+            borderRadius: '10px',
+            backgroundColor: 'var(--paper)',
+            border: '1px solid var(--border)'
+          }}>
+            <strong style={{ color: 'var(--ink)' }}>• Safe Bunk Buffer:</strong> The indicator reflects exact permissible absences before breaching 80.0%. Courses at 0 safe buffer require 100% presence.
+          </div>
+          <div style={{
+            padding: '10px 12px',
+            borderRadius: '10px',
+            backgroundColor: 'var(--paper)',
+            border: '1px solid var(--border)'
+          }}>
+            <strong style={{ color: 'var(--ink)' }}>• Automatic Debarment Flag:</strong> Any course falling below 80.0% without approved institutional or medical leave is subjected to automatic grade reduction or debarment.
+          </div>
+        </div>
       </div>
     </div>
   );

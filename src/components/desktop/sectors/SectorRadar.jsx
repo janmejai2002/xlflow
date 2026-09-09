@@ -16,7 +16,6 @@ import {
 import { COURSE_COLORS } from '../../../data/rosterData';
 import { calculateBunkStats } from '../../../services/bunkCalculator';
 import { getGoogleCalendarUrl } from '../../../services/calendarExport';
-import TemporalScrubber from '../../TemporalScrubber';
 import HorizonHeatmap from '../../HorizonHeatmap';
 import { toast } from 'sonner';
 
@@ -28,8 +27,12 @@ export default function SectorRadar({
   onSelectDate
 }) {
   const [copiedVenue, setCopiedVenue] = useState(false);
-  const [simulatedHour, setSimulatedHour] = useState(10.5);
-  const [isLiveTime, setIsLiveTime] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 30000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Active / next lecture calculation
   const nextSession = schedule[0] || {
@@ -380,7 +383,10 @@ export default function SectorRadar({
                       borderRadius: '4px',
                       border: '1px solid var(--border)'
                     }}>
-                      📍 {s.venue}
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                        <MapPin size={10} color="var(--hanko)" />
+                        <span>{s.venue}</span>
+                      </span>
                     </span>
                   </div>
                 );
@@ -390,25 +396,57 @@ export default function SectorRadar({
 
         </div>
 
-        {/* Right Column: Temporal Scrubber + Chronos Continuum Canvas + Heatmap */}
+        {/* Right Column: Live Campus Real-Time Phase + Heatmap */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           
-          {/* Temporal Scrubber Dial */}
+          {/* Live Campus Real-Time Phase Indicator */}
           <div style={{
             backgroundColor: 'var(--card)',
             borderRadius: '16px',
             border: '1px solid var(--border)',
-            padding: '14px 18px'
+            padding: '14px 18px',
+            boxShadow: 'var(--shadow-card)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
           }}>
-            <TemporalScrubber
-              simulatedHour={simulatedHour}
-              onChangeHour={setSimulatedHour}
-              isLive={isLiveTime}
-              onResetLive={() => {
-                setSimulatedHour(10.5);
-                setIsLiveTime(true);
-              }}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                backgroundColor: 'var(--wash-moss)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--moss)'
+              }}>
+                <Clock size={16} />
+              </div>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>
+                  Live Campus Clock • IST
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
+                  XLRI Delhi-NCR • Term-5 Academic Continuum
+                </div>
+              </div>
+            </div>
+            <span style={{
+              fontSize: '11px',
+              fontWeight: 700,
+              color: 'var(--moss)',
+              backgroundColor: 'var(--wash-moss)',
+              padding: '4px 10px',
+              borderRadius: '9999px',
+              border: '1px solid rgba(22, 163, 74, 0.25)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--moss)', animation: 'pulse 2s infinite' }} />
+              Live Real-Time
+            </span>
           </div>
 
           {/* Horizon Heatmap Calendar Visualizer */}

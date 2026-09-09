@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { ShieldCheck, AlertTriangle, AlertCircle, Check, SlidersHorizontal, Plus, Minus, RotateCcw, User, Clock, BookOpen } from 'lucide-react';
+import React from 'react';
+import { ShieldCheck, AlertTriangle, AlertCircle, Check, SlidersHorizontal, User, Clock, BookOpen } from 'lucide-react';
 import NumberFlow from '@number-flow/react';
 import { COURSE_COLORS } from '../data/rosterData';
-import { simulateAttendance, STATUTORY_THRESHOLD } from '../services/bunkCalculator';
+import { STATUTORY_THRESHOLD } from '../services/bunkCalculator';
 
 /**
  * CourseSafetyCard: High-Aesthetic Academic Safety Cockpit
@@ -22,8 +22,6 @@ export default function CourseSafetyCard({
   isCompact = false,
   className = ''
 }) {
-  const [inlineSkips, setInlineSkips] = useState(0);
-
   // Retrieve course colors or fallback to institutional indigo
   const colors = COURSE_COLORS[course.code] || {
     accent: '#4E6E9C',
@@ -33,18 +31,11 @@ export default function CourseSafetyCard({
   };
 
   const originalStats = course.stats;
-
-  // Calculate live projection based on inline simulated skips
-  const projectedPct = inlineSkips > 0
-    ? simulateAttendance(course.attended, course.conducted, 0, inlineSkips)
-    : originalStats.currentPercentage;
-
+  const projectedPct = originalStats.currentPercentage;
   const isSafe = projectedPct >= STATUTORY_THRESHOLD * 100;
   const isWarning = projectedPct >= STATUTORY_THRESHOLD * 100 && projectedPct < 85;
   const isDanger = projectedPct < STATUTORY_THRESHOLD * 100;
-
-  // Adjusted safe bunks remaining after simulated skips
-  const projectedSafeBunks = Math.max(0, originalStats.safeBunksRemaining - inlineSkips);
+  const projectedSafeBunks = originalStats.safeBunksRemaining;
 
   // Status tokens
   let statusColor = 'var(--moss)';
@@ -427,6 +418,7 @@ export default function CourseSafetyCard({
       </div>
 
       {/* 4. Interactive Inline Quick-Skip Stepper & Deep Sim Trigger */}
+      {/* Row 4: Statutory Compliance Status & Details */}
       <div
         style={{
           display: 'flex',
@@ -437,114 +429,30 @@ export default function CourseSafetyCard({
           borderTop: '1px solid var(--border-soft)'
         }}
       >
-        {/* Inline Quick Bunk Stepper */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)' }}>
-            Simulate Skips:
+          <span style={{
+            fontSize: '11px',
+            fontWeight: 600,
+            color: isDanger ? 'var(--hanko-text)' : (isWarning ? 'var(--ochre-text)' : 'var(--moss-text)'),
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px'
+          }}>
+            <ShieldCheck size={13} color={statusColor} />
+            {isDanger ? 'Immediate Attendance Required' : (isWarning ? 'Caution: Minimal Absence Buffer' : 'Compliant with 80% Policy')}
           </span>
-
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              backgroundColor: 'var(--paper)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
-              padding: '2px'
-            }}
-          >
-            {/* Decrement Button */}
-            <button
-              onClick={() => setInlineSkips(prev => Math.max(0, prev - 1))}
-              disabled={inlineSkips === 0}
-              aria-label={`Decrease simulated skips for ${course.code}`}
-              title="Decrease simulated bunks"
-              style={{
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '6px',
-                border: 'none',
-                backgroundColor: 'transparent',
-                color: inlineSkips === 0 ? 'var(--ink-faint)' : 'var(--ink)',
-                cursor: inlineSkips === 0 ? 'not-allowed' : 'pointer',
-                transition: 'background 0.1s'
-              }}
-            >
-              <Minus size={12} />
-            </button>
-
-            {/* Stepper Count Display */}
-            <span
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '12px',
-                fontWeight: 700,
-                color: inlineSkips > 0 ? 'var(--mizu)' : 'var(--ink)',
-                minWidth: '22px',
-                textAlign: 'center'
-              }}
-            >
-              {inlineSkips}
-            </span>
-
-            {/* Increment Button */}
-            <button
-              onClick={() => setInlineSkips(prev => Math.min(8, prev + 1))}
-              aria-label={`Increase simulated skips for ${course.code}`}
-              title="Increase simulated bunks"
-              style={{
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '6px',
-                border: 'none',
-                backgroundColor: 'transparent',
-                color: 'var(--ink)',
-                cursor: 'pointer',
-                transition: 'background 0.1s'
-              }}
-            >
-              <Plus size={12} />
-            </button>
-          </div>
-
-          {/* Reset Stepper Button (shown only when simulation active) */}
-          {inlineSkips > 0 && (
-            <button
-              onClick={() => setInlineSkips(0)}
-              title="Reset simulation"
-              aria-label="Reset simulation to real data"
-              style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--ink-soft)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                padding: '3px',
-                borderRadius: '4px'
-              }}
-            >
-              <RotateCcw size={12} />
-            </button>
-          )}
         </div>
 
-        {/* Detailed Scenario Planner Trigger (No Emojis!) */}
+        {/* Detailed Course Standing Trigger */}
         <button
           onClick={() => onOpenDeepSim?.(course.code)}
-          title={`Open Detailed What-If Simulator for ${course.code}`}
-          aria-label={`Open scenario planner for ${course.code}`}
+          title={`View Academic Standing for ${course.code}`}
+          aria-label={`View academic standing for ${course.code}`}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '5px',
-            padding: '5px 9px',
+            padding: '5px 10px',
             borderRadius: '7px',
             backgroundColor: 'var(--paper)',
             border: '1px solid var(--border)',
@@ -564,7 +472,7 @@ export default function CourseSafetyCard({
           }}
         >
           <SlidersHorizontal size={12} color="var(--mizu)" />
-          <span>Planner</span>
+          <span>Details</span>
         </button>
       </div>
     </div>

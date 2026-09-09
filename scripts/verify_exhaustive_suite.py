@@ -210,16 +210,10 @@ async def run_exhaustive_audit():
             print("[✓ PASS] Slide-Over Context Inspector Dock slid out on lecture click", flush=True)
             passed_checks += 1
 
-            # Test What-If bunk simulation checkbox in Inspector
-            skip_checkbox = page.locator("aside input[type='checkbox']").first
-            if await skip_checkbox.is_visible():
-                await skip_checkbox.check()
-                await page.wait_for_timeout(300)
-                projected_el = page.locator("aside").locator("text=Projected:").first
-                assert await projected_el.is_visible(), "Projected attendance impact not shown!"
-                print("[✓ PASS] Inspector 'What-If' skip simulation computed attendance drop accurately", flush=True)
-                await skip_checkbox.uncheck()
-                await page.wait_for_timeout(200)
+            # Statutory policy note replaces the old What-If simulator; just verify the info text is present
+            policy_note = page.locator("aside").locator("text=80% minimum attendance").first
+            if await policy_note.is_visible():
+                print("[✓ PASS] Inspector shows statutory 80% policy note (simulator removed)", flush=True)
                 passed_checks += 1
 
             # Test Astra AI Chat tab in Inspector

@@ -72,20 +72,6 @@ export default function Header({
                 fontWeight: 800
               }}>Flow</span>
             </span>
-            {isDemo && (
-              <span style={{
-                fontSize: '10px',
-                fontWeight: 600,
-                padding: '1px 5px',
-                borderRadius: '9999px',
-                backgroundColor: 'var(--wash-ochre)',
-                color: 'var(--ochre-text)',
-                border: '1px solid rgba(194, 145, 58, 0.25)',
-                whiteSpace: 'nowrap'
-              }}>
-                DEMO
-              </span>
-            )}
             <button
               onClick={() => {
                 fireStreakConfetti();

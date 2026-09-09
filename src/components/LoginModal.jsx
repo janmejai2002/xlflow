@@ -116,7 +116,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
           textAlign: 'center'
         }}>
           <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--mizu)', display: 'block', marginBottom: '8px' }}>
-            Instant Evaluation Mode
+            Term-5 Student Portal
           </span>
           <button
             onClick={onStartDemo}
@@ -138,10 +138,10 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
             }}
           >
             <Sparkles size={16} />
-            <span>Launch Demo (Term-5 Student)</span>
+            <span>Continue as Janmejai Singh (B25349)</span>
           </button>
           <p style={{ fontSize: '11px', color: 'var(--ink-soft)', marginTop: '6px', marginBottom: 0 }}>
-            Instant preview with real Term-5 elective timetable & 80% attendance data.
+            Active Term-5 elective timetable, venues, and 80.0% attendance tracking.
           </p>
         </div>
 

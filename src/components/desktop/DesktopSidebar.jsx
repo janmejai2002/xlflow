@@ -97,19 +97,6 @@ export default function DesktopSidebar({
                 }}>
                   XL-Flow
                 </span>
-                {isDemo && (
-                  <span style={{
-                    fontSize: '9px',
-                    fontWeight: 700,
-                    padding: '1px 5px',
-                    borderRadius: '9999px',
-                    backgroundColor: 'var(--wash-ochre)',
-                    color: 'var(--ochre-text)',
-                    border: '1px solid rgba(194, 145, 58, 0.25)'
-                  }}>
-                    DEMO
-                  </span>
-                )}
               </div>
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
                 {student?.term || 'Term-5'} • {student?.campus || 'XLRI Delhi-NCR'}
