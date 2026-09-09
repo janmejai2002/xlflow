@@ -65,7 +65,7 @@ export default function SectorBunkMeter({ courses = [] }) {
                 SECTOR 03
               </span>
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>•</span>
-              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Statutory Attendance Safety & Risk Simulation</span>
+              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Statutory Attendance Safety & Compliance Tracker</span>
             </div>
             <h2 style={{
               fontFamily: 'var(--font-brand)',
