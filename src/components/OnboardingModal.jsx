@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sparkles, Shield, Compass, ChevronRight, Check } from 'lucide-react';
+import XlFlowLogo from './XlFlowLogo';
 
 export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDemo, student }) {
   if (!isOpen) return null;
@@ -31,26 +32,16 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
         textAlign: 'center'
       }}>
         {/* Welcome Emblem */}
-        <div style={{
-          width: '56px',
-          height: '56px',
-          borderRadius: '20px',
-          backgroundColor: 'rgba(0, 169, 184, 0.12)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--mizu)',
-          marginBottom: '16px'
-        }}>
-          <Sparkles size={28} />
+        <div style={{ marginBottom: '16px' }}>
+          <XlFlowLogo size={52} />
         </div>
 
         <h2 style={{
           fontSize: '22px',
-          fontWeight: 700,
+          fontWeight: 800,
           margin: '0 0 6px 0',
-          fontFamily: 'var(--font-serif)',
-          letterSpacing: '-0.02em'
+          fontFamily: 'var(--font-brand)',
+          letterSpacing: '-0.03em'
         }}>
           Welcome to XL-Flow V1
         </h2>

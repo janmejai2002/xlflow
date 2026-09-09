@@ -116,7 +116,8 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
                 width: '30px',
                 height: '30px',
                 borderRadius: '8px',
-                backgroundColor: 'var(--ink)',
+                background: 'var(--wash-mizu)',
+                border: '1px solid rgba(0, 169, 184, 0.3)',
                 color: 'var(--mizu)',
                 display: 'flex',
                 alignItems: 'center',
@@ -126,9 +127,10 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
               </div>
               <div>
                 <Drawer.Title style={{
-                  fontFamily: 'var(--font-serif)',
+                  fontFamily: 'var(--font-brand)',
                   fontSize: '17px',
-                  fontWeight: 600,
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
                   color: 'var(--ink)',
                   margin: 0
                 }}>

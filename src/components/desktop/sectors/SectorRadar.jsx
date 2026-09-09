@@ -83,11 +83,13 @@ export default function SectorRadar({
             width: '32px',
             height: '32px',
             borderRadius: '8px',
-            backgroundColor: 'var(--ink)',
+            background: 'var(--wash-mizu)',
+            border: '1px solid rgba(0, 169, 184, 0.3)',
             color: 'var(--mizu)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)'
           }}>
             <Compass size={16} />
           </div>
@@ -100,14 +102,14 @@ export default function SectorRadar({
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Live Spatial Flight Deck</span>
             </div>
             <h2 style={{
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-brand)',
               fontSize: '22px',
-              fontWeight: 600,
+              fontWeight: 800,
+              letterSpacing: '-0.025em',
               color: 'var(--ink)',
-              margin: '2px 0 0 0',
-              letterSpacing: '-0.02em'
+              margin: 0
             }}>
-              Today's Academic Radar
+              Today's Radar & Chronos Continuum
             </h2>
           </div>
         </div>
@@ -202,9 +204,10 @@ export default function SectorRadar({
 
             {/* Title */}
             <h3 style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '22px',
-              fontWeight: 600,
+              fontFamily: 'var(--font-brand)',
+              fontSize: '20px',
+              fontWeight: 700,
+              letterSpacing: '-0.025em',
               color: 'var(--ink)',
               margin: '0 0 6px 0',
               lineHeight: 1.25

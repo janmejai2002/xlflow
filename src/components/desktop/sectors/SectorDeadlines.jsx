@@ -68,11 +68,13 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
             width: '32px',
             height: '32px',
             borderRadius: '8px',
-            backgroundColor: 'var(--ink)',
+            background: 'var(--wash-mizu)',
+            border: '1px solid rgba(0, 169, 184, 0.3)',
             color: 'var(--mizu)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)'
           }}>
             <CheckSquare size={16} />
           </div>
@@ -85,12 +87,12 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Midterm Quotas & Deliverables Flight Deck</span>
             </div>
             <h2 style={{
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-brand)',
               fontSize: '22px',
-              fontWeight: 600,
+              fontWeight: 800,
               color: 'var(--ink)',
               margin: '2px 0 0 0',
-              letterSpacing: '-0.02em'
+              letterSpacing: '-0.025em'
             }}>
               Deadlines, Quizzes & Case Pipeline
             </h2>

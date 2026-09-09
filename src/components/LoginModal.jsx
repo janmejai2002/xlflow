@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Lock, Mail, Eye, EyeOff, ShieldCheck, AlertCircle, X } from 'lucide-react';
 import { loginWithCredentials } from '../services/api';
+import XlFlowLogo from './XlFlowLogo';
 
 export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDemo }) {
   if (!isOpen) return null;
@@ -87,23 +88,14 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
 
         {/* Modal Brand Header */}
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <div style={{
-            width: '44px',
-            height: '44px',
-            borderRadius: '12px',
-            backgroundColor: 'var(--ink)',
-            color: 'var(--mizu)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 12px auto'
-          }}>
-            <Sparkles size={24} />
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+            <XlFlowLogo size={46} />
           </div>
           <h2 style={{
-            fontFamily: 'var(--font-serif)',
+            fontFamily: 'var(--font-brand)',
             fontSize: '22px',
-            fontWeight: 600,
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
             color: 'var(--ink)',
             margin: '0 0 4px 0'
           }}>

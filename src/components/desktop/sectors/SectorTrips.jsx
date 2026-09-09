@@ -69,11 +69,13 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
             width: '32px',
             height: '32px',
             borderRadius: '8px',
-            backgroundColor: 'var(--ink)',
+            background: 'var(--wash-ochre)',
+            border: '1px solid rgba(194, 145, 58, 0.3)',
             color: 'var(--ochre)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(194, 145, 58, 0.15)'
           }}>
             <Palmtree size={16} />
           </div>
@@ -86,12 +88,12 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Vacation Arbitrage & Long Weekend Optimizer</span>
             </div>
             <h2 style={{
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-brand)',
               fontSize: '22px',
-              fontWeight: 600,
+              fontWeight: 800,
               color: 'var(--ink)',
               margin: '2px 0 0 0',
-              letterSpacing: '-0.02em'
+              letterSpacing: '-0.025em'
             }}>
               Getaways & Natural Travel Windows
             </h2>

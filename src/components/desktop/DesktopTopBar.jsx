@@ -68,12 +68,12 @@ export default function DesktopTopBar({
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <h1 style={{
-              fontFamily: 'var(--font-serif)',
+              fontFamily: 'var(--font-brand)',
               fontSize: '18px',
-              fontWeight: 600,
+              fontWeight: 700,
               color: 'var(--ink)',
               margin: 0,
-              letterSpacing: '-0.02em'
+              letterSpacing: '-0.025em'
             }}>
               {title}
             </h1>

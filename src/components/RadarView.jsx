@@ -111,10 +111,10 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
       }}>
         <div>
           <h2 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '24px',
-            fontWeight: 600,
-            letterSpacing: '-0.02em',
+            fontFamily: 'var(--font-brand)',
+            fontSize: '22px',
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
             color: 'var(--ink)'
           }}>
             Today's Radar
@@ -210,9 +210,10 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
 
           {/* Course Name */}
           <h3 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '20px',
-            fontWeight: 600,
+            fontFamily: 'var(--font-brand)',
+            fontSize: '19px',
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
             lineHeight: 1.25,
             color: 'var(--ink)',
             marginBottom: '8px'
@@ -394,9 +395,10 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
           <h3 style={{
-            fontFamily: 'var(--font-serif)',
+            fontFamily: 'var(--font-brand)',
             fontSize: '17px',
-            fontWeight: 600,
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
             color: 'var(--ink)'
           }}>
             Upcoming Sessions
