@@ -190,18 +190,6 @@ input, textarea, select {
   justify-content: center;
 }
 
-@media (max-width: 500px) {
-  .hide-below-500 {
-    display: none !important;
-  }
-}
-
-@media (min-width: 501px) {
-  .hide-above-500 {
-    display: none !important;
-  }
-}
-
 @media (max-width: 480px) {
   .hide-below-480 {
     display: none !important;
@@ -255,12 +243,6 @@ input, textarea, select {
 /* Mobile Header Responsive Utilities */
 @media (max-width: 520px) {
   .hide-below-520 {
-    display: none !important;
-  }
-}
-
-@media (max-width: 500px) {
-  .hide-below-500 {
     display: none !important;
   }
 }
