@@ -185,15 +185,18 @@ export default function SectorBunkMeter({ courses = [] }) {
         </div>
       </div>
 
-      {/* 3-Column Course Grid */}
+      {/* Responsive Course Grid */}
       <div style={{
         flex: 1,
         minHeight: 0,
         overflowY: 'auto',
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '14px',
-        alignContent: 'start'
+        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+        gridAutoRows: 'max-content',
+        gap: '16px',
+        alignContent: 'start',
+        paddingBottom: '28px',
+        paddingRight: '6px'
       }}>
         {filteredCourses.map(course => (
           <CourseSafetyCard

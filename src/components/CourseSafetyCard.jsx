@@ -2,7 +2,7 @@ import React from 'react';
 import { ShieldCheck, AlertTriangle, AlertCircle, Check, SlidersHorizontal, User, Clock, BookOpen } from 'lucide-react';
 import NumberFlow from '@number-flow/react';
 import { COURSE_COLORS } from '../data/rosterData';
-import { STATUTORY_THRESHOLD } from '../services/bunkCalculator';
+import { STATUTORY_THRESHOLD, calculateBunkStats } from '../services/bunkCalculator';
 import { playTactileClick } from '../services/soundEngine';
 
 /**
@@ -31,7 +31,7 @@ export default function CourseSafetyCard({
     bg: '#2A4870'
   };
 
-  const originalStats = course.stats;
+  const originalStats = course.stats || calculateBunkStats(course.attended, course.conducted, course.totalPlanned);
   const projectedPct = originalStats.currentPercentage;
   const isSafe = projectedPct >= STATUTORY_THRESHOLD * 100;
   const isWarning = projectedPct >= STATUTORY_THRESHOLD * 100 && projectedPct < 85;
@@ -75,6 +75,8 @@ export default function CourseSafetyCard({
         boxShadow: 'var(--shadow-card)',
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'space-between',
+        minHeight: '270px',
         gap: '14px',
         position: 'relative',
         overflow: 'hidden',
@@ -132,15 +134,18 @@ export default function CourseSafetyCard({
           <h3
             style={{
               fontFamily: 'var(--font-brand)',
-              fontSize: isCompact ? '16px' : '17px',
+              fontSize: isCompact ? '15px' : '16px',
               fontWeight: 700,
-              letterSpacing: '-0.025em',
+              letterSpacing: '-0.02em',
               color: 'var(--ink)',
-              margin: '0 0 3px 0',
-              lineHeight: 1.25,
+              margin: '0 0 4px 0',
+              lineHeight: 1.3,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: isCompact ? 'nowrap' : 'normal'
+              wordBreak: 'break-word',
+              minHeight: '2.6em'
             }}
             title={course.name}
           >
@@ -148,7 +153,7 @@ export default function CourseSafetyCard({
           </h3>
 
           {/* Faculty Meta */}
-          <p style={{ fontSize: '12px', color: 'var(--ink-soft)', margin: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <p style={{ fontSize: '12px', color: 'var(--ink-soft)', margin: 0, display: 'flex', alignItems: 'center', gap: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             <User size={12} color="var(--ink-faint)" />
             <span>{course.faculty}</span>
           </p>
@@ -163,7 +168,7 @@ export default function CourseSafetyCard({
             backgroundColor: statusWash,
             border: `1px solid ${statusBorder}`,
             borderRadius: '12px',
-            padding: '6px 8px',
+            padding: '6px 10px',
             flexShrink: 0
           }}
         >
@@ -205,11 +210,11 @@ export default function CourseSafetyCard({
           </div>
 
           {/* Odometer Numeric Percentage */}
-          <div style={{ textAlign: 'left' }}>
+          <div style={{ textAlign: 'left', minWidth: '46px' }}>
             <div
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '17px',
+                fontSize: '16px',
                 fontWeight: 800,
                 color: statusTextColor,
                 lineHeight: 1,
@@ -223,7 +228,7 @@ export default function CourseSafetyCard({
               />
               <span style={{ fontSize: '11px', fontWeight: 600, marginLeft: '1px' }}>%</span>
             </div>
-            <div style={{ fontSize: '10px', fontWeight: 700, color: statusTextColor, marginTop: '2px', letterSpacing: '0.02em' }}>
+            <div style={{ fontSize: '10px', fontWeight: 700, color: statusTextColor, marginTop: '2px', letterSpacing: '0.02em', whiteSpace: 'nowrap' }}>
               {statusLabel}
             </div>
           </div>
@@ -306,21 +311,24 @@ export default function CourseSafetyCard({
             backgroundColor: 'var(--paper)',
             border: '1px solid var(--border)',
             borderRadius: '10px',
-            padding: '8px 10px',
+            padding: '7px 9px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            minWidth: 0
           }}
         >
-          <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: '3px' }}>
+          <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: '3px', whiteSpace: 'nowrap' }}>
             <BookOpen size={10} color="var(--ink-faint)" />
             <span>Conducted</span>
           </span>
-          <div style={{ marginTop: '3px', fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '13px', color: 'var(--ink)' }}>
-            {course.attended} / {course.conducted}
-            <span style={{ fontSize: '10px', color: 'var(--ink-soft)', fontWeight: 500, marginLeft: '3px' }}>
-              ({(course.totalPlanned || 24) - course.conducted} left)
-            </span>
+          <div style={{ marginTop: '3px' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontWeight: 800, fontSize: '13px', color: 'var(--ink)', lineHeight: 1.1 }}>
+              {course.attended} / {course.conducted}
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--ink-soft)', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap' }}>
+              {Math.max(0, (course.totalPlanned || 20) - course.conducted)} left
+            </div>
           </div>
         </div>
 
@@ -330,30 +338,32 @@ export default function CourseSafetyCard({
             backgroundColor: 'var(--paper)',
             border: '1px solid var(--border)',
             borderRadius: '10px',
-            padding: '8px 10px',
+            padding: '7px 9px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            minWidth: 0
           }}
         >
-          <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: '3px' }}>
+          <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: '3px', whiteSpace: 'nowrap' }}>
             <ShieldCheck size={10} color="var(--moss)" />
             <span>Safe Margin</span>
           </span>
-          <div
-            style={{
-              marginTop: '3px',
-              fontFamily: 'var(--font-mono)',
-              fontWeight: 800,
-              fontSize: '13px',
-              color: isDanger ? 'var(--hanko-text)' : 'var(--moss-text)'
-            }}
-          >
-            {isDanger ? (
-              <span>0 Safe</span>
-            ) : (
-              <span>+{projectedSafeBunks} Safe</span>
-            )}
+          <div style={{ marginTop: '3px' }}>
+            <div
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 800,
+                fontSize: '13px',
+                color: isDanger ? 'var(--hanko-text)' : 'var(--moss-text)',
+                lineHeight: 1.1
+              }}
+            >
+              {isDanger ? '0 Safe' : `+${projectedSafeBunks} Safe`}
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--ink-soft)', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap' }}>
+              80% rule buffer
+            </div>
           </div>
         </div>
 
@@ -363,57 +373,69 @@ export default function CourseSafetyCard({
             backgroundColor: 'var(--paper)',
             border: '1px solid var(--border)',
             borderRadius: '10px',
-            padding: '8px 10px',
+            padding: '7px 9px',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            minWidth: 0
           }}
         >
-          <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: '3px' }}>
+          <span style={{ fontSize: '10px', color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', gap: '3px', whiteSpace: 'nowrap' }}>
             <Clock size={10} color="var(--ink-faint)" />
             <span>Next Class</span>
           </span>
           <div style={{ marginTop: '3px' }}>
-            {isDanger ? (
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: 'var(--hanko-text)',
-                  backgroundColor: 'var(--wash-hanko)',
-                  padding: '2px 5px',
-                  borderRadius: '5px'
-                }}
-              >
-                Must Attend
-              </span>
-            ) : originalStats.safeImmediateBunks > 0 ? (
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: 'var(--moss-text)',
-                  backgroundColor: 'var(--wash-moss)',
-                  padding: '2px 5px',
-                  borderRadius: '5px'
-                }}
-              >
-                Safe to Miss
-              </span>
-            ) : (
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: 'var(--ochre-text)',
-                  backgroundColor: 'var(--wash-ochre)',
-                  padding: '2px 5px',
-                  borderRadius: '5px'
-                }}
-              >
-                Zero Buffer
-              </span>
-            )}
+            <div style={{ lineHeight: 1.1 }}>
+              {isDanger ? (
+                <span
+                  style={{
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    color: 'var(--hanko-text)',
+                    backgroundColor: 'var(--wash-hanko)',
+                    padding: '2px 5px',
+                    borderRadius: '4px',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-block'
+                  }}
+                >
+                  Must Attend
+                </span>
+              ) : (originalStats.safeImmediateBunks > 0 || (course.conducted === 0 && projectedSafeBunks > 0)) ? (
+                <span
+                  style={{
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    color: 'var(--moss-text)',
+                    backgroundColor: 'var(--wash-moss)',
+                    padding: '2px 5px',
+                    borderRadius: '4px',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-block'
+                  }}
+                >
+                  Safe to Miss
+                </span>
+              ) : (
+                <span
+                  style={{
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    color: 'var(--ochre-text)',
+                    backgroundColor: 'var(--wash-ochre)',
+                    padding: '2px 5px',
+                    borderRadius: '4px',
+                    whiteSpace: 'nowrap',
+                    display: 'inline-block'
+                  }}
+                >
+                  Zero Buffer
+                </span>
+              )}
+            </div>
+            <div style={{ fontSize: '10px', color: 'var(--ink-soft)', fontWeight: 500, marginTop: '2px', whiteSpace: 'nowrap' }}>
+              immediate slot
+            </div>
           </div>
         </div>
       </div>

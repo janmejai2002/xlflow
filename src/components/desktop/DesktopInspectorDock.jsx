@@ -30,6 +30,53 @@ import { queryAstraAi, getStoredAiConfig, AI_PROVIDERS } from '../../services/ai
 import { playTactileClick } from '../../services/soundEngine';
 import { toast } from 'sonner';
 
+// Helper to safely render markdown in chat messages
+function renderFormattedMarkdown(text) {
+  if (!text) return null;
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  const formatted = escaped
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--ink);font-weight:700;">$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em style="color:var(--ink-soft);">$1</em>')
+    .replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono);font-size:11px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;">$1</code>')
+    .replace(/\n\n/g, '<div style="height:6px"></div>')
+    .replace(/\n/g, '<br/>');
+
+  return (
+    <div
+      dangerouslySetInnerHTML={{ __html: formatted }}
+      style={{
+        lineHeight: 1.5,
+        wordBreak: 'break-word',
+        color: 'inherit'
+      }}
+    />
+  );
+}
+
+function formatActionLabel(action) {
+  if (!action) return '';
+  switch (action.type) {
+    case 'NAVIGATE_AND_SIMULATE':
+      return `Simulating ${action.skips} bunk(s) for ${action.courseCode}`;
+    case 'NAVIGATE_TAB':
+      return `Switched view to ${action.tab}`;
+    case 'INSPECT_CLASS':
+      return `Inspecting ${action.session?.courseCode || 'lecture'}`;
+    case 'OPEN_ROSTER':
+      return `Searched batch roster for ${action.query}`;
+    case 'TRIGGER_CELEBRATION':
+      return 'Attendance streak celebrated!';
+    case 'TOGGLE_SOUNDSCAPE':
+      return '432Hz focus audio active';
+    default:
+      return 'Action executed';
+  }
+}
+
 export default function DesktopInspectorDock({
   selectedSession,
   courses = [],
@@ -646,11 +693,36 @@ export default function DesktopInspectorDock({
                     backgroundColor: msg.role === 'user' ? 'var(--ink)' : 'var(--paper)',
                     color: msg.role === 'user' ? 'var(--paper)' : 'var(--ink)',
                     fontSize: '12px',
-                    lineHeight: 1.4,
+                    lineHeight: 1.5,
                     border: msg.role === 'user' ? 'none' : '1px solid var(--border)',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                    maxWidth: '92%'
                   }}>
-                    {msg.text}
+                    {msg.role === 'user' ? (
+                      <div style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+                        {msg.text}
+                      </div>
+                    ) : (
+                      <div>
+                        {renderFormattedMarkdown(msg.text)}
+                        {msg.action && (
+                          <div style={{
+                            marginTop: '8px',
+                            paddingTop: '6px',
+                            borderTop: '1px solid rgba(0, 169, 184, 0.2)',
+                            fontSize: '11px',
+                            color: 'var(--mizu)',
+                            fontWeight: 600,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px'
+                          }}>
+                            <Check size={12} />
+                            <span>{formatActionLabel(msg.action)}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
