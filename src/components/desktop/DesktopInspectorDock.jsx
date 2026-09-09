@@ -24,7 +24,7 @@ import {
   Settings
 } from 'lucide-react';
 import { COURSE_COLORS } from '../../data/rosterData';
-import { calculateBunkStats, simulateAttendance, STATUTORY_THRESHOLD } from '../../services/bunkCalculator';
+import { calculateBunkStats, STATUTORY_THRESHOLD } from '../../services/bunkCalculator';
 import { getGoogleCalendarUrl, downloadIcsFile } from '../../services/calendarExport';
 import { queryAstraAi, getStoredAiConfig, AI_PROVIDERS } from '../../services/aiProviderEngine';
 import { playTactileClick } from '../../services/soundEngine';
@@ -44,7 +44,6 @@ export default function DesktopInspectorDock({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dockTab, setDockTab] = useState('lecture'); // 'lecture' | 'copilot'
   const [copiedVenue, setCopiedVenue] = useState(false);
-  const [simulateSkip, setSimulateSkip] = useState(false);
 
   // Copilot State
   const [copilotMessages, setCopilotMessages] = useState([
@@ -108,7 +107,6 @@ export default function DesktopInspectorDock({
   useEffect(() => {
     if (selectedSession) {
       setDockTab('lecture');
-      setSimulateSkip(false);
     }
   }, [selectedSession]);
 
@@ -135,11 +133,6 @@ export default function DesktopInspectorDock({
   };
 
   const stats = calculateBunkStats(courseMatch.attended, courseMatch.conducted, courseMatch.totalPlanned);
-
-  // Simulated stats if student skips this active lecture
-  const simulatedAttended = simulateSkip ? courseMatch.attended : courseMatch.attended;
-  const simulatedConducted = simulateSkip ? courseMatch.conducted + 1 : courseMatch.conducted;
-  const projectedPct = simulateAttendance(courseMatch.attended, courseMatch.conducted, 0, simulateSkip ? 1 : 0);
 
   const colors = COURSE_COLORS[activeSession.courseCode] || {
     accent: '#4E6E9C',
@@ -495,40 +488,20 @@ export default function DesktopInspectorDock({
                 )}
               </div>
 
-              {/* What-If Simulator Toggle */}
+              {/* Statutory Policy Note */}
               <div style={{
                 padding: '10px',
                 backgroundColor: 'var(--paper)',
                 borderRadius: '10px',
                 border: '1px solid var(--border)',
                 display: 'flex',
-                flexDirection: 'column',
+                alignItems: 'flex-start',
                 gap: '8px'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink)' }}>
-                    Simulate Bunking This Class:
-                  </span>
-                  <input
-                    type="checkbox"
-                    checked={simulateSkip}
-                    onChange={(e) => setSimulateSkip(e.target.checked)}
-                    style={{ cursor: 'pointer', accentColor: 'var(--hanko)' }}
-                  />
-                </div>
-
-                {simulateSkip && (
-                  <div style={{
-                    fontSize: '11px',
-                    color: projectedPct >= 80 ? 'var(--moss-text)' : 'var(--hanko)',
-                    backgroundColor: projectedPct >= 80 ? 'var(--wash-moss)' : 'var(--wash-hanko)',
-                    padding: '6px 8px',
-                    borderRadius: '6px',
-                    fontWeight: 500
-                  }}>
-                    Projected: <strong>{(projectedPct || 0).toFixed(1)}%</strong> ({(stats.currentPercentage || 0) > projectedPct ? '↓' : ''} {Math.abs((stats.currentPercentage || 0) - (projectedPct || 0)).toFixed(1)}% impact)
-                  </div>
-                )}
+                <Info size={13} style={{ color: 'var(--ink-muted)', marginTop: '1px', flexShrink: 0 }} />
+                <span style={{ fontSize: '11px', color: 'var(--ink-soft)', lineHeight: 1.5 }}>
+                  XLRI requires <strong style={{ color: 'var(--ink)' }}>80% minimum attendance</strong> per course. Students below threshold may be debarred from end-term examinations.
+                </span>
               </div>
             </div>
 
