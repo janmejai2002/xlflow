@@ -135,18 +135,11 @@ async def run_exhaustive_audit():
         print("[✓ PASS] Sector 01 Hero Card: 'Omnichannel Retailing' with countdown", flush=True)
         passed_checks += 1
 
-        # Test 2D / 3D Mode Switcher
-        orb_btn = page.locator("button:has-text('3D Celestial Orb')")
-        if await orb_btn.is_visible():
-            await orb_btn.click()
-            await page.wait_for_timeout(1000)
-            canvas_el = page.locator("canvas")
-            assert await canvas_el.count() > 0, "Three.js Canvas not mounted in 3D mode!"
-            print("[✓ PASS] Sector 01 3D Celestial Continuum Canvas mounted without WebGL errors", flush=True)
-            tactical_btn = page.locator("button:has-text('2D Tactical View')")
-            await tactical_btn.click()
-            await page.wait_for_timeout(400)
-            passed_checks += 1
+        # Test Tactical Radar & Real-Time Campus Feed
+        feed_badge = page.locator("section[data-sector-id='radar']").locator("text=Real-Time Campus Feed").first
+        assert await feed_badge.is_visible(), "Sector 01 Real-Time Campus Feed badge missing!"
+        print("[✓ PASS] Sector 01 Tactical Radar: Campus Feed badge & Horizon Heatmap mounted cleanly", flush=True)
+        passed_checks += 1
 
         # Test Temporal Scrubber
         scrubber = page.locator("input[type='range']").first

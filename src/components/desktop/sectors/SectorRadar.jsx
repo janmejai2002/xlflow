@@ -16,7 +16,6 @@ import {
 import { COURSE_COLORS } from '../../../data/rosterData';
 import { calculateBunkStats } from '../../../services/bunkCalculator';
 import { getGoogleCalendarUrl } from '../../../services/calendarExport';
-import ChronosOrb3D from '../../ChronosOrb3D';
 import TemporalScrubber from '../../TemporalScrubber';
 import HorizonHeatmap from '../../HorizonHeatmap';
 import { toast } from 'sonner';
@@ -29,7 +28,6 @@ export default function SectorRadar({
   onSelectDate
 }) {
   const [copiedVenue, setCopiedVenue] = useState(false);
-  const [spatialMode, setSpatialMode] = useState('2d');
   const [simulatedHour, setSimulatedHour] = useState(10.5);
   const [isLiveTime, setIsLiveTime] = useState(true);
 
@@ -109,53 +107,26 @@ export default function SectorRadar({
               margin: '2px 0 0 0',
               letterSpacing: '-0.02em'
             }}>
-              Today's Radar & Chronos Continuum
+              Today's Academic Radar
             </h2>
           </div>
         </div>
 
-        {/* 2D / 3D Spatial Continuum Switch */}
+        {/* Live Status Indicator */}
         <div style={{
           display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
           backgroundColor: 'var(--card)',
-          padding: '3px',
-          borderRadius: '10px',
-          border: '1px solid var(--border)'
+          padding: '5px 12px',
+          borderRadius: '9999px',
+          border: '1px solid var(--border)',
+          fontSize: '11px',
+          fontWeight: 600,
+          color: 'var(--ink-soft)'
         }}>
-          <button
-            onClick={() => setSpatialMode('2d')}
-            style={{
-              padding: '5px 12px',
-              fontSize: '11px',
-              fontWeight: 600,
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: spatialMode === '2d' ? 'var(--ink)' : 'transparent',
-              color: spatialMode === '2d' ? 'var(--paper)' : 'var(--ink-soft)',
-              cursor: 'pointer'
-            }}
-          >
-            2D Tactical View
-          </button>
-          <button
-            onClick={() => setSpatialMode('3d')}
-            style={{
-              padding: '5px 12px',
-              fontSize: '11px',
-              fontWeight: 600,
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: spatialMode === '3d' ? 'var(--ink)' : 'transparent',
-              color: spatialMode === '3d' ? 'var(--paper)' : 'var(--ink-soft)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px'
-            }}
-          >
-            <Sparkles size={11} color={spatialMode === '3d' ? 'var(--mizu)' : 'currentColor'} />
-            <span>3D Celestial Orb</span>
-          </button>
+          <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--moss)', display: 'inline-block' }} />
+          <span>Real-Time Campus Feed</span>
         </div>
       </div>
 
@@ -437,36 +408,19 @@ export default function SectorRadar({
             />
           </div>
 
-          {/* 3D Orb / Tactical Visualizer */}
-          {spatialMode === '3d' ? (
-            <div style={{
-              height: '240px',
-              backgroundColor: 'var(--card)',
-              borderRadius: '16px',
-              border: '1px solid var(--border)',
-              overflow: 'hidden',
-              position: 'relative'
-            }}>
-              <ChronosOrb3D
-                schedule={schedule}
-                simulatedHour={simulatedHour}
-                onSelectSession={onSelectSession}
-              />
-            </div>
-          ) : (
-            <div style={{
-              backgroundColor: 'var(--card)',
-              borderRadius: '16px',
-              border: '1px solid var(--border)',
-              padding: '16px'
-            }}>
-              <HorizonHeatmap
-                schedule={schedule}
-                deadlines={deadlines}
-                onSelectDate={onSelectDate}
-              />
-            </div>
-          )}
+          {/* Horizon Heatmap Calendar Visualizer */}
+          <div style={{
+            backgroundColor: 'var(--card)',
+            borderRadius: '16px',
+            border: '1px solid var(--border)',
+            padding: '16px'
+          }}>
+            <HorizonHeatmap
+              schedule={schedule}
+              deadlines={deadlines}
+              onSelectDate={onSelectDate}
+            />
+          </div>
 
         </div>
       </div>
