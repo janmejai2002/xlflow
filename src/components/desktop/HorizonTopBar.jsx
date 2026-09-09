@@ -10,7 +10,9 @@ import {
   Sun,
   Moon,
   Users,
-  LogOut
+  LogOut,
+  Smartphone,
+  Monitor
 } from 'lucide-react';
 
 export default function HorizonTopBar({
@@ -26,7 +28,9 @@ export default function HorizonTopBar({
   onOpenBooklet,
   isAmbientOn,
   onToggleAmbient,
-  onOpenAiSettings
+  onOpenAiSettings,
+  onToggleLayoutMode,
+  isDesktop
 }) {
   return (
     <header style={{
@@ -110,17 +114,20 @@ export default function HorizonTopBar({
             </div>
           </div>
 
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px',
-            backgroundColor: 'var(--wash-ochre)',
-            padding: '2px 6px',
-            borderRadius: '6px',
-            fontSize: '10px',
-            fontWeight: 700,
-            color: 'var(--ochre-text)'
-          }}>
+          <div
+            className="topbar-hide-980"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              backgroundColor: 'var(--wash-ochre)',
+              padding: '2px 6px',
+              borderRadius: '6px',
+              fontSize: '10px',
+              fontWeight: 700,
+              color: 'var(--ochre-text)'
+            }}
+          >
             <Flame size={12} color="var(--ochre)" />
             <span>8-Day Streak</span>
           </div>
@@ -198,7 +205,7 @@ export default function HorizonTopBar({
           }}
         >
           <Headphones size={13} color={isAmbientOn ? 'var(--moss)' : 'currentColor'} />
-          <span>432Hz Focus</span>
+          <span className="topbar-hide-1280">432Hz Focus</span>
 
           {/* Equalizer Waveform Animation */}
           {isAmbientOn && (
@@ -214,6 +221,7 @@ export default function HorizonTopBar({
         <button
           onClick={onOpenBooklet}
           title="Student Instruction Manual"
+          className="topbar-hide-1120"
           style={{
             padding: '6px 10px',
             backgroundColor: 'var(--paper)',
@@ -247,13 +255,36 @@ export default function HorizonTopBar({
           }}
         >
           <Sparkles size={12} />
-          <span>AI Engine</span>
+          <span className="topbar-hide-1280">AI Engine</span>
+        </button>
+
+        {/* View Mode Switcher (Desktop Horizon vs Mobile Shell) */}
+        <button
+          onClick={onToggleLayoutMode}
+          title="Switch to Mobile Phone View"
+          style={{
+            padding: '6px 10px',
+            backgroundColor: 'var(--paper)',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            color: 'var(--ink)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '11px',
+            fontWeight: 600
+          }}
+        >
+          <Smartphone size={13} color="var(--mizu)" />
+          <span className="topbar-hide-1120">Mobile Shell</span>
         </button>
 
         {/* Shortcuts Helper */}
         <button
           onClick={onOpenShortcuts}
           title="Keyboard Shortcuts (?)"
+          className="topbar-hide-1120"
           style={{
             padding: '6px 10px',
             backgroundColor: 'var(--paper)',
@@ -309,18 +340,21 @@ export default function HorizonTopBar({
         </button>
 
         {/* ERP Live Indicator Pill */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: '4px 10px',
-          backgroundColor: 'var(--paper)',
-          borderRadius: '8px',
-          border: '1px solid var(--border)',
-          fontSize: '11px',
-          fontFamily: 'var(--font-mono)',
-          color: 'var(--ink-soft)'
-        }}>
+        <div
+          className="topbar-hide-1280"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '4px 10px',
+            backgroundColor: 'var(--paper)',
+            borderRadius: '8px',
+            border: '1px solid var(--border)',
+            fontSize: '11px',
+            fontFamily: 'var(--font-mono)',
+            color: 'var(--ink-soft)'
+          }}
+        >
           <span style={{
             width: '6px',
             height: '6px',

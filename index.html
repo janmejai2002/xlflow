@@ -29,7 +29,10 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(err => {
+          navigator.serviceWorker.register('./sw.js').then((reg) => {
+            // Actively check for newest version on every page open
+            reg.update();
+          }).catch(err => {
             console.log('SW registration error:', err);
           });
         });
