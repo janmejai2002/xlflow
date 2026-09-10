@@ -100,6 +100,26 @@
         </p>
       </div>
 
+      <div class="xlflow-hud-card" id="xlflow-campus-radar-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 12px; font-weight: 700; color: #94A3B8;">CAMPUS RADAR • WHO'S WHERE</span>
+          <span id="xlflow-radar-headcount" style="font-size: 11px; font-weight: 700; color: #38BDF8; background: rgba(56,189,248,0.15); padding: 2px 8px; border-radius: 999px;">
+            Live Presence
+          </span>
+        </div>
+        <div id="xlflow-radar-beacons" style="font-size: 12px; color: #CBD5E1; line-height: 1.5; margin-bottom: 10px;">
+          ☕ Nescafe (2) • 📚 Library (1) • 🏛️ MCR (1)
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button id="xlflow-open-social-btn" style="flex: 1; padding: 7px 10px; background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38BDF8; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">
+            Explore Campus Radar ↗
+          </button>
+          <button id="xlflow-invite-btn" style="padding: 7px 10px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; border-radius: 8px; font-size: 11px; font-weight: 600; cursor: pointer;">
+            Invite Friends
+          </button>
+        </div>
+      </div>
+
       <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: #64748B; text-align: center;">
         XL-Flow Client v1.0.0 • Zero Telemetry • Student Identity Protected
       </div>
@@ -138,6 +158,46 @@
           }
         });
       }
+
+      // Launch full app
+      const launchBtn = document.getElementById('xlflow-launch-full-btn');
+      const openSocialBtn = document.getElementById('xlflow-open-social-btn');
+      const appUrl = typeof chrome !== 'undefined' && chrome.runtime?.getURL ? chrome.runtime.getURL('dist/index.html') : 'https://janmejai2002.github.io/xlflow/';
+
+      if (launchBtn) {
+        launchBtn.onclick = () => window.open(appUrl, '_blank');
+      }
+      if (openSocialBtn) {
+        openSocialBtn.onclick = () => window.open(appUrl + '?tab=synergy', '_blank');
+      }
+
+      // Invite Friends button
+      const inviteBtn = document.getElementById('xlflow-invite-btn');
+      if (inviteBtn) {
+        inviteBtn.onclick = () => {
+          const inviteText = "Hey! Check out XL-Flow to see live campus hotspots and compare our free slots: https://janmejai2002.github.io/xlflow/?meet=B25349";
+          navigator.clipboard.writeText(inviteText);
+          inviteBtn.textContent = 'Copied Link!';
+          setTimeout(() => { inviteBtn.textContent = 'Invite Friends'; }, 2000);
+        };
+      }
+
+      // Hydrate live social presence from local daemon
+      try {
+        fetch('http://localhost:3101/api/social/whos-where', { signal: AbortSignal.timeout(1500) })
+          .then(r => r.json())
+          .then(data => {
+            if (data && data.zoneCounts) {
+              const countEl = document.getElementById('xlflow-radar-headcount');
+              const beaconsEl = document.getElementById('xlflow-radar-beacons');
+              if (countEl) countEl.textContent = `${data.zoneCounts.total || 0} on campus`;
+              if (beaconsEl) {
+                beaconsEl.textContent = `☕ Nescafe (${data.zoneCounts.nescafe || 0}) • 📚 Library (${data.zoneCounts.library || 0}) • 🏛️ Academic (${data.zoneCounts.academic || 0})`;
+              }
+            }
+          })
+          .catch(() => {});
+      } catch (e) {}
     }
   }
 

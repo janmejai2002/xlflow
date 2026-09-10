@@ -35,7 +35,7 @@ const STANDARD_SLOTS = [
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-export default function SectorSynergy({ currentUser, schedule = [] }) {
+export default function SectorSynergy({ currentUser, schedule = [], isMobile = false }) {
   const [activeSubTab, setActiveSubTab] = useState('radar'); // 'radar' | 'synergy' | 'circles'
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState('all');
@@ -101,7 +101,7 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
         return;
       }
       setSelectedMembers(prev => [...prev, student]);
-      toast.success(Added );
+      toast.success(`Added ${student.name.split(' ')[0]} to squad`);
     }
   };
 
@@ -161,7 +161,7 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
 
   return (
     <div style={{
-      width: 'min(1150px, calc(100vw - 80px))',
+      width: isMobile ? '100%' : 'min(1150px, calc(100vw - 80px))',
       maxWidth: '100%',
       boxSizing: 'border-box',
       height: '100%',
@@ -171,7 +171,13 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
       flexShrink: 0
     }}>
       {/* Sector Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: isMobile ? 'flex-start' : 'center', 
+        justifyContent: 'space-between',
+        flexDirection: isMobile ? 'column' : 'row',
+        gap: isMobile ? '12px' : '0'
+      }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
             width: '32px',
@@ -183,12 +189,13 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)'
+            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)',
+            flexShrink: 0
           }}>
             <Users size={16} />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
               <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--mizu)', letterSpacing: '0.06em' }}>
                 SECTOR 06
               </span>
@@ -197,7 +204,7 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
             </div>
             <h2 style={{
               fontFamily: 'var(--font-brand)',
-              fontSize: '22px',
+              fontSize: isMobile ? '19px' : '22px',
               fontWeight: 800,
               color: 'var(--ink)',
               margin: '2px 0 0 0',
@@ -209,13 +216,22 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
         </div>
 
         {/* View Switcher Tabs + Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '8px',
+          flexWrap: 'wrap',
+          width: isMobile ? '100%' : 'auto',
+          justifyContent: isMobile ? 'flex-start' : 'flex-end'
+        }}>
           <div style={{
             display: 'flex',
             backgroundColor: 'var(--card)',
             padding: '3px',
             borderRadius: '10px',
-            border: '1px solid var(--border)'
+            border: '1px solid var(--border)',
+            overflowX: 'auto',
+            maxWidth: '100%'
           }}>
             {[
               { id: 'radar', label: 'Campus Radar', icon: Compass },

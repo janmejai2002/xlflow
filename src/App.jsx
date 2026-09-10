@@ -19,6 +19,7 @@ import DesktopHorizonDeck from './components/desktop/DesktopHorizonDeck';
 import GroupCollaborationModal from './components/desktop/GroupCollaborationModal';
 import AiSettingsModal from './components/AiSettingsModal';
 import InviteWelcomeModal from './components/social/InviteWelcomeModal';
+import SectorSynergy from './components/desktop/sectors/SectorSynergy';
 import { parseDeepLink } from './services/deepLinkHandler';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
@@ -381,6 +382,14 @@ export default function App() {
                 schedule={dataPayload.schedule}
                 deadlines={dataPayload.deadlines}
                 courses={dataPayload.courses}
+              />
+            )}
+
+            {activeTab === 'synergy' && (
+              <SectorSynergy
+                currentUser={dataPayload.student}
+                schedule={dataPayload.schedule}
+                isMobile={true}
               />
             )}
 
