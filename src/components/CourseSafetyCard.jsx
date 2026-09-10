@@ -128,6 +128,23 @@ export default function CourseSafetyCard({
             <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
               {course.credits || 3.0} Credits • {course.term || 'Term-5'}
             </span>
+            {course.discrepancy?.hasDiscrepancy && (
+              <span
+                title={`ERP: ${course.officialStats?.attended}/${course.officialStats?.conducted} vs Self-Log: ${course.selfStats?.attended}/${course.selfStats?.conducted}`}
+                style={{
+                  fontSize: '10px',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 700,
+                  padding: '1px 6px',
+                  borderRadius: '4px',
+                  backgroundColor: 'var(--wash-ochre)',
+                  color: 'var(--ochre-text)',
+                  border: '1px solid rgba(194, 145, 58, 0.35)'
+                }}
+              >
+                Δ {course.discrepancy.difference > 0 ? `+${course.discrepancy.difference}` : course.discrepancy.difference} vs ERP
+              </span>
+            )}
           </div>
 
           {/* Course Title in Modern Plus Jakarta Sans */}

@@ -18,6 +18,9 @@ import {
 import { COURSE_COLORS } from '../../../data/rosterData';
 import { calculateBunkStats } from '../../../services/bunkCalculator';
 import { getGoogleCalendarUrl } from '../../../services/calendarExport';
+import { selfAttendanceStore } from '../../../services/selfAttendanceStore';
+import SelfAttendanceMarkPill from '../../attendance/SelfAttendanceMarkPill';
+import PostLectureCheckinCard from '../../attendance/PostLectureCheckinCard';
 import HorizonHeatmap from '../../HorizonHeatmap';
 import ChronosOrb3D from '../../ChronosOrb3D';
 import { playTactileClick } from '../../../services/soundEngine';
@@ -33,6 +36,12 @@ export default function SectorRadar({
   const [copiedVenue, setCopiedVenue] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [spatialMode, setSpatialMode] = useState('3d'); // '3d' | 'heatmap'
+  const [, setStoreVer] = useState(0);
+
+  useEffect(() => {
+    const unsub = selfAttendanceStore.subscribe(() => setStoreVer(v => v + 1));
+    return unsub;
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 30000);
@@ -60,7 +69,8 @@ export default function SectorRadar({
     totalPlanned: 20
   };
 
-  const stats = calculateBunkStats(courseMatch.attended, courseMatch.conducted, courseMatch.totalPlanned);
+  const courseStatsObj = selfAttendanceStore.getCourseStats(courseMatch, schedule);
+  const stats = courseStatsObj?.active || calculateBunkStats(courseMatch.attended, courseMatch.conducted, courseMatch.totalPlanned);
   const colors = COURSE_COLORS[nextSession.courseCode] || { accent: '#4E6E9C', bg: 'var(--card)' };
 
   const handleCopyVenue = (venue) => {
@@ -141,6 +151,9 @@ export default function SectorRadar({
           <span>Real-Time Campus Feed</span>
         </div>
       </div>
+
+      {/* Sovereign Self-Attendance Check-In Prompt */}
+      <PostLectureCheckinCard schedule={schedule} courses={courses} />
 
       {/* Main Dual-Cockpit Container */}
       <div style={{
@@ -245,37 +258,48 @@ export default function SectorRadar({
               <span style={{ color: 'var(--ink-soft)', fontSize: '12px' }}>({nextSession.classDate})</span>
             </div>
 
-            {/* Venue & GCal Actions */}
+            {/* Venue, GCal & Self-Attendance Actions */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingTop: '12px',
-              borderTop: '1px solid var(--border)'
+              borderTop: '1px solid var(--border)',
+              gap: '8px'
             }}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCopyVenue(nextSession.venue);
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '7px 12px',
-                  borderRadius: '8px',
-                  backgroundColor: 'var(--paper)',
-                  border: '1px solid var(--border)',
-                  color: 'var(--ink)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                <MapPin size={13} color={colors.accent} />
-                <span>{nextSession.venue}</span>
-                {copiedVenue ? <Check size={12} color="var(--moss)" /> : <Copy size={12} color="var(--ink-soft)" />}
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopyVenue(nextSession.venue);
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '7px 12px',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--paper)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--ink)',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <MapPin size={13} color={colors.accent} />
+                  <span>{nextSession.venue}</span>
+                  {copiedVenue ? <Check size={12} color="var(--moss)" /> : <Copy size={12} color="var(--ink-soft)" />}
+                </button>
+
+                <SelfAttendanceMarkPill
+                  sessionId={nextSession.sessionId}
+                  courseCode={nextSession.courseCode}
+                  courseName={nextSession.courseName}
+                  classDate={nextSession.classDate}
+                  venue={nextSession.venue}
+                />
+              </div>
 
               <button
                 onClick={(e) => {
@@ -389,20 +413,31 @@ export default function SectorRadar({
                       </div>
                     </div>
 
-                    <span style={{
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      color: 'var(--ink-soft)',
-                      backgroundColor: 'var(--card)',
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      border: '1px solid var(--border)'
-                    }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                        <MapPin size={10} color="var(--hanko)" />
-                        <span>{s.venue}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <SelfAttendanceMarkPill
+                        sessionId={s.sessionId}
+                        courseCode={s.courseCode}
+                        courseName={s.courseName}
+                        classDate={s.classDate}
+                        venue={s.venue}
+                        size="sm"
+                      />
+
+                      <span style={{
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: 'var(--ink-soft)',
+                        backgroundColor: 'var(--card)',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        border: '1px solid var(--border)'
+                      }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                          <MapPin size={10} color="var(--hanko)" />
+                          <span>{s.venue}</span>
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
                 );
               })}

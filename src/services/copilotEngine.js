@@ -6,6 +6,7 @@
 import { calculateBunkStats, simulateAttendance, STATUTORY_THRESHOLD } from './bunkCalculator';
 import { findNaturalGetaways } from './tripPlanner';
 import { BATCH_ROSTER } from '../data/rosterData';
+import { selfAttendanceStore } from './selfAttendanceStore';
 
 export function processCopilotMessage(input, context) {
   const query = input.trim().toLowerCase();
@@ -148,11 +149,35 @@ export function processCopilotMessage(input, context) {
     };
   }
 
+  // 8. Self Attendance & Discrepancy Intent
+  if (query.includes('discrepan') || query.includes('self') || query.includes('ground reality') || query.includes('audit') || query.includes('appeal') || query.includes('dean')) {
+    const discrepancies = selfAttendanceStore.getAllDiscrepancies(courses, schedule);
+    const storeData = selfAttendanceStore.load();
+    const markedSessions = Object.keys(storeData.sessions || {}).length;
+
+    let reply = '';
+    if (discrepancies.length > 0) {
+      const list = discrepancies.map(d => `• **${d.courseCode}**: ERP shows ${d.officialAttended}/${d.officialConducted}, but your personal log tracks ${d.selfAttended}/${d.selfConducted} (Δ ${d.difference > 0 ? `+${d.difference}` : d.difference}).`).join('\n');
+      reply = `I audited your sovereign attendance records against the official ERP snapshot:\n\n⚠️ **${discrepancies.length} Course Discrepanc${discrepancies.length > 1 ? 'ies' : 'y'} Found**:\n${list}\n\nYou have personally logged **${markedSessions} sessions**. You can export a certified Dean Appeal Report or CSV directly from the Self-Log Audit panel in Bunk-O-Meter.`;
+    } else {
+      reply = `All your courses currently align between your personal log and the official ERP snapshot! You have tracked **${markedSessions} sessions** in sovereign storage. You can mark recent lectures or review historical audit logs anytime in the Bunk-O-Meter.`;
+    }
+
+    return {
+      reply,
+      action: {
+        type: 'NAVIGATE_TAB',
+        tab: 'bunkmeter'
+      }
+    };
+  }
+
   // Default intelligent assistant response
   return {
     reply: `I can help you coordinate your Term-5 commitments at XLRI. Try asking:
 - *"Can I bunk OMCR this Friday?"*
 - *"Where is my next class?"*
+- *"Check my attendance discrepancies"*
 - *"Find long weekends for a trip"*
 - *"Search for roll 349"*
 - *"Play 432Hz focus ambient"*`,

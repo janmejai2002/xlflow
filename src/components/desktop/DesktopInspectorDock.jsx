@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { COURSE_COLORS } from '../../data/rosterData';
 import { calculateBunkStats, STATUTORY_THRESHOLD } from '../../services/bunkCalculator';
+import { selfAttendanceStore } from '../../services/selfAttendanceStore';
+import SelfAttendanceMarkPill from '../attendance/SelfAttendanceMarkPill';
 import { getGoogleCalendarUrl, downloadIcsFile } from '../../services/calendarExport';
 import { queryAstraAi, getStoredAiConfig, AI_PROVIDERS } from '../../services/aiProviderEngine';
 import { playTactileClick } from '../../services/soundEngine';
@@ -91,6 +93,12 @@ export default function DesktopInspectorDock({
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [dockTab, setDockTab] = useState('lecture'); // 'lecture' | 'copilot'
   const [copiedVenue, setCopiedVenue] = useState(false);
+  const [, setStoreVer] = useState(0);
+
+  useEffect(() => {
+    const unsub = selfAttendanceStore.subscribe(() => setStoreVer(v => v + 1));
+    return unsub;
+  }, []);
 
   // Copilot State
   const [copilotMessages, setCopilotMessages] = useState([
@@ -179,7 +187,8 @@ export default function DesktopInspectorDock({
     totalPlanned: 20
   };
 
-  const stats = calculateBunkStats(courseMatch.attended, courseMatch.conducted, courseMatch.totalPlanned);
+  const recon = selfAttendanceStore.getCourseStats(courseMatch, schedule);
+  const stats = recon ? recon.active : calculateBunkStats(courseMatch.attended, courseMatch.conducted, courseMatch.totalPlanned);
 
   const colors = COURSE_COLORS[activeSession.courseCode] || {
     accent: '#4E6E9C',
@@ -550,6 +559,42 @@ export default function DesktopInspectorDock({
                   XLRI requires <strong style={{ color: 'var(--ink)' }}>80% minimum attendance</strong> per course. Students below threshold may be debarred from end-term examinations.
                 </span>
               </div>
+            </div>
+
+            {/* Sovereign Self-Attendance Marking Card */}
+            <div style={{
+              backgroundColor: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: '14px',
+              padding: '14px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <ShieldCheck size={14} color="var(--mizu)" />
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--ink)' }}>
+                    Ground Reality Attendance
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '10px',
+                  fontWeight: 600,
+                  color: 'var(--moss-text)',
+                  backgroundColor: 'var(--wash-moss)',
+                  padding: '2px 6px',
+                  borderRadius: '6px'
+                }}>
+                  Sovereign Log
+                </span>
+              </div>
+
+              <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0, lineHeight: 1.4 }}>
+                ERP lags by days. Mark this class to update your real-time safety margin:
+              </p>
+
+              <SelfAttendanceMarkPill session={activeSession} isCompact={false} />
             </div>
 
             {/* Quick Export Actions */}
