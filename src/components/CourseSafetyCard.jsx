@@ -252,6 +252,50 @@ export default function CourseSafetyCard({
         </div>
       </div>
 
+      {/* Plain-English Zero-Math Safety Statement */}
+      <div style={{
+        padding: '6px 10px',
+        borderRadius: '8px',
+        backgroundColor: statusWash,
+        border: `1px solid ${statusBorder}`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '6px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+          {isDanger ? (
+            <AlertTriangle size={12} color={statusColor} style={{ flexShrink: 0 }} />
+          ) : (
+            <ShieldCheck size={12} color={statusColor} style={{ flexShrink: 0 }} />
+          )}
+          <span style={{
+            fontSize: '11px',
+            fontWeight: 700,
+            color: statusTextColor,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
+            {isDanger
+              ? `Debarment Danger: Attend next ${originalStats.classesNeededToRecover || 1} classes`
+              : projectedSafeBunks === 0
+              ? `0 Bunks Left: Attend next class to remain safe`
+              : `+${projectedSafeBunks} Bunks Available before 80% limit`}
+          </span>
+        </div>
+        <span style={{
+          fontSize: '9.5px',
+          fontWeight: 700,
+          fontFamily: 'var(--font-mono)',
+          color: statusTextColor,
+          opacity: 0.85,
+          flexShrink: 0
+        }}>
+          {isDanger ? 'ACTION REQ' : projectedSafeBunks === 0 ? 'CAUTION' : 'SAFE'}
+        </span>
+      </div>
+
       {/* 2. Safety Horizon Dual-Track Gauge */}
       <div>
         <div style={{ position: 'relative', width: '100%', height: '9px', backgroundColor: 'var(--stone)', borderRadius: '999px', overflow: 'hidden' }}>

@@ -468,12 +468,28 @@ export default function SectorSynergy({ currentUser, schedule = [], isMobile = f
 
                 {/* 3-Step Guided Architecture Ribbon */}
                 <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                  gap: '14px',
                   paddingTop: '16px',
                   borderTop: '1px solid var(--border-soft)'
                 }}>
+                  <div style={{
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    letterSpacing: '0.04em',
+                    color: 'var(--ink)',
+                    marginBottom: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <BookOpen size={14} color="var(--mizu)" />
+                    <span>How Study Squads Work</span>
+                  </div>
+
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                    gap: '14px'
+                  }}>
                   <div style={{
                     backgroundColor: 'var(--paper)',
                     borderRadius: '12px',
@@ -562,7 +578,8 @@ export default function SectorSynergy({ currentUser, schedule = [], isMobile = f
                   </div>
                 </div>
               </div>
-            ) : (
+            </div>
+          ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '14px' }}>
                 {squads.map(c => (
                   <div

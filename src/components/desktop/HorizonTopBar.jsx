@@ -37,7 +37,8 @@ export default function HorizonTopBar({
   isDesktop,
   isInspectorOpen,
   onToggleInspector,
-  onOpenBeaconModal
+  onOpenBeaconModal,
+  onOpenQuickTour
 }) {
   const [myBeacon, setMyBeacon] = useState(() => socialApi.getMyStatus());
 
@@ -328,7 +329,41 @@ export default function HorizonTopBar({
           }} />
         </button>
 
-        {/* Action 2: 432Hz Focus Sound Engine */}
+        {/* Action 2: Quick Tour Button */}
+        <button
+          onClick={() => {
+            playTactileClick(700);
+            onOpenQuickTour?.();
+          }}
+          title="Take 30-sec Quick Tour (How XL-Flow Works)"
+          aria-label="Take Quick Tour"
+          style={{
+            height: '32px',
+            padding: '0 10px',
+            backgroundColor: 'var(--wash-ochre)',
+            border: '1px solid rgba(194, 145, 58, 0.35)',
+            borderRadius: '8px',
+            color: 'var(--ochre-text)',
+            fontSize: '11px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(194, 145, 58, 0.22)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--wash-ochre)';
+          }}
+        >
+          <Sparkles size={12} color="var(--ochre)" />
+          <span className="topbar-hide-1280">Quick Tour</span>
+        </button>
+
+        {/* Action 3: 432Hz Focus Sound Engine */}
         <button
           onClick={() => {
             playTactileClick(600);

@@ -51,6 +51,8 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
 
   const pending = deadlines.filter(d => !d.completed);
   const completed = deadlines.filter(d => d.completed);
+  const urgent = pending.filter(d => new Date(d.dueDate).getTime() - Date.now() < 48 * 3600 * 1000);
+  const upcoming = pending.filter(d => new Date(d.dueDate).getTime() - Date.now() >= 48 * 3600 * 1000);
 
   return (
     <div style={{
@@ -202,78 +204,172 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
           flexDirection: 'column',
           gap: '10px'
         }}>
-          <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ink-soft)' }}>
-            ACTIVE DELIVERABLES ({pending.length})
+          <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ink-soft)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span>ACTIVE DELIVERABLES ({pending.length})</span>
+            {urgent.length > 0 && (
+              <span style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                color: 'var(--hanko)',
+                backgroundColor: 'var(--wash-hanko)',
+                padding: '2px 6px',
+                borderRadius: '4px'
+              }}>
+                🔥 {urgent.length} Due Soon
+              </span>
+            )}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
-            {pending.map(d => {
-              const colors = COURSE_COLORS[d.courseCode] || { accent: '#4E6E9C' };
-              const isUrgent = new Date(d.dueDate).getTime() - Date.now() < 48 * 3600 * 1000;
+            {/* Urgent Section */}
+            {urgent.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '4px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--hanko)', letterSpacing: '0.04em' }}>
+                  DUE SOON (&lt; 48 HOURS)
+                </span>
+                {urgent.map(d => {
+                  const colors = COURSE_COLORS[d.courseCode] || { accent: '#4E6E9C' };
+                  return (
+                    <div
+                      key={d.id}
+                      style={{
+                        backgroundColor: 'var(--paper)',
+                        border: '1.5px solid rgba(210, 84, 63, 0.35)',
+                        borderRadius: '10px',
+                        padding: '12px 14px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        boxShadow: '0 1px 3px rgba(210, 84, 63, 0.08)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <input
+                          type="checkbox"
+                          checked={d.completed}
+                          onChange={() => handleToggleCompleted(d.id)}
+                          style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: 'var(--moss)' }}
+                        />
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                            <span style={{
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              color: colors.accent,
+                              backgroundColor: 'var(--card)',
+                              padding: '1px 5px',
+                              borderRadius: '4px',
+                              border: '1px solid var(--border)'
+                            }}>
+                              {d.courseCode}
+                            </span>
+                            <span style={{
+                              fontSize: '9px',
+                              fontWeight: 800,
+                              color: 'var(--hanko)',
+                              backgroundColor: 'var(--wash-hanko)',
+                              padding: '1px 6px',
+                              borderRadius: '4px'
+                            }}>
+                              URGENT
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>
+                            {d.title}
+                          </div>
+                        </div>
+                      </div>
 
-              return (
-                <div
-                  key={d.id}
-                  style={{
-                    backgroundColor: 'var(--paper)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '10px',
-                    padding: '12px 14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <input
-                      type="checkbox"
-                      checked={d.completed}
-                      onChange={() => handleToggleCompleted(d.id)}
-                      style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: 'var(--moss)' }}
-                    />
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-                        <span style={{
-                          fontSize: '10px',
-                          fontWeight: 700,
-                          color: colors.accent,
-                          backgroundColor: 'var(--card)',
-                          padding: '1px 5px',
-                          borderRadius: '4px',
-                          border: '1px solid var(--border)'
-                        }}>
-                          {d.courseCode}
-                        </span>
-                        {isUrgent && (
-                          <span style={{
-                            fontSize: '9px',
-                            fontWeight: 700,
-                            color: 'var(--hanko)',
-                            backgroundColor: 'var(--wash-hanko)',
-                            padding: '1px 5px',
-                            borderRadius: '4px'
-                          }}>
-                            URGENT
-                          </span>
-                        )}
-                      </div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ink)' }}>
-                        {d.title}
-                      </div>
+                      <span style={{
+                        fontSize: '11px',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 700,
+                        color: 'var(--hanko)'
+                      }}>
+                        {d.dueDate?.slice(0, 10)}
+                      </span>
                     </div>
-                  </div>
+                  );
+                })}
+              </div>
+            )}
 
-                  <span style={{
-                    fontSize: '11px',
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--ink-soft)'
-                  }}>
-                    {d.dueDate?.slice(0, 10)}
+            {/* Upcoming Section */}
+            {upcoming.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {urgent.length > 0 && (
+                  <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--ink-soft)', letterSpacing: '0.04em', marginTop: '6px' }}>
+                    THIS TERM &amp; UPCOMING
                   </span>
-                </div>
-              );
-            })}
+                )}
+                {upcoming.map(d => {
+                  const colors = COURSE_COLORS[d.courseCode] || { accent: '#4E6E9C' };
+                  return (
+                    <div
+                      key={d.id}
+                      style={{
+                        backgroundColor: 'var(--paper)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '10px',
+                        padding: '12px 14px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <input
+                          type="checkbox"
+                          checked={d.completed}
+                          onChange={() => handleToggleCompleted(d.id)}
+                          style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: 'var(--moss)' }}
+                        />
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                            <span style={{
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              color: colors.accent,
+                              backgroundColor: 'var(--card)',
+                              padding: '1px 5px',
+                              borderRadius: '4px',
+                              border: '1px solid var(--border)'
+                            }}>
+                              {d.courseCode}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ink)' }}>
+                            {d.title}
+                          </div>
+                        </div>
+                      </div>
+
+                      <span style={{
+                        fontSize: '11px',
+                        fontFamily: 'var(--font-mono)',
+                        color: 'var(--ink-soft)'
+                      }}>
+                        {d.dueDate?.slice(0, 10)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {pending.length === 0 && (
+              <div style={{
+                textAlign: 'center',
+                padding: '30px 10px',
+                color: 'var(--moss)',
+                fontSize: '13px',
+                fontWeight: 600
+              }}>
+                🎉 All deliverables complete! Zero assignments pending.
+              </div>
+            )}
           </div>
         </div>
 
