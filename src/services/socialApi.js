@@ -28,7 +28,20 @@ class SocialApiClient {
     this.initWebSocket();
   }
 
+  isPublicHttps() {
+    return typeof window !== 'undefined' && 
+           window.location.protocol === 'https:' && 
+           !window.location.hostname.includes('localhost') &&
+           !window.location.hostname.includes('127.0.0.1');
+  }
+
   async checkServerHealth() {
+    if (this.isPublicHttps()) {
+      // Running on public HTTPS (e.g. https://janmejai2002.github.io).
+      // Browsers block public HTTPS -> private loopback http://localhost (Private Network Access policy).
+      this.serverOnline = false;
+      return false;
+    }
     try {
       const res = await fetch(LOCAL_SERVER_URL + '/health', { method: 'GET', signal: AbortSignal.timeout(2000) });
       if (res.ok) {
@@ -43,7 +56,7 @@ class SocialApiClient {
   }
 
   initWebSocket() {
-    if (typeof window === 'undefined' || !window.WebSocket) return;
+    if (typeof window === 'undefined' || !window.WebSocket || this.isPublicHttps()) return;
     try {
       if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
         return;
@@ -94,18 +107,20 @@ class SocialApiClient {
   // ==========================================
 
   async getWhosWhere() {
-    try {
-      const res = await fetch(LOCAL_SERVER_URL + '/api/social/whos-where', { signal: AbortSignal.timeout(2500) });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok && data.statuses) {
-          this.serverOnline = true;
-          localStorage.setItem(STORAGE_KEYS.REMOTE_STATUSES, JSON.stringify(data.statuses));
-          return this._formatWhosWhere(data.statuses, data.zoneCounts);
+    if (!this.isPublicHttps()) {
+      try {
+        const res = await fetch(LOCAL_SERVER_URL + '/api/social/whos-where', { signal: AbortSignal.timeout(2500) });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok && data.statuses) {
+            this.serverOnline = true;
+            localStorage.setItem(STORAGE_KEYS.REMOTE_STATUSES, JSON.stringify(data.statuses));
+            return this._formatWhosWhere(data.statuses, data.zoneCounts);
+          }
         }
+      } catch {
+        this.serverOnline = false;
       }
-    } catch {
-      this.serverOnline = false;
     }
 
     let cached = {};
@@ -181,20 +196,22 @@ class SocialApiClient {
       localStorage.setItem(STORAGE_KEYS.STATUS, JSON.stringify(fullPayload));
     } catch {}
 
-    try {
-      const res = await fetch(LOCAL_SERVER_URL + '/api/social/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fullPayload),
-        signal: AbortSignal.timeout(3000)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        this.notifySubscribers({ type: 'STATUS_UPDATED', status: fullPayload });
-        return data;
+    if (!this.isPublicHttps()) {
+      try {
+        const res = await fetch(LOCAL_SERVER_URL + '/api/social/status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fullPayload),
+          signal: AbortSignal.timeout(3000)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          this.notifySubscribers({ type: 'STATUS_UPDATED', status: fullPayload });
+          return data;
+        }
+      } catch {
+        // Offline mode
       }
-    } catch {
-      // Offline mode
     }
 
     this.notifySubscribers({ type: 'STATUS_UPDATED', status: fullPayload });
@@ -206,12 +223,14 @@ class SocialApiClient {
       localStorage.removeItem(STORAGE_KEYS.STATUS);
     } catch {}
 
-    try {
-      await fetch(LOCAL_SERVER_URL + '/api/social/status?roll=' + encodeURIComponent(rollNo), {
-        method: 'DELETE',
-        signal: AbortSignal.timeout(3000)
-      });
-    } catch {}
+    if (!this.isPublicHttps()) {
+      try {
+        await fetch(LOCAL_SERVER_URL + '/api/social/status?roll=' + encodeURIComponent(rollNo), {
+          method: 'DELETE',
+          signal: AbortSignal.timeout(3000)
+        });
+      } catch {}
+    }
 
     this.notifySubscribers({ type: 'STATUS_CLEARED', rollNo });
     return { ok: true };
@@ -237,18 +256,20 @@ class SocialApiClient {
   // ==========================================
 
   async getFriends(rollNo) {
-    try {
-      const res = await fetch(LOCAL_SERVER_URL + '/api/social/friends?roll=' + encodeURIComponent(rollNo), {
-        signal: AbortSignal.timeout(2500)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok && Array.isArray(data.friends)) {
-          localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(data.friends));
-          return data.friends;
+    if (!this.isPublicHttps()) {
+      try {
+        const res = await fetch(LOCAL_SERVER_URL + '/api/social/friends?roll=' + encodeURIComponent(rollNo), {
+          signal: AbortSignal.timeout(2500)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok && Array.isArray(data.friends)) {
+            localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(data.friends));
+            return data.friends;
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.FRIENDS);
@@ -273,14 +294,16 @@ class SocialApiClient {
       localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(updated));
     } catch {}
 
-    try {
-      await fetch(LOCAL_SERVER_URL + '/api/social/friends', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rollNo, friendRoll }),
-        signal: AbortSignal.timeout(3000)
-      });
-    } catch {}
+    if (!this.isPublicHttps()) {
+      try {
+        await fetch(LOCAL_SERVER_URL + '/api/social/friends', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rollNo, friendRoll }),
+          signal: AbortSignal.timeout(3000)
+        });
+      } catch {}
+    }
 
     this.notifySubscribers({ type: 'FRIENDS_UPDATED', rollNo, friends: updated });
     return { ok: true, isFriend: !exists, friends: updated };
@@ -291,18 +314,20 @@ class SocialApiClient {
   // ==========================================
 
   async getCircles(rollNo) {
-    try {
-      const res = await fetch(LOCAL_SERVER_URL + '/api/social/circles?roll=' + encodeURIComponent(rollNo), {
-        signal: AbortSignal.timeout(2500)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok && Array.isArray(data.circles)) {
-          localStorage.setItem(STORAGE_KEYS.CIRCLES, JSON.stringify(data.circles));
-          return data.circles;
+    if (!this.isPublicHttps()) {
+      try {
+        const res = await fetch(LOCAL_SERVER_URL + '/api/social/circles?roll=' + encodeURIComponent(rollNo), {
+          signal: AbortSignal.timeout(2500)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok && Array.isArray(data.circles)) {
+            localStorage.setItem(STORAGE_KEYS.CIRCLES, JSON.stringify(data.circles));
+            return data.circles;
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CIRCLES);
@@ -313,21 +338,23 @@ class SocialApiClient {
   }
 
   async createCircle({ name, courseCode, ownerRoll, ownerName }) {
-    try {
-      const res = await fetch(LOCAL_SERVER_URL + '/api/social/circles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, courseCode, ownerRoll, ownerName }),
-        signal: AbortSignal.timeout(3000)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok && data.circle) {
-          this.notifySubscribers({ type: 'CIRCLE_CREATED', circle: data.circle });
-          return data.circle;
+    if (!this.isPublicHttps()) {
+      try {
+        const res = await fetch(LOCAL_SERVER_URL + '/api/social/circles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, courseCode, ownerRoll, ownerName }),
+          signal: AbortSignal.timeout(3000)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok && data.circle) {
+            this.notifySubscribers({ type: 'CIRCLE_CREATED', circle: data.circle });
+            return data.circle;
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
     const code = 'XL-' + Math.random().toString(36).substring(2, 6).toUpperCase();
     const fallbackCircle = {
@@ -350,21 +377,23 @@ class SocialApiClient {
   }
 
   async joinCircle({ code, rollNo, name }) {
-    try {
-      const res = await fetch(LOCAL_SERVER_URL + '/api/social/circles/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code.trim().toUpperCase(), rollNo, name }),
-        signal: AbortSignal.timeout(3000)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok) {
-          this.notifySubscribers({ type: 'CIRCLE_JOINED', circle: data.circle });
-          return data;
+    if (!this.isPublicHttps()) {
+      try {
+        const res = await fetch(LOCAL_SERVER_URL + '/api/social/circles/join', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code.trim().toUpperCase(), rollNo, name }),
+          signal: AbortSignal.timeout(3000)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok) {
+            this.notifySubscribers({ type: 'CIRCLE_JOINED', circle: data.circle });
+            return data;
+          }
         }
-      }
-    } catch {}
+      } catch {}
+    }
 
     return { ok: true, message: 'Joined circle offline', offline: true };
   }
@@ -375,15 +404,17 @@ class SocialApiClient {
 
   async getScheduleOverlap(rolls) {
     const rollsParam = Array.isArray(rolls) ? rolls.join(',') : rolls;
-    try {
-      const res = await fetch(LOCAL_SERVER_URL + '/api/social/overlap?rolls=' + encodeURIComponent(rollsParam), {
-        signal: AbortSignal.timeout(3000)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.ok) return data;
-      }
-    } catch {}
+    if (!this.isPublicHttps()) {
+      try {
+        const res = await fetch(LOCAL_SERVER_URL + '/api/social/overlap?rolls=' + encodeURIComponent(rollsParam), {
+          signal: AbortSignal.timeout(3000)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok) return data;
+        }
+      } catch {}
+    }
 
     return this._computeLocalOverlap(Array.isArray(rolls) ? rolls : rolls.split(','));
   }
