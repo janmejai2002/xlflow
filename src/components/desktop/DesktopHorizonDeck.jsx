@@ -9,6 +9,7 @@ import SectorDeadlines from './sectors/SectorDeadlines';
 import SectorSynergy from './sectors/SectorSynergy';
 import DesktopInspectorDock from './DesktopInspectorDock';
 import AiSettingsModal from '../AiSettingsModal';
+import StatusBeaconModal from '../social/StatusBeaconModal';
 import { playTactileClick } from '../../services/soundEngine';
 
 export default function DesktopHorizonDeck({
@@ -35,6 +36,7 @@ export default function DesktopHorizonDeck({
   const [selectedSession, setSelectedSession] = useState(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
+  const [isBeaconModalOpen, setIsBeaconModalOpen] = useState(false);
 
   // Mouse Drag-to-Scroll state
   const isDraggingRef = useRef(false);
@@ -208,6 +210,7 @@ export default function DesktopHorizonDeck({
         isDesktop={isDesktop}
         isInspectorOpen={isInspectorOpen}
         onToggleInspector={() => setIsInspectorOpen(prev => !prev)}
+        onOpenBeaconModal={() => setIsBeaconModalOpen(true)}
       />
 
       {/* 2. Panoramic Horizontal Horizon Track (Zero Vertical Scroll) */}
@@ -372,6 +375,13 @@ export default function DesktopHorizonDeck({
       <AiSettingsModal
         isOpen={isAiSettingsOpen}
         onClose={() => setIsAiSettingsOpen(false)}
+      />
+
+      {/* 6. Campus Presence Beacon Modal */}
+      <StatusBeaconModal
+        isOpen={isBeaconModalOpen}
+        onClose={() => setIsBeaconModalOpen(false)}
+        currentUser={dataPayload.student}
       />
     </div>
   );
