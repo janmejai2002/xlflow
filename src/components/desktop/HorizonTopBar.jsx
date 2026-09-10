@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Search,
   Command,
@@ -11,10 +11,13 @@ import {
   Moon,
   Smartphone,
   BookOpen,
-  Cpu
+  Cpu,
+  Radio,
+  Compass
 } from 'lucide-react';
 import XlFlowLogo from '../XlFlowLogo';
 import { playTactileClick } from '../../services/soundEngine';
+import { socialApi } from '../../services/socialApi';
 
 export default function HorizonTopBar({
   student,
@@ -33,8 +36,20 @@ export default function HorizonTopBar({
   onToggleLayoutMode,
   isDesktop,
   isInspectorOpen,
-  onToggleInspector
+  onToggleInspector,
+  onOpenBeaconModal
 }) {
+  const [myBeacon, setMyBeacon] = useState(() => socialApi.getMyStatus());
+
+  useEffect(() => {
+    const unsub = socialApi.subscribe((e) => {
+      if (e.type === 'STATUS_UPDATED' || e.type === 'STATUS_CLEARED') {
+        setMyBeacon(socialApi.getMyStatus());
+      }
+    });
+    return unsub;
+  }, []);
+
   const initials = student?.name
     ? student.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
     : 'JS';
@@ -170,6 +185,32 @@ export default function HorizonTopBar({
             <Flame size={11} color="var(--ochre)" />
             <span>8d Streak</span>
           </div>
+
+          {/* Campus Presence Beacon Trigger */}
+          <button
+            onClick={() => {
+              playTactileClick(700);
+              onOpenBeaconModal?.();
+            }}
+            title="Broadcast or view campus presence beacon"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              backgroundColor: myBeacon ? 'var(--wash-moss)' : 'var(--paper)',
+              border: myBeacon ? '1px solid var(--moss)' : '1px solid var(--border)',
+              padding: '2px 8px',
+              borderRadius: '9999px',
+              fontSize: '10px',
+              fontWeight: 700,
+              color: myBeacon ? 'var(--moss-text)' : 'var(--ink-soft)',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Radio size={10} color={myBeacon ? 'var(--moss)' : 'var(--ochre)'} className={myBeacon ? 'animate-pulse' : ''} />
+            <span>{myBeacon ? `${myBeacon.emoji} ${myBeacon.zone}` : 'Beacon'}</span>
+          </button>
         </div>
       </div>
 

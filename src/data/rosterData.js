@@ -184,6 +184,11 @@ export const BATCH_ROSTER = {
   "B25480":{"n":"Yovel P Mathew","s":"G"}
 };
 
+// Friendly Roster lookup alias: roll -> { name, section }
+export const ROSTER = Object.fromEntries(
+  Object.entries(BATCH_ROSTER).map(([roll, val]) => [roll, { name: val.n, section: val.s }])
+);
+
 // Course accent colors for wAIbi-sabi design (WCAG 2.1 AA compliant)
 export const COURSE_COLORS = {
   OMCR: { accent: '#00A9B8', border: '#00A9B8', wash: 'rgba(0, 169, 184, 0.12)', bg: 'rgba(0, 169, 184, 0.08)', label: 'Mizu Blue' },

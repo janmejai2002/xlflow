@@ -1,0 +1,191 @@
+{
+  "users": {
+    "B25349": {
+      "rollNo": "B25349",
+      "name": "Janmejai Singh",
+      "section": "E",
+      "avatar": "JS",
+      "lastSeen": "2026-09-10T12:14:47.949Z",
+      "isGhost": false
+    },
+    "B25001": {
+      "rollNo": "B25001",
+      "name": "Aakanksha Jain",
+      "section": "E",
+      "avatar": "AJ",
+      "lastSeen": "2026-09-10T11:40:00.000Z",
+      "isGhost": false
+    },
+    "B25002": {
+      "rollNo": "B25002",
+      "name": "Aaradhya Saxena",
+      "section": "F",
+      "avatar": "AS",
+      "lastSeen": "2026-09-10T11:35:00.000Z",
+      "isGhost": false
+    },
+    "B25003": {
+      "rollNo": "B25003",
+      "name": "Abhishek Kumar",
+      "section": "G",
+      "avatar": "AK",
+      "lastSeen": "2026-09-10T11:20:00.000Z",
+      "isGhost": false
+    },
+    "B25004": {
+      "rollNo": "B25004",
+      "name": "Aditi Sharma",
+      "section": "E",
+      "avatar": "AS",
+      "lastSeen": "2026-09-10T11:15:00.000Z",
+      "isGhost": false
+    },
+    "B25005": {
+      "rollNo": "B25005",
+      "name": "Akshat Gupta",
+      "section": "F",
+      "avatar": "AG",
+      "lastSeen": "2026-09-10T11:10:00.000Z",
+      "isGhost": false
+    },
+    "B25308": {
+      "rollNo": "B25308",
+      "name": "Mayank Jain",
+      "section": "E",
+      "avatar": "MA",
+      "lastSeen": "2026-09-10T12:14:39.600Z",
+      "isGhost": false
+    }
+  },
+  "friends": {
+    "B25349": [
+      "B25001",
+      "B25002",
+      "B25004"
+    ],
+    "B25001": [
+      "B25349",
+      "B25004"
+    ],
+    "B25002": [
+      "B25349",
+      "B25005"
+    ],
+    "B25301": [
+      "B25308"
+    ]
+  },
+  "statuses": {
+    "B25001": {
+      "rollNo": "B25001",
+      "name": "Aakanksha Jain",
+      "section": "E",
+      "emoji": "☕",
+      "text": "Cold coffee at Nescafe before BDM",
+      "zone": "nescafe",
+      "updatedAt": "2026-09-10T11:30:00.000Z",
+      "expiresAt": 1789045200000
+    },
+    "B25002": {
+      "rollNo": "B25002",
+      "name": "Aaradhya Saxena",
+      "section": "F",
+      "emoji": "📚",
+      "text": "Strategy Case prep @ Library 2nd Floor",
+      "zone": "library",
+      "updatedAt": "2026-09-10T11:15:00.000Z",
+      "expiresAt": 1789048800000
+    },
+    "B25003": {
+      "rollNo": "B25003",
+      "name": "Abhishek Kumar",
+      "section": "G",
+      "emoji": "⚡",
+      "text": "Free window near MCR 07",
+      "zone": "academic",
+      "updatedAt": "2026-09-10T11:00:00.000Z",
+      "expiresAt": 1789043400000
+    },
+    "B25004": {
+      "rollNo": "B25004",
+      "name": "Aditi Sharma",
+      "section": "E",
+      "emoji": "🏋️",
+      "text": "Quick evening workout session",
+      "zone": "recreation",
+      "updatedAt": "2026-09-10T11:20:00.000Z",
+      "expiresAt": 1789047000000
+    },
+    "B25005": {
+      "rollNo": "B25005",
+      "name": "Akshat Gupta",
+      "section": "F",
+      "emoji": "☕",
+      "text": "Nescafe open discussion on elective bids",
+      "zone": "nescafe",
+      "updatedAt": "2026-09-10T11:10:00.000Z",
+      "expiresAt": 1789044000000
+    },
+    "B25349": {
+      "rollNo": "B25349",
+      "name": "Janmejai Singh",
+      "section": "E",
+      "emoji": "☕",
+      "text": "Testing automated social verification at Nescafe",
+      "zone": "nescafe",
+      "updatedAt": "2026-09-10T12:14:47.949Z",
+      "expiresAt": "2026-09-10T13:14:47.949Z"
+    }
+  },
+  "circles": {
+    "XL-STRAT": {
+      "code": "XL-STRAT",
+      "name": "Strategy Term-5 Project Group",
+      "ownerRoll": "B25349",
+      "courseCode": "STMAN",
+      "members": [
+        "B25349",
+        "B25001",
+        "B25002",
+        "B25004"
+      ],
+      "createdAt": "2026-09-08T10:00:00.000Z"
+    },
+    "XL-MKTG": {
+      "code": "XL-MKTG",
+      "name": "OMCR Retailing Case Squad",
+      "ownerRoll": "B25001",
+      "courseCode": "OMCR",
+      "members": [
+        "B25001",
+        "B25349",
+        "B25005"
+      ],
+      "createdAt": "2026-09-09T14:30:00.000Z"
+    },
+    "XL-EJKF": {
+      "code": "XL-EJKF",
+      "name": "AI & FinTech Squad",
+      "ownerRoll": "B25349",
+      "ownerName": "Janmejai Singh",
+      "courseCode": "FINTECH",
+      "members": [
+        "B25349",
+        "B25308"
+      ],
+      "createdAt": "2026-09-10T12:14:39.598Z"
+    },
+    "XL-Q838": {
+      "code": "XL-Q838",
+      "name": "AI & FinTech Squad",
+      "ownerRoll": "B25349",
+      "ownerName": "Janmejai Singh",
+      "courseCode": "FINTECH",
+      "members": [
+        "B25349",
+        "B25308"
+      ],
+      "createdAt": "2026-09-10T12:14:47.952Z"
+    }
+  }
+}

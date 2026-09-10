@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Users,
   Search,
@@ -9,11 +9,21 @@ import {
   Sparkles,
   Share2,
   CheckCircle2,
-  X
+  X,
+  Compass,
+  Radio,
+  BookOpen,
+  Plus
 } from 'lucide-react';
 import { BATCH_ROSTER } from '../../../data/rosterData';
 import { fireStreakConfetti } from '../../../services/confetti';
 import { toast } from 'sonner';
+import CampusRadarView from '../../social/CampusRadarView';
+import StatusBeaconModal from '../../social/StatusBeaconModal';
+import StudyCircleModal from '../../social/StudyCircleModal';
+import FriendProfileModal from '../../social/FriendProfileModal';
+import { socialApi } from '../../../services/socialApi';
+import { generateMeetSharePayload } from '../../../services/deepLinkHandler';
 
 const STANDARD_SLOTS = [
   { id: 'slot1', label: '09:00 - 10:30', startHour: 9 },
@@ -26,6 +36,7 @@ const STANDARD_SLOTS = [
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export default function SectorSynergy({ currentUser, schedule = [] }) {
+  const [activeSubTab, setActiveSubTab] = useState('radar'); // 'radar' | 'synergy' | 'circles'
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSection, setSelectedSection] = useState('all');
   const [selectedMembers, setSelectedMembers] = useState(() => [
@@ -36,6 +47,24 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
     }
   ]);
   const [copiedSchedule, setCopiedSchedule] = useState(false);
+
+  // Modals state
+  const [isBeaconModalOpen, setIsBeaconModalOpen] = useState(false);
+  const [isCircleModalOpen, setIsCircleModalOpen] = useState(false);
+  const [selectedFriendForModal, setSelectedFriendForModal] = useState(null);
+
+  // My live beacon
+  const [myBeacon, setMyBeacon] = useState(null);
+
+  useEffect(() => {
+    setMyBeacon(socialApi.getMyStatus());
+    const unsub = socialApi.subscribe((e) => {
+      if (e.type === 'STATUS_UPDATED' || e.type === 'STATUS_CLEARED') {
+        setMyBeacon(socialApi.getMyStatus());
+      }
+    });
+    return unsub;
+  }, []);
 
   const rosterList = useMemo(() => {
     return Object.entries(BATCH_ROSTER).map(([roll, data]) => ({
@@ -72,7 +101,7 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
         return;
       }
       setSelectedMembers(prev => [...prev, student]);
-      toast.success(`Added ${student.name}`);
+      toast.success(Added );
     }
   };
 
@@ -92,9 +121,9 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
     if (busyCount === 0) {
       return { status: 'free', label: 'Mutual Free', color: 'var(--moss)', bg: 'var(--wash-moss)' };
     } else if (busyCount === 1) {
-      return { status: 'partial', label: `1 Busy (${busyNames[0]})`, color: 'var(--ochre)', bg: 'var(--wash-ochre)' };
+      return { status: 'partial', label: '1 Busy (' + (busyNames[0] || '1') + ')', color: 'var(--ochre)', bg: 'var(--wash-ochre)' };
     } else {
-      return { status: 'busy', label: `${busyCount} Busy`, color: 'var(--ink-soft)', bg: 'var(--border-soft)' };
+      return { status: 'busy', label: busyCount + ' Busy', color: 'var(--ink-soft)', bg: 'var(--border-soft)' };
     }
   };
 
@@ -112,19 +141,21 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
   }, [selectedMembers]);
 
   const handleCopyReport = () => {
-    const membersText = selectedMembers.map(m => `${m.name} (${m.roll})`).join(', ');
-    const slotsText = mutualFreeSlots.slice(0, 5).map(s => `• ${s.day}: ${s.slot}`).join('\n');
+    const myRoll = currentUser?.id || 'B25349';
+    const share = generateMeetSharePayload(myRoll, currentUser?.name);
+    const membersText = selectedMembers.map(m => m.name + ' (' + m.roll + ')').join(', ');
+    const slotsText = mutualFreeSlots.slice(0, 5).map(s => '• ' + s.day + ': ' + s.slot).join('\n');
 
-    const text = `🤝 *XLRI Term-5 Group Synergy Schedule*\n` +
-      `*Members:* ${membersText}\n\n` +
-      `✨ *Top Mutual Free Windows:*\n${slotsText}\n\n` +
-      `⚡ *Total Free Slots:* ${mutualFreeSlots.length} this week\n` +
-      `_Generated via XL-Flow Horizon Deck_`;
+    const text = '🤝 *XLRI Term-5 Group Synergy Schedule*\n' +
+      '*Members:* ' + membersText + '\n\n' +
+      '✨ *Top Mutual Free Windows:*\n' + slotsText + '\n\n' +
+      '⚡ *Total Free Slots:* ' + mutualFreeSlots.length + ' this week\n' +
+      'Tap to compare your timetable on XL-Flow: ' + share.url;
 
     navigator.clipboard.writeText(text);
     setCopiedSchedule(true);
     fireStreakConfetti();
-    toast.success('Synergy WhatsApp Invite Copied!');
+    toast.success('WhatsApp Synergy Invite Copied!');
     setTimeout(() => setCopiedSchedule(false), 2200);
   };
 
@@ -162,7 +193,7 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
                 SECTOR 06
               </span>
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>•</span>
-              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>178 Roster Overlap & Free Window Finder</span>
+              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Social Presence & Batch Synergy Hub</span>
             </div>
             <h2 style={{
               fontFamily: 'var(--font-brand)',
@@ -172,34 +203,97 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
               margin: '2px 0 0 0',
               letterSpacing: '-0.025em'
             }}>
-              Batch Synergy & Group Free Slot Matrix
+              Campus Social & Free Window Synergy
             </h2>
           </div>
         </div>
 
-        <button
-          onClick={handleCopyReport}
-          style={{
+        {/* View Switcher Tabs + Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '7px 14px',
-            backgroundColor: 'var(--ink)',
-            color: 'var(--paper)',
+            backgroundColor: 'var(--card)',
+            padding: '3px',
             borderRadius: '10px',
-            border: 'none',
-            fontSize: '12px',
-            fontWeight: 600,
-            cursor: 'pointer',
-            boxShadow: 'var(--shadow-card)'
-          }}
-        >
-          {copiedSchedule ? <Check size={14} color="var(--mizu)" /> : <Share2 size={14} />}
-          <span>{copiedSchedule ? 'Invite Copied!' : 'Copy WhatsApp Invite'}</span>
-        </button>
+            border: '1px solid var(--border)'
+          }}>
+            {[
+              { id: 'radar', label: 'Campus Radar', icon: Compass },
+              { id: 'synergy', label: 'Free Slot Matrix', icon: Calendar },
+              { id: 'circles', label: 'Study Squads', icon: BookOpen }
+            ].map(tab => {
+              const Icon = tab.icon;
+              const isActive = activeSubTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveSubTab(tab.id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '5px 12px',
+                    borderRadius: '7px',
+                    border: 'none',
+                    backgroundColor: isActive ? 'var(--ink)' : 'transparent',
+                    color: isActive ? 'var(--paper)' : 'var(--ink-soft)',
+                    fontSize: '11px',
+                    fontWeight: isActive ? 700 : 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <Icon size={12} />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => setIsBeaconModalOpen(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 12px',
+              backgroundColor: myBeacon ? 'var(--wash-moss)' : 'var(--wash-ochre)',
+              color: myBeacon ? 'var(--moss-text)' : 'var(--ochre-text)',
+              borderRadius: '10px',
+              border: myBeacon ? '1px solid var(--moss)' : '1px solid rgba(194, 145, 58, 0.3)',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            <Radio size={12} className={myBeacon ? 'animate-pulse' : ''} />
+            <span>{myBeacon ? (myBeacon.emoji + ' ' + (myBeacon.zone || 'Campus')) : '+ Beacon'}</span>
+          </button>
+
+          <button
+            onClick={handleCopyReport}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 14px',
+              backgroundColor: 'var(--ink)',
+              color: 'var(--paper)',
+              borderRadius: '10px',
+              border: 'none',
+              fontSize: '12px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              boxShadow: 'var(--shadow-card)'
+            }}
+          >
+            {copiedSchedule ? <Check size={14} color="var(--mizu)" /> : <Share2 size={14} />}
+            <span>{copiedSchedule ? 'Invite Copied!' : 'Invite on WhatsApp'}</span>
+          </button>
+        </div>
       </div>
 
-      {/* Main Grid: Controls + Overlap Matrix */}
+      {/* Main Content Area based on activeSubTab */}
       <div style={{
         flex: 1,
         minHeight: 0,
@@ -208,210 +302,347 @@ export default function SectorSynergy({ currentUser, schedule = [] }) {
         flexDirection: 'column',
         gap: '14px'
       }}>
-        {/* Member Selector Bar */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 1fr',
-          gap: '14px',
-          backgroundColor: 'var(--card)',
-          padding: '14px 18px',
-          borderRadius: '14px',
-          border: '1px solid var(--border)'
-        }}>
-          {/* Active Members */}
-          <div>
-            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ink-soft)', marginBottom: '8px' }}>
-              COLLABORATION SQUAD ({selectedMembers.length}/4)
+        {/* SUBTAB 1: CAMPUS RADAR (WHO'S WHERE NOW) */}
+        {activeSubTab === 'radar' && (
+          <CampusRadarView
+            currentUser={currentUser}
+            onOpenBeaconModal={() => setIsBeaconModalOpen(true)}
+            onSelectStudent={(st) => setSelectedFriendForModal(st)}
+          />
+        )}
+
+        {/* SUBTAB 2: STUDY SQUADS & CIRCLES */}
+        {activeSubTab === 'circles' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              backgroundColor: 'var(--card)',
+              padding: '14px 18px',
+              borderRadius: '16px',
+              border: '1px solid var(--border)'
+            }}>
+              <div>
+                <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ink)', margin: 0 }}>
+                  Active Project Squads & Term Study Groups
+                </h4>
+                <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: '2px 0 0 0' }}>
+                  Organize by elective or project team and invite batchmates via 6-character squad codes
+                </p>
+              </div>
+              <button
+                onClick={() => setIsCircleModalOpen(true)}
+                style={{
+                  padding: '7px 14px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  backgroundColor: 'var(--ink)',
+                  color: 'var(--paper)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <Plus size={13} />
+                <span>Create or Join Squad</span>
+              </button>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {selectedMembers.map(m => (
+
+            {/* Quick Circles Preview Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '14px' }}>
+              {[
+                { code: 'XL-STRAT', name: 'Strategy Project Squad', course: 'STMAN', members: 4, desc: 'Term-5 case analysis & final presentation team' },
+                { code: 'XL-OMCR', name: 'Omnichannel Retailing Case', course: 'OMCR', members: 3, desc: 'D2C brand strategy & store operations modeling' },
+                { code: 'XL-COFFEE', name: 'Nescafe Coffee Crew', course: 'GENERAL', members: 5, desc: 'Quick coffee runs & post-lecture hangout coordination' }
+              ].map(c => (
                 <div
-                  key={m.roll}
+                  key={c.code}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '6px 10px',
-                    backgroundColor: 'var(--paper)',
+                    backgroundColor: 'var(--card)',
+                    borderRadius: '14px',
                     border: '1px solid var(--border)',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    color: 'var(--ink)'
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px'
                   }}
                 >
-                  <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--mizu)', backgroundColor: 'var(--wash-mizu)', padding: '1px 5px', borderRadius: '4px' }}>
-                    Sec {m.section}
-                  </span>
-                  <span>{m.name}</span>
-                  <button
-                    onClick={() => handleToggleMember(m)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '1px', color: 'var(--ink-soft)' }}
-                  >
-                    <X size={12} />
-                  </button>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--mizu)', backgroundColor: 'var(--wash-mizu)', padding: '2px 6px', borderRadius: '4px' }}>
+                      {c.course}
+                    </span>
+                    <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--ink)' }}>
+                      {c.code}
+                    </span>
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ink)', margin: 0 }}>
+                      {c.name}
+                    </h4>
+                    <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: '4px 0 0 0' }}>
+                      {c.desc}
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px', paddingTop: '10px', borderTop: '1px solid var(--border-soft)' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
+                      👥 {c.members} members
+                    </span>
+                    <button
+                      onClick={() => setIsCircleModalOpen(true)}
+                      style={{
+                        background: 'none',
+                        border: '1px solid var(--border)',
+                        borderRadius: '6px',
+                        padding: '4px 10px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        color: 'var(--ink)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Manage
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
+        )}
 
-          {/* Search + Section Filter */}
-          <div>
-            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ink-soft)', marginBottom: '8px' }}>
-              ADD FROM 178 BATCH ROSTER
+        {/* SUBTAB 3: FREE SLOT MATRIX (ORIGINAL SYNERGY ENGINE) */}
+        {activeSubTab === 'synergy' && (
+          <>
+            {/* Member Selector Bar */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1.2fr 1fr',
+              gap: '14px',
+              backgroundColor: 'var(--card)',
+              padding: '14px 18px',
+              borderRadius: '14px',
+              border: '1px solid var(--border)'
+            }}>
+              {/* Active Members */}
+              <div>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ink-soft)', marginBottom: '8px' }}>
+                  COLLABORATION SQUAD ({selectedMembers.length}/4)
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {selectedMembers.map(m => (
+                    <div
+                      key={m.roll}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '6px 10px',
+                        backgroundColor: 'var(--paper)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: 'var(--ink)'
+                      }}
+                    >
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--mizu)', backgroundColor: 'var(--wash-mizu)', padding: '1px 5px', borderRadius: '4px' }}>
+                        Sec {m.section}
+                      </span>
+                      <span>{m.name}</span>
+                      <button
+                        onClick={() => handleToggleMember(m)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '1px', color: 'var(--ink-soft)' }}
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Search + Section Filter */}
+              <div>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--ink-soft)', marginBottom: '8px' }}>
+                  ADD FROM 178 BATCH ROSTER
+                </div>
+                <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                  <div style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    backgroundColor: 'var(--paper)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    padding: '5px 10px'
+                  }}>
+                    <Search size={13} color="var(--ink-soft)" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search name or roll..."
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        outline: 'none',
+                        fontSize: '12px',
+                        color: 'var(--ink)',
+                        width: '100%'
+                      }}
+                    />
+                  </div>
+
+                  {['all', 'E', 'F', 'G'].map(sec => (
+                    <button
+                      key={sec}
+                      onClick={() => setSelectedSection(sec)}
+                      style={{
+                        padding: '4px 8px',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        borderRadius: '6px',
+                        border: selectedSection === sec ? '1px solid var(--ink)' : '1px solid var(--border)',
+                        backgroundColor: selectedSection === sec ? 'var(--ink)' : 'var(--paper)',
+                        color: selectedSection === sec ? 'var(--paper)' : 'var(--ink)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {sec.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Suggestions */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', maxHeight: '56px', overflowY: 'auto' }}>
+                  {searchResults.slice(0, 6).map(s => {
+                    const isSelected = selectedMembers.some(m => m.roll === s.roll);
+                    return (
+                      <button
+                        key={s.roll}
+                        onClick={() => handleToggleMember(s)}
+                        style={{
+                          fontSize: '11px',
+                          padding: '3px 8px',
+                          borderRadius: '6px',
+                          border: isSelected ? '1px solid var(--moss)' : '1px solid var(--border)',
+                          backgroundColor: isSelected ? 'var(--wash-moss)' : 'var(--paper)',
+                          color: isSelected ? 'var(--moss-text)' : 'var(--ink)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {s.name} ({s.section}) {isSelected ? '✓' : '+'}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+
+            {/* Matrix Grid */}
+            <div style={{
+              backgroundColor: 'var(--card)',
+              borderRadius: '14px',
+              border: '1px solid var(--border)',
+              overflow: 'hidden'
+            }}>
               <div style={{
-                flex: 1,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                backgroundColor: 'var(--paper)',
-                border: '1px solid var(--border)',
-                borderRadius: '8px',
-                padding: '5px 10px'
-              }}>
-                <Search size={13} color="var(--ink-soft)" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search name or roll..."
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    outline: 'none',
-                    fontSize: '12px',
-                    color: 'var(--ink)',
-                    width: '100%'
-                  }}
-                />
-              </div>
-
-              {['all', 'E', 'F', 'G'].map(sec => (
-                <button
-                  key={sec}
-                  onClick={() => setSelectedSection(sec)}
-                  style={{
-                    padding: '4px 8px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    borderRadius: '6px',
-                    border: selectedSection === sec ? '1px solid var(--ink)' : '1px solid var(--border)',
-                    backgroundColor: selectedSection === sec ? 'var(--ink)' : 'var(--paper)',
-                    color: selectedSection === sec ? 'var(--paper)' : 'var(--ink)',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {sec.toUpperCase()}
-                </button>
-              ))}
-            </div>
-
-            {/* Suggestions */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', maxHeight: '56px', overflowY: 'auto' }}>
-              {searchResults.slice(0, 6).map(s => {
-                const isSelected = selectedMembers.some(m => m.roll === s.roll);
-                return (
-                  <button
-                    key={s.roll}
-                    onClick={() => handleToggleMember(s)}
-                    style={{
-                      fontSize: '11px',
-                      padding: '3px 8px',
-                      borderRadius: '6px',
-                      border: isSelected ? '1px solid var(--moss)' : '1px solid var(--border)',
-                      backgroundColor: isSelected ? 'var(--wash-moss)' : 'var(--paper)',
-                      color: isSelected ? 'var(--moss-text)' : 'var(--ink)',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {s.name} ({s.section}) {isSelected ? '✓' : '+'}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Matrix Grid */}
-        <div style={{
-          backgroundColor: 'var(--card)',
-          borderRadius: '14px',
-          border: '1px solid var(--border)',
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '120px repeat(6, 1fr)',
-            backgroundColor: 'var(--card-hover)',
-            borderBottom: '1px solid var(--border)',
-            fontWeight: 700,
-            fontSize: '11px'
-          }}>
-            <div style={{ padding: '10px 12px', borderRight: '1px solid var(--border)', color: 'var(--ink-soft)' }}>
-              SLOT TIME
-            </div>
-            {DAYS.map(day => (
-              <div key={day} style={{ padding: '10px', textAlign: 'center', borderRight: '1px solid var(--border)', color: 'var(--ink)' }}>
-                {day.slice(0, 3).toUpperCase()}
-              </div>
-            ))}
-          </div>
-
-          {STANDARD_SLOTS.map(slot => (
-            <div
-              key={slot.id}
-              style={{
                 display: 'grid',
                 gridTemplateColumns: '120px repeat(6, 1fr)',
-                borderBottom: '1px solid var(--border-soft)',
+                backgroundColor: 'var(--card-hover)',
+                borderBottom: '1px solid var(--border)',
+                fontWeight: 700,
                 fontSize: '11px'
-              }}
-            >
-              <div style={{
-                padding: '12px 10px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '10px',
-                color: 'var(--ink-soft)',
-                borderRight: '1px solid var(--border)',
-                backgroundColor: 'var(--card)',
-                display: 'flex',
-                alignItems: 'center'
               }}>
-                {slot.label}
+                <div style={{ padding: '10px 12px', borderRight: '1px solid var(--border)', color: 'var(--ink-soft)' }}>
+                  SLOT TIME
+                </div>
+                {DAYS.map(day => (
+                  <div key={day} style={{ padding: '10px', textAlign: 'center', borderRight: '1px solid var(--border)', color: 'var(--ink)' }}>
+                    {day.slice(0, 3).toUpperCase()}
+                  </div>
+                ))}
               </div>
 
-              {DAYS.map(day => {
-                const info = getSlotStatus(day, slot);
-                return (
-                  <div
-                    key={day}
-                    style={{
-                      padding: '8px 4px',
-                      borderRight: '1px solid var(--border-soft)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: info.bg
-                    }}
-                  >
-                    <span style={{
-                      fontSize: '10px',
-                      fontWeight: 600,
-                      color: info.color,
-                      textAlign: 'center',
-                      lineHeight: 1.2
-                    }}>
-                      {info.status === 'free' ? '🌟 Mutual Free' : info.label}
-                    </span>
+              {STANDARD_SLOTS.map(slot => (
+                <div
+                  key={slot.id}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '120px repeat(6, 1fr)',
+                    borderBottom: '1px solid var(--border-soft)',
+                    fontSize: '11px'
+                  }}
+                >
+                  <div style={{
+                    padding: '12px 10px',
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '10px',
+                    color: 'var(--ink-soft)',
+                    borderRight: '1px solid var(--border)',
+                    backgroundColor: 'var(--card)',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}>
+                    {slot.label}
                   </div>
-                );
-              })}
+
+                  {DAYS.map(day => {
+                    const info = getSlotStatus(day, slot);
+                    return (
+                      <div
+                        key={day}
+                        style={{
+                          padding: '8px 4px',
+                          borderRight: '1px solid var(--border-soft)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: info.bg
+                        }}
+                      >
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: 600,
+                          color: info.color,
+                          textAlign: 'center',
+                          lineHeight: 1.2
+                        }}>
+                          {info.status === 'free' ? '🌟 Mutual Free' : info.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </div>
+
+      {/* Social Modals */}
+      <StatusBeaconModal
+        isOpen={isBeaconModalOpen}
+        onClose={() => setIsBeaconModalOpen(false)}
+        currentUser={currentUser}
+        onStatusUpdated={(st) => setMyBeacon(st)}
+      />
+
+      <StudyCircleModal
+        isOpen={isCircleModalOpen}
+        onClose={() => setIsCircleModalOpen(false)}
+        currentUser={currentUser}
+      />
+
+      <FriendProfileModal
+        isOpen={!!selectedFriendForModal}
+        onClose={() => setSelectedFriendForModal(null)}
+        student={selectedFriendForModal}
+        currentUser={currentUser}
+      />
     </div>
   );
 }

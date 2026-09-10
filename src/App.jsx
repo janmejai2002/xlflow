@@ -18,6 +18,8 @@ import DesktopCommandDeck from './components/desktop/DesktopCommandDeck';
 import DesktopHorizonDeck from './components/desktop/DesktopHorizonDeck';
 import GroupCollaborationModal from './components/desktop/GroupCollaborationModal';
 import AiSettingsModal from './components/AiSettingsModal';
+import InviteWelcomeModal from './components/social/InviteWelcomeModal';
+import { parseDeepLink } from './services/deepLinkHandler';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useMcpBridge } from './hooks/useMcpBridge';
@@ -47,6 +49,17 @@ export default function App() {
 
   const [isSyncing, setIsSyncing] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  // Deep-Link Ingestion (?meet=ROLL, ?join=CODE, ?beacon=ZONE)
+  const [deepLinkData, setDeepLinkData] = useState(() => {
+    if (typeof window === 'undefined') return { hasLink: false };
+    return parseDeepLink();
+  });
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const p = parseDeepLink();
+    return !!p.hasLink;
+  });
 
   // 1. Theme initialization
   const [theme, setTheme] = useState(() => {
@@ -152,6 +165,22 @@ export default function App() {
     setIsDemo(true);
     setDataPayload(getSampleDataPayload());
     setIsLoginModalOpen(true);
+  };
+
+  // Handle viral invite onboarding selection (?meet=ROLL or ?join=CODE)
+  const handleIdentitySelected = (student, deepLink) => {
+    setDataPayload(prev => ({
+      ...prev,
+      student: {
+        id: student.roll,
+        name: student.name,
+        email: `${student.roll.toLowerCase()}@astra.xlri.ac.in`,
+        section: student.section
+      }
+    }));
+    if (deepLink?.type === 'meet') {
+      setActiveTab('synergy');
+    }
   };
 
   // Jump from Horizon Heatmap to specific date on timetable
@@ -447,6 +476,14 @@ export default function App() {
       <McpHudIndicator
         isConnected={isMcpConnected}
         activeCommand={mcpActiveCommand}
+      />
+
+      {/* Viral Invite & Deep-Link Landing Modal (?meet=ROLL or ?join=CODE) */}
+      <InviteWelcomeModal
+        isOpen={isInviteModalOpen}
+        onClose={() => setIsInviteModalOpen(false)}
+        deepLinkData={deepLinkData}
+        onIdentitySelected={handleIdentitySelected}
       />
 
       {/* Tactile Toaster Notifications */}
