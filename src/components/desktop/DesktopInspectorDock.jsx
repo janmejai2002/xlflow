@@ -30,6 +30,7 @@ import SelfAttendanceMarkPill from '../attendance/SelfAttendanceMarkPill';
 import { getGoogleCalendarUrl, downloadIcsFile } from '../../services/calendarExport';
 import { queryAstraAi, getStoredAiConfig, AI_PROVIDERS } from '../../services/aiProviderEngine';
 import { playTactileClick } from '../../services/soundEngine';
+import ProactiveActionDeck from '../copilot/ProactiveActionDeck';
 import { toast } from 'sonner';
 
 // Helper to safely render markdown in chat messages
@@ -685,6 +686,13 @@ export default function DesktopInspectorDock({
                 <span>AI Vault</span>
               </button>
             </div>
+
+            {/* 2026 Proactive Agentic Action Deck */}
+            <ProactiveActionDeck
+              context={{ courses, schedule, deadlines, student }}
+              onExecuteAction={onExecuteAction}
+              isCompact={true}
+            />
 
             {/* Suggestions Chips */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>

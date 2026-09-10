@@ -51,6 +51,90 @@ export function playTactileClick(pitch = 800) {
 }
 
 /**
+ * Synthesizes an ultra-subtle 6ms mechanical tick for micro-interactions (hover, stepper, toggle)
+ */
+export function playSoftClick(pitch = 950) {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(pitch, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.009);
+
+    gain.gain.setValueAtTime(0.035, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.009);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.01);
+  } catch (e) {}
+}
+
+/**
+ * Synthesizes a luxury two-tone affirmative chime (520Hz -> 780Hz) for instant actions & copy
+ */
+export function playHapticSuccess() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const notes = [520, 784];
+    notes.forEach((freq, idx) => {
+      const startTime = ctx.currentTime + idx * 0.06;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(0.05, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.18);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + 0.2);
+    });
+  } catch (e) {}
+}
+
+/**
+ * Synthesizes a rich 432Hz singing bowl overtone chime for holistic peace of mind
+ */
+export function playHarmonicChime() {
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const harmonics = [432, 864, 1296];
+    harmonics.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+      const decay = 1.2 + i * 0.4;
+      gain.gain.setValueAtTime(0.05 / (i + 1), ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + decay);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + decay);
+    });
+  } catch (e) {}
+}
+
+/**
  * Synthesizes a resonant bell chime for milestones & streak achievements
  */
 export function playChime() {

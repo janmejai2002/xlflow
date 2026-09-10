@@ -1,9 +1,10 @@
-import React from 'react';
-import { ShieldCheck, AlertTriangle, AlertCircle, Check, SlidersHorizontal, User, Clock, BookOpen } from 'lucide-react';
+import React, { useState } from 'react';
+import { ShieldCheck, AlertTriangle, AlertCircle, Check, SlidersHorizontal, User, Clock, BookOpen, Zap, FileText } from 'lucide-react';
 import NumberFlow from '@number-flow/react';
 import { COURSE_COLORS } from '../data/rosterData';
 import { STATUTORY_THRESHOLD, calculateBunkStats } from '../services/bunkCalculator';
-import { playTactileClick } from '../services/soundEngine';
+import { playTactileClick, playHapticSuccess } from '../services/soundEngine';
+import { toast } from 'sonner';
 
 /**
  * CourseSafetyCard: High-Aesthetic Academic Safety Cockpit
@@ -13,6 +14,7 @@ import { playTactileClick } from '../services/soundEngine';
  * - Tabular figures in font-mono
  * - Mechanical NumberFlow rolling odometer
  * - Multi-layered Safety Horizon Dual-Track Gauge with 80% statutory needle
+ * - Positive Recovery Trajectory formula for low-attendance mitigation
  * - 3 Glassmorphic micro-stat tiles
  * - Inline interactive quick-skip stepper (0 to 6 skips) with live recalculation
  * - Zero emojis, tactile micro-interactions
@@ -23,6 +25,8 @@ export default function CourseSafetyCard({
   isCompact = false,
   className = ''
 }) {
+  const [copiedDispute, setCopiedDispute] = useState(false);
+
   // Retrieve course colors or fallback to institutional indigo
   const colors = COURSE_COLORS[course.code] || {
     accent: '#4E6E9C',
@@ -37,6 +41,37 @@ export default function CourseSafetyCard({
   const isWarning = projectedPct >= STATUTORY_THRESHOLD * 100 && projectedPct < 85;
   const isDanger = projectedPct < STATUTORY_THRESHOLD * 100;
   const projectedSafeBunks = originalStats.safeBunksRemaining;
+
+  // Positive Recovery Trajectory calculation if below 80%
+  let recoveryClassesNeeded = 0;
+  if (originalStats.currentPercentage < STATUTORY_THRESHOLD * 100 && course.conducted > 0) {
+    const needed = Math.ceil((STATUTORY_THRESHOLD * course.conducted - course.attended) / (1 - STATUTORY_THRESHOLD));
+    recoveryClassesNeeded = Math.max(1, needed);
+  }
+
+  const handleCopyCourseDispute = (e) => {
+    e.stopPropagation();
+    const memo = `Subject: Attendance Discrepancy Inquiry - Course ${course.code}
+To: Prof. ${course.faculty || 'Course Coordinator'} / Academic Administration
+From: Student Janmejai Singh (Roll No. B25349, Section EF)
+Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+
+Respected Professor / Administration,
+
+I am writing to respectfully flag an attendance discrepancy for ${course.code}: ${course.name}.
+According to my verified personal log, I have attended ${course.selfStats?.attended || course.attended} / ${course.selfStats?.conducted || course.conducted} sessions, while the ERP portal reflects ${course.officialStats?.attended || course.attended} / ${course.officialStats?.conducted || course.conducted} sessions.
+
+Please verify the physical sign-in sheet so that my statutory standing is accurately protected.
+
+Sincerely,
+Janmejai Singh (B25349)`;
+
+    navigator.clipboard.writeText(memo);
+    setCopiedDispute(true);
+    playHapticSuccess();
+    toast.success(`Dispute Memo Copied for ${course.code}!`);
+    setTimeout(() => setCopiedDispute(false), 2200);
+  };
 
   // Status tokens
   let statusColor = 'var(--moss)';
@@ -129,21 +164,27 @@ export default function CourseSafetyCard({
               {course.credits || 3.0} Credits • {course.term || 'Term-5'}
             </span>
             {course.discrepancy?.hasDiscrepancy && (
-              <span
-                title={`ERP: ${course.officialStats?.attended}/${course.officialStats?.conducted} vs Self-Log: ${course.selfStats?.attended}/${course.selfStats?.conducted}`}
+              <button
+                onClick={handleCopyCourseDispute}
+                title={`ERP: ${course.officialStats?.attended || course.attended}/${course.officialStats?.conducted || course.conducted} vs Self-Log: ${course.selfStats?.attended || course.attended}. Click to copy Dean Appeal dispute memo.`}
                 style={{
                   fontSize: '10px',
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 700,
                   padding: '1px 6px',
                   borderRadius: '4px',
-                  backgroundColor: 'var(--wash-ochre)',
-                  color: 'var(--ochre-text)',
-                  border: '1px solid rgba(194, 145, 58, 0.35)'
+                  backgroundColor: copiedDispute ? 'var(--wash-moss)' : 'var(--wash-ochre)',
+                  color: copiedDispute ? 'var(--moss-text)' : 'var(--ochre-text)',
+                  border: `1px solid ${copiedDispute ? 'var(--moss)' : 'rgba(194, 145, 58, 0.35)'}`,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px'
                 }}
               >
-                Δ {course.discrepancy.difference > 0 ? `+${course.discrepancy.difference}` : course.discrepancy.difference} vs ERP
-              </span>
+                {copiedDispute ? <Check size={10} /> : <FileText size={10} />}
+                <span>Δ {course.discrepancy.difference > 0 ? `+${course.discrepancy.difference}` : course.discrepancy.difference} Memo</span>
+              </button>
             )}
           </div>
 
@@ -500,6 +541,31 @@ export default function CourseSafetyCard({
           </div>
         </div>
       </div>
+
+      {/* 2026 Positive Recovery Trajectory Banner (Zero-Panic Formula) */}
+      {recoveryClassesNeeded > 0 && (
+        <div
+          style={{
+            backgroundColor: 'var(--wash-hanko)',
+            border: '1px solid rgba(210, 84, 63, 0.3)',
+            borderRadius: '9px',
+            padding: '6px 10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '6px',
+            fontSize: '11px',
+            color: 'var(--hanko-text)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <Zap size={12} color="var(--hanko)" style={{ flexShrink: 0 }} />
+            <span>
+              <strong>Recovery Formula:</strong> Attend next <strong>{recoveryClassesNeeded} class{recoveryClassesNeeded > 1 ? 'es' : ''}</strong> consecutively to restore 80.0% statutory safety.
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* 4. Interactive Inline Quick-Skip Stepper & Deep Sim Trigger */}
       {/* Row 4: Statutory Compliance Status & Details */}

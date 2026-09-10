@@ -3,6 +3,7 @@ import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Headphon
 import { fireStreakConfetti } from '../services/confetti';
 import { toast } from 'sonner';
 import XlFlowLogo from './XlFlowLogo';
+import DynamicAmbientIsland from './DynamicAmbientIsland';
 
 export default function Header({
   student,
@@ -19,7 +20,12 @@ export default function Header({
   onOpenCopilot,
   onOpenBooklet,
   onToggleLayoutMode,
-  onOpenQuickTour
+  onOpenQuickTour,
+  schedule = [],
+  courses = [],
+  deadlines = [],
+  onSelectTab,
+  onInspectSession
 }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const menuRef = useRef(null);
@@ -111,8 +117,20 @@ export default function Header({
         </div>
       </div>
 
-      {/* Right: Quick Actions */}
+      {/* Right: Quick Actions + Dynamic Ambient Island */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
+        {/* Dynamic Ambient Island (Glanceable pill) */}
+        <DynamicAmbientIsland
+          schedule={schedule}
+          courses={courses}
+          deadlines={deadlines}
+          isAmbientOn={isAmbientOn}
+          onToggleAmbient={onToggleAmbient}
+          onInspectSession={onInspectSession}
+          onSelectTab={onSelectTab}
+          isCompact={true}
+        />
+
         {/* Quick Batch Roster Search */}
         <button
           onClick={onOpenSearch}
