@@ -18,14 +18,14 @@ export default function SectorTimetable({
 
   return (
     <div style={{
-      width: 'min(1260px, calc(100vw - 80px))',
-      maxWidth: '100%',
+      width: '100%',
+      maxWidth: '1440px',
+      margin: '0 auto',
       boxSizing: 'border-box',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      gap: '16px',
-      flexShrink: 0
+      gap: '16px'
     }}>
       {/* Sector Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
