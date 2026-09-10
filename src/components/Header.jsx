@@ -120,10 +120,10 @@ export default function Header({
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
-            borderRadius: '8px',
-            padding: '0 7px',
-            height: '34px',
-            minWidth: '34px',
+            borderRadius: '9px',
+            padding: '0 8px',
+            height: '44px',
+            minWidth: '44px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -134,7 +134,7 @@ export default function Header({
             fontWeight: 600
           }}
         >
-          <Search size={14} style={{ color: 'var(--ink-soft)' }} />
+          <Search size={15} style={{ color: 'var(--ink-soft)' }} />
           <span className="hide-below-480" style={{
             fontSize: '10px',
             color: 'var(--ink-soft)',
@@ -155,10 +155,10 @@ export default function Header({
           style={{
             background: 'var(--wash-mizu)',
             border: '1px solid rgba(0, 169, 184, 0.35)',
-            borderRadius: '8px',
-            padding: '0 9px',
-            height: '34px',
-            minWidth: '34px',
+            borderRadius: '9px',
+            padding: '0 10px',
+            height: '44px',
+            minWidth: '44px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -179,7 +179,7 @@ export default function Header({
             e.currentTarget.style.borderColor = 'rgba(0, 169, 184, 0.35)';
           }}
         >
-          <Sparkles size={13} color="var(--mizu)" />
+          <Sparkles size={14} color="var(--mizu)" />
           <span className="hide-below-380" style={{ color: 'var(--mizu)', fontWeight: 700 }}>Astra</span>
         </button>
 
@@ -191,9 +191,9 @@ export default function Header({
           style={{
             background: 'var(--card)',
             border: '1px solid var(--border)',
-            borderRadius: '8px',
-            width: '34px',
-            height: '34px',
+            borderRadius: '9px',
+            width: '44px',
+            height: '44px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -202,7 +202,7 @@ export default function Header({
             transition: 'all 0.2s'
           }}
         >
-          {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
         </button>
 
         {/* Mobile "More" Menu Toggle (Always accessible) */}
@@ -213,9 +213,9 @@ export default function Header({
             style={{
               background: isMoreOpen ? 'var(--card-hover)' : 'var(--card)',
               border: '1px solid var(--border)',
-              borderRadius: '8px',
-              width: '34px',
-              height: '34px',
+              borderRadius: '9px',
+              width: '44px',
+              height: '44px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -223,7 +223,7 @@ export default function Header({
               cursor: 'pointer'
             }}
           >
-            <MoreHorizontal size={17} />
+            <MoreHorizontal size={18} />
           </button>
 
           {/* Floating Dropdown for secondary mobile actions */}
