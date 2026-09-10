@@ -31,27 +31,17 @@ export default function DesktopHorizonDeck({
   onToggleLayoutMode,
   isDesktop
 }) {
-  const containerRef = useRef(null);
   const [activeSectorIndex, setActiveSectorIndex] = useState(0);
   const [selectedSession, setSelectedSession] = useState(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const [isBeaconModalOpen, setIsBeaconModalOpen] = useState(false);
 
-  // Mouse Drag-to-Scroll state
-  const isDraggingRef = useRef(false);
-  const startXRef = useRef(0);
-  const scrollLeftRef = useRef(0);
-
   // Smooth jump to sector
   const jumpToSector = useCallback((index) => {
-    if (!containerRef.current) return;
     const clamped = Math.max(0, Math.min(SECTORS.length - 1, index));
-    const targetElement = containerRef.current.querySelector(`section[data-sector-index="${clamped}"]`);
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-      setActiveSectorIndex(clamped);
-    }
+    setActiveSectorIndex(clamped);
+    playTactileClick(600);
   }, []);
 
   const handlePrevSector = () => {
@@ -83,95 +73,6 @@ export default function DesktopHorizonDeck({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeSectorIndex, jumpToSector]);
-
-  // Update active sector on horizontal scroll
-  const handleScroll = () => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
-    const scrollPos = container.scrollLeft;
-    const sectorEls = container.querySelectorAll('section[data-sector-index]');
-
-    let closestIdx = 0;
-    let minDiff = Infinity;
-
-    sectorEls.forEach((el) => {
-      const idx = parseInt(el.getAttribute('data-sector-index'), 10);
-      const offsetLeft = el.offsetLeft;
-      const diff = Math.abs(offsetLeft - scrollPos);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIdx = idx;
-      }
-    });
-
-    if (closestIdx !== activeSectorIndex && closestIdx >= 0 && closestIdx < SECTORS.length) {
-      setActiveSectorIndex(closestIdx);
-    }
-  };
-
-  // Mouse Drag handlers
-  const handleMouseDown = (e) => {
-    // Only drag if left click and not clicking inside interactive controls
-    if (e.button !== 0) return;
-    const tag = e.target.tagName?.toLowerCase();
-    if (tag === 'button' || tag === 'input' || tag === 'select' || tag === 'a') return;
-
-    isDraggingRef.current = true;
-    startXRef.current = e.pageX - containerRef.current.offsetLeft;
-    scrollLeftRef.current = containerRef.current.scrollLeft;
-    containerRef.current.style.cursor = 'grabbing';
-    containerRef.current.style.userSelect = 'none';
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDraggingRef.current || !containerRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startXRef.current) * 1.5; // scroll sensitivity
-    containerRef.current.scrollLeft = scrollLeftRef.current - walk;
-  };
-
-  const handleMouseUpOrLeave = () => {
-    if (isDraggingRef.current && containerRef.current) {
-      isDraggingRef.current = false;
-      containerRef.current.style.cursor = 'grab';
-      containerRef.current.style.removeProperty('user-select');
-    }
-  };
-
-  // Translate vertical wheel scroll to horizontal panning across the horizon track
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleNativeWheel = (e) => {
-      // Check if user is scrolling inside an element that is vertically scrollable and has room to scroll
-      let target = e.target;
-      let hasInnerScroll = false;
-      while (target && target !== container) {
-        const style = window.getComputedStyle(target);
-        const overflowY = style.overflowY;
-        const isScrollable = (overflowY === 'auto' || overflowY === 'scroll') && target.scrollHeight > target.clientHeight;
-        if (isScrollable) {
-          const atTop = target.scrollTop <= 1 && e.deltaY < 0;
-          const atBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 2 && e.deltaY > 0;
-          if (!atTop && !atBottom) {
-            hasInnerScroll = true;
-            break;
-          }
-        }
-        target = target.parentElement;
-      }
-
-      if (!hasInnerScroll && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        container.scrollLeft += e.deltaY * 0.9;
-      }
-    };
-
-    container.addEventListener('wheel', handleNativeWheel, { passive: false });
-    return () => container.removeEventListener('wheel', handleNativeWheel);
-  }, []);
 
   // When a lecture or session is selected anywhere, open Context Inspector
   const handleSelectSession = (session) => {
@@ -213,34 +114,28 @@ export default function DesktopHorizonDeck({
         onOpenBeaconModal={() => setIsBeaconModalOpen(true)}
       />
 
-      {/* 2. Panoramic Horizontal Horizon Track (Zero Vertical Scroll) */}
-      <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex' }}>
+      {/* 2. Focused Single-Active-Sector Workspace (Zero Horizontal Scroll, Zero Side Peek) */}
+      <div style={{ flex: 1, minHeight: 0, position: 'relative', display: 'flex', overflow: 'hidden' }}>
         <main
-          ref={containerRef}
-          className="no-scrollbar"
-          onScroll={handleScroll}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUpOrLeave}
-          onMouseLeave={handleMouseUpOrLeave}
           style={{
             flex: 1,
             height: '100%',
-            overflowX: 'auto',
-            overflowY: 'hidden',
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '36px',
-            padding: '20px 36px',
-            scrollSnapType: 'x proximity',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
-            cursor: 'grab'
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            padding: '20px 32px',
+            position: 'relative'
           }}
         >
           {/* SECTOR 01: Chronos Radar & Live Flight Deck */}
-          <section data-sector-index="0" data-sector-id="radar" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
+          <section
+            data-sector-index="0"
+            data-sector-id="radar"
+            style={{
+              display: activeSectorIndex === 0 ? 'block' : 'none',
+              height: '100%',
+              animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
             <SectorRadar
               schedule={dataPayload.schedule}
               courses={dataPayload.courses}
@@ -250,17 +145,16 @@ export default function DesktopHorizonDeck({
             />
           </section>
 
-          {/* Vertical Architectural Divider */}
-          <div style={{
-            width: '1px',
-            height: '80%',
-            backgroundColor: 'var(--border)',
-            alignSelf: 'center',
-            flexShrink: 0
-          }} />
-
           {/* SECTOR 02: Architectural Weekly Matrix Timetable */}
-          <section data-sector-index="1" data-sector-id="timetable" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
+          <section
+            data-sector-index="1"
+            data-sector-id="timetable"
+            style={{
+              display: activeSectorIndex === 1 ? 'block' : 'none',
+              height: '100%',
+              animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
             <SectorTimetable
               schedule={dataPayload.schedule}
               onSelectSession={handleSelectSession}
@@ -268,33 +162,31 @@ export default function DesktopHorizonDeck({
             />
           </section>
 
-          {/* Vertical Architectural Divider */}
-          <div style={{
-            width: '1px',
-            height: '80%',
-            backgroundColor: 'var(--border)',
-            alignSelf: 'center',
-            flexShrink: 0
-          }} />
-
           {/* SECTOR 03: Bunk-O-Meter Statutory Debt Matrix */}
-          <section data-sector-index="2" data-sector-id="bunkmeter" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
+          <section
+            data-sector-index="2"
+            data-sector-id="bunkmeter"
+            style={{
+              display: activeSectorIndex === 2 ? 'block' : 'none',
+              height: '100%',
+              animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
             <SectorBunkMeter
               courses={dataPayload.courses}
             />
           </section>
 
-          {/* Vertical Architectural Divider */}
-          <div style={{
-            width: '1px',
-            height: '80%',
-            backgroundColor: 'var(--border)',
-            alignSelf: 'center',
-            flexShrink: 0
-          }} />
-
           {/* SECTOR 04: Getaways & Natural Travel Windows */}
-          <section data-sector-index="3" data-sector-id="trips" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
+          <section
+            data-sector-index="3"
+            data-sector-id="trips"
+            style={{
+              display: activeSectorIndex === 3 ? 'block' : 'none',
+              height: '100%',
+              animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
             <SectorTrips
               schedule={dataPayload.schedule}
               deadlines={dataPayload.deadlines}
@@ -302,34 +194,32 @@ export default function DesktopHorizonDeck({
             />
           </section>
 
-          {/* Vertical Architectural Divider */}
-          <div style={{
-            width: '1px',
-            height: '80%',
-            backgroundColor: 'var(--border)',
-            alignSelf: 'center',
-            flexShrink: 0
-          }} />
-
           {/* SECTOR 05: Deadlines, Quizzes & Case Pipeline */}
-          <section data-sector-index="4" data-sector-id="deadlines" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
+          <section
+            data-sector-index="4"
+            data-sector-id="deadlines"
+            style={{
+              display: activeSectorIndex === 4 ? 'block' : 'none',
+              height: '100%',
+              animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
             <SectorDeadlines
               initialDeadlines={dataPayload.deadlines}
               courses={dataPayload.courses}
             />
           </section>
 
-          {/* Vertical Architectural Divider */}
-          <div style={{
-            width: '1px',
-            height: '80%',
-            backgroundColor: 'var(--border)',
-            alignSelf: 'center',
-            flexShrink: 0
-          }} />
-
           {/* SECTOR 06: Batch Synergy & Free Window Matrix */}
-          <section data-sector-index="5" data-sector-id="synergy" style={{ scrollSnapAlign: 'start', height: '100%', maxWidth: 'calc(100vw - 72px)', flexShrink: 0, boxSizing: 'border-box' }}>
+          <section
+            data-sector-index="5"
+            data-sector-id="synergy"
+            style={{
+              display: activeSectorIndex === 5 ? 'block' : 'none',
+              height: '100%',
+              animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
             <SectorSynergy
               currentUser={dataPayload.student}
               schedule={dataPayload.schedule}
