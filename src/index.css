@@ -220,10 +220,10 @@ main.no-scrollbar::-webkit-scrollbar,
   padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
 }
 
-/* Touch Target Minimum (44x44px for accessibility) */
+/* Touch Target Minimum (44x44px for WCAG 2.1 AA accessibility) */
 .touch-target {
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 44px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;

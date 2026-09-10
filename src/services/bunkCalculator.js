@@ -19,12 +19,12 @@ export function calculateBunkStats(attended, conducted, totalPlanned = 20, thres
 
   // 3. Remaining Safe Bunks (b_safe)
   // Student can miss at most b_safe classes across the remainder of the term without dropping < threshold
-  const safeAcrossRemaining = Math.floor((A + R) - (threshold * N));
+  const safeAcrossRemaining = Math.floor(Number(((A + R) - (threshold * N)).toFixed(6)));
   const safeBunksRemaining = Math.max(0, Math.min(R, safeAcrossRemaining));
 
   // 4. Immediate Consecutive Safe Bunks (b_now)
   // Can student miss next k classes immediately starting today?
-  const safeImmediate = Math.floor((A / threshold) - C);
+  const safeImmediate = Math.floor(Number(((A / threshold) - C).toFixed(6)));
   const safeImmediateBunks = Math.max(0, Math.min(R, safeImmediate));
 
   // 5. Recovery Classes Required (c_req)
@@ -33,7 +33,7 @@ export function calculateBunkStats(attended, conducted, totalPlanned = 20, thres
   let isDebarredRisk = false;
 
   if (currentPercentage < threshold * 100) {
-    const rawReq = Math.ceil((threshold * C - A) / (1 - threshold));
+    const rawReq = Math.ceil(Number(((threshold * C - A) / (1 - threshold)).toFixed(6)));
     recoveryRequired = Math.max(0, rawReq);
     if (recoveryRequired > R) {
       isDebarredRisk = true; // Mathematically impossible to reach 80%

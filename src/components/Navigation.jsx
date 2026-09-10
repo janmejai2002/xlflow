@@ -39,6 +39,10 @@ export default function Navigation({ activeTab, onSelectTab, warningCount, pendi
           <button
             key={tab.id}
             onClick={() => onSelectTab(tab.id)}
+            aria-label={tab.label}
+            aria-current={isActive ? 'page' : undefined}
+            role="tab"
+            aria-selected={isActive}
             style={{
               position: 'relative',
               display: 'flex',
@@ -46,12 +50,14 @@ export default function Navigation({ activeTab, onSelectTab, warningCount, pendi
               alignItems: 'center',
               justifyContent: 'center',
               gap: '3px',
-              padding: '6px 8px',
+              padding: '6px 4px',
+              minHeight: '48px',
+              minWidth: '44px',
               borderRadius: '10px',
               background: isActive ? 'var(--wash-mizu)' : 'transparent',
               border: 'none',
               cursor: 'pointer',
-              color: isActive ? 'var(--mizu)' : 'var(--ink-soft)',
+              color: isActive ? 'var(--mizu-text)' : 'var(--ink-soft)',
               transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
               flex: 1,
               maxWidth: '96px'

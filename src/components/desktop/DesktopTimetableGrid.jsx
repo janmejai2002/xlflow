@@ -136,6 +136,8 @@ export default function DesktopTimetableGrid({
             <button
               onClick={() => setCurrentDateIndex(prev => Math.max(0, prev - 6))}
               disabled={currentDateIndex <= 0}
+              aria-label="Previous 6 days"
+              title="Previous 6 days"
               style={{
                 background: 'var(--paper)',
                 border: '1px solid var(--border)',
@@ -151,6 +153,8 @@ export default function DesktopTimetableGrid({
             <button
               onClick={() => setCurrentDateIndex(prev => Math.min(Math.max(0, uniqueDates.length - 1), prev + 6))}
               disabled={currentDateIndex + 6 >= uniqueDates.length}
+              aria-label="Next 6 days"
+              title="Next 6 days"
               style={{
                 background: 'var(--paper)',
                 border: '1px solid var(--border)',

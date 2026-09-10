@@ -32,8 +32,11 @@ export function useKeyboardShortcuts({
           onSelectTab?.('timetable');
         } else if (e.key === '4') {
           e.preventDefault();
-          onSelectTab?.('trips');
+          onSelectTab?.('synergy');
         } else if (e.key === '5') {
+          e.preventDefault();
+          onSelectTab?.('trips');
+        } else if (e.key === '6') {
           e.preventDefault();
           onSelectTab?.('deadlines');
         } else if (e.key.toLowerCase() === 't') {

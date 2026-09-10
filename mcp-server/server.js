@@ -197,10 +197,10 @@ async function executeTool(name, args = {}) {
           name: c.name,
           faculty: c.faculty,
           currentPercentage: stats.currentPercentage,
-          safeBunks: stats.safeBunks,
-          immediateBunks: stats.immediateBunks,
+          safeBunks: stats.safeBunksRemaining,
+          immediateBunks: stats.safeImmediateBunks,
           tier: stats.tier,
-          isDebarred: stats.isDebarred
+          isDebarred: stats.isDebarredRisk
         };
       });
       if (args.courseCode) {
@@ -261,7 +261,7 @@ async function executeTool(name, args = {}) {
       const trips = findNaturalGetaways(SAMPLE_SCHEDULE, []);
       const minDays = args.minDays || 3;
       const maxBunks = args.maxBunksAllowed !== undefined ? args.maxBunksAllowed : 1;
-      const filtered = trips.filter(t => t.durationDays >= minDays && t.classesMissed <= maxBunks);
+      const filtered = trips.filter(t => (t.lengthDays || t.durationDays || 0) >= minDays && t.classesMissed <= maxBunks);
       return {
         topOpportunities: filtered
       };

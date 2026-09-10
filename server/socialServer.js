@@ -46,9 +46,12 @@ function cleanExpiredStatuses() {
   const now = Date.now();
   let changed = false;
   for (const [roll, status] of Object.entries(db.statuses || {})) {
-    if (status.expiresAt && status.expiresAt < now) {
-      delete db.statuses[roll];
-      changed = true;
+    if (status.expiresAt) {
+      const expTime = typeof status.expiresAt === 'number' ? status.expiresAt : new Date(status.expiresAt).getTime();
+      if (!isNaN(expTime) && expTime < now) {
+        delete db.statuses[roll];
+        changed = true;
+      }
     }
   }
   if (changed) saveDatabase(db);
