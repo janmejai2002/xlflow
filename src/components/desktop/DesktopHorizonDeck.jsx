@@ -10,6 +10,7 @@ import SectorSynergy from './sectors/SectorSynergy';
 import DesktopInspectorDock from './DesktopInspectorDock';
 import AiSettingsModal from '../AiSettingsModal';
 import StatusBeaconModal from '../social/StatusBeaconModal';
+import QuickTourModal from '../QuickTourModal';
 import { playTactileClick } from '../../services/soundEngine';
 
 export default function DesktopHorizonDeck({
@@ -36,6 +37,9 @@ export default function DesktopHorizonDeck({
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const [isBeaconModalOpen, setIsBeaconModalOpen] = useState(false);
+  const [isQuickTourOpen, setIsQuickTourOpen] = useState(() => {
+    return !localStorage.getItem('has_seen_quick_tour_v1');
+  });
 
   // Smooth jump to sector
   const jumpToSector = useCallback((index) => {
@@ -112,6 +116,7 @@ export default function DesktopHorizonDeck({
         isInspectorOpen={isInspectorOpen}
         onToggleInspector={() => setIsInspectorOpen(prev => !prev)}
         onOpenBeaconModal={() => setIsBeaconModalOpen(true)}
+        onOpenQuickTour={() => setIsQuickTourOpen(true)}
       />
 
       {/* 2. Focused Single-Active-Sector Workspace (Zero Horizontal Scroll, Zero Side Peek) */}
@@ -291,6 +296,16 @@ export default function DesktopHorizonDeck({
         isOpen={isBeaconModalOpen}
         onClose={() => setIsBeaconModalOpen(false)}
         currentUser={dataPayload.student}
+      />
+
+      {/* 7. Interactive 30-Second Quick Tour */}
+      <QuickTourModal
+        isOpen={isQuickTourOpen}
+        onClose={() => {
+          localStorage.setItem('has_seen_quick_tour_v1', 'true');
+          setIsQuickTourOpen(false);
+        }}
+        onJumpToSector={jumpToSector}
       />
     </div>
   );

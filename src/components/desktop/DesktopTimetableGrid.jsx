@@ -30,6 +30,7 @@ export default function DesktopTimetableGrid({
   selectedSessionId
 }) {
   const [selectedCourseFilter, setSelectedCourseFilter] = useState('all');
+  const [selectedDayFilter, setSelectedDayFilter] = useState('ALL');
   const [viewMode, setViewMode] = useState('matrix'); // 'matrix' | 'list'
   const [copiedId, setCopiedId] = useState(null);
 
@@ -75,6 +76,12 @@ export default function DesktopTimetableGrid({
     }
     return weekDays;
   }, [uniqueDates, currentDateIndex, todayStr]);
+
+  // Filter days by day tab (ALL or specific day)
+  const visibleDaysWindow = useMemo(() => {
+    if (selectedDayFilter === 'ALL') return daysWindow;
+    return daysWindow.filter(d => d.dayName === selectedDayFilter);
+  }, [daysWindow, selectedDayFilter]);
 
   // Filter schedule by active course and active week dates
   const weekDateStrings = useMemo(() => new Set(daysWindow.map(d => d.dateStr)), [daysWindow]);
@@ -187,6 +194,40 @@ export default function DesktopTimetableGrid({
           </div>
         </div>
 
+        {/* Day Filter Tabs: All, Mon, Tue, Wed, Thu, Fri, Sat */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '3px',
+          backgroundColor: 'var(--paper)',
+          padding: '2px',
+          borderRadius: '8px',
+          border: '1px solid var(--border)'
+        }}>
+          {['ALL', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => {
+            const isSelected = selectedDayFilter === day;
+            return (
+              <button
+                key={day}
+                onClick={() => setSelectedDayFilter(day)}
+                style={{
+                  padding: '4px 8px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: isSelected ? 'var(--mizu)' : 'transparent',
+                  color: isSelected ? '#FFFFFF' : 'var(--ink-soft)',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {day === 'ALL' ? 'All Days' : day}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Course Filter Chips */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto' }}>
           <button
@@ -274,7 +315,7 @@ export default function DesktopTimetableGrid({
         {/* Days Header Row */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '64px repeat(6, 1fr)',
+          gridTemplateColumns: `64px repeat(${visibleDaysWindow.length}, 1fr)`,
           borderBottom: '1px solid var(--border)',
           backgroundColor: 'var(--card-hover)',
           position: 'sticky',
@@ -293,8 +334,8 @@ export default function DesktopTimetableGrid({
             IST
           </div>
 
-          {/* 6 Day Headers */}
-          {daysWindow.map((d) => (
+          {/* Visible Day Headers */}
+          {visibleDaysWindow.map((d) => (
             <div
               key={d.dateStr}
               style={{
@@ -338,7 +379,7 @@ export default function DesktopTimetableGrid({
         <div style={{
           position: 'relative',
           display: 'grid',
-          gridTemplateColumns: '64px repeat(6, 1fr)',
+          gridTemplateColumns: `64px repeat(${visibleDaysWindow.length}, 1fr)`,
           height: `${TOTAL_HOURS * HOUR_HEIGHT}px`,
           backgroundColor: 'var(--paper)'
         }}>
@@ -396,8 +437,8 @@ export default function DesktopTimetableGrid({
             })}
           </div>
 
-          {/* 6 Day Columns */}
-          {daysWindow.map((day) => {
+          {/* Visible Day Columns */}
+          {visibleDaysWindow.map((day) => {
             const daySessions = weekSessions.filter(s => s.classDate === day.dateStr);
 
             return (

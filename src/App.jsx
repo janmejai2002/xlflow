@@ -19,6 +19,7 @@ import DesktopHorizonDeck from './components/desktop/DesktopHorizonDeck';
 import GroupCollaborationModal from './components/desktop/GroupCollaborationModal';
 import AiSettingsModal from './components/AiSettingsModal';
 import InviteWelcomeModal from './components/social/InviteWelcomeModal';
+import QuickTourModal from './components/QuickTourModal';
 import SectorSynergy from './components/desktop/sectors/SectorSynergy';
 import { parseDeepLink } from './services/deepLinkHandler';
 import { useBreakpoint } from './hooks/useBreakpoint';
@@ -44,6 +45,7 @@ export default function App() {
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
     return !localStorage.getItem('has_seen_onboarding_v1');
   });
+  const [isQuickTourOpen, setIsQuickTourOpen] = useState(false);
   const [isAmbientOn, setIsAmbientOn] = useState(false);
   const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const [timetableSelectedDate, setTimetableSelectedDate] = useState(null);
@@ -320,6 +322,7 @@ export default function App() {
             onToggleAmbient={handleToggleAmbient}
             onOpenCopilot={() => setIsCopilotOpen(true)}
             onOpenBooklet={() => setIsBookletOpen(true)}
+            onOpenQuickTour={() => setIsQuickTourOpen(true)}
             onToggleLayoutMode={() => {
               const next = toggleLayoutMode();
               toast(`Switched to ${next === 'desktop' ? 'Desktop Horizon Deck' : 'Mobile Shell'}`);
@@ -495,6 +498,16 @@ export default function App() {
         onClose={() => setIsInviteModalOpen(false)}
         deepLinkData={deepLinkData}
         onIdentitySelected={handleIdentitySelected}
+      />
+
+      {/* Interactive 30-Second Quick Tour */}
+      <QuickTourModal
+        isOpen={isQuickTourOpen}
+        onClose={() => setIsQuickTourOpen(false)}
+        onJumpToSector={(idx) => {
+          const tabs = ['radar', 'timetable', 'bunkmeter', 'trips', 'deadlines', 'synergy'];
+          setActiveTab(tabs[idx] || 'radar');
+        }}
       />
 
       {/* Tactile Toaster Notifications */}

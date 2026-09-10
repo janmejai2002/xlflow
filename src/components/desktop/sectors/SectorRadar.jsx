@@ -301,22 +301,36 @@ export default function SectorRadar({
                     e.stopPropagation();
                     handleCopyVenue(nextSession.venue);
                   }}
+                  title="Click to copy classroom venue code"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '5px',
-                    padding: '5px 10px',
-                    borderRadius: '8px',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '9px',
                     backgroundColor: 'var(--paper)',
-                    border: '1px solid var(--border)',
+                    border: '1.5px solid var(--border)',
                     color: 'var(--ink)',
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    cursor: 'pointer'
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                    transition: 'all 0.15s ease'
                   }}
                 >
-                  <MapPin size={12} color={colors.accent} />
+                  <MapPin size={13} color={colors.accent} />
                   <span>{nextSession.venue}</span>
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    color: copiedVenue ? 'var(--moss)' : 'var(--ink-soft)',
+                    backgroundColor: copiedVenue ? 'var(--wash-moss)' : 'var(--card)',
+                    padding: '1px 5px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--border)'
+                  }}>
+                    {copiedVenue ? 'COPIED!' : 'COPY'}
+                  </span>
                   {copiedVenue ? <Check size={11} color="var(--moss)" /> : <Copy size={11} color="var(--ink-soft)" />}
                 </button>
 
@@ -356,25 +370,44 @@ export default function SectorRadar({
               </div>
             </div>
 
-            {/* Attendance Safety Footer */}
+            {/* Attendance Safety Footer - Plain English Zero Mental Math */}
             <div style={{
               marginTop: '10px',
-              padding: '6px 10px',
-              borderRadius: '8px',
-              backgroundColor: stats.tier === 'danger' ? 'var(--wash-hanko)' : 'var(--wash-moss)',
-              border: `1px solid ${stats.tier === 'danger' ? 'rgba(210, 84, 63, 0.25)' : 'rgba(110, 140, 99, 0.25)'}`,
+              padding: '8px 12px',
+              borderRadius: '10px',
+              backgroundColor: stats.tier === 'danger' ? 'var(--wash-hanko)' : stats.tier === 'warning' ? 'var(--wash-ochre)' : 'var(--wash-moss)',
+              border: `1px solid ${stats.tier === 'danger' ? 'rgba(210, 84, 63, 0.35)' : stats.tier === 'warning' ? 'rgba(194, 145, 58, 0.35)' : 'rgba(110, 140, 99, 0.35)'}`,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              gap: '8px'
             }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0 }}>
+                <ShieldCheck size={14} color={stats.tier === 'danger' ? 'var(--hanko)' : stats.tier === 'warning' ? 'var(--ochre)' : 'var(--moss)'} style={{ flexShrink: 0 }} />
+                <span style={{
+                  fontSize: '11.5px',
+                  fontWeight: 700,
+                  color: stats.tier === 'danger' ? 'var(--hanko)' : stats.tier === 'warning' ? 'var(--ochre-text)' : 'var(--moss-text)',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}>
+                  {stats.tier === 'danger'
+                    ? `⚠️ Attendance Danger: ${(stats.currentPercentage || 0).toFixed(0)}% — Attend next ${stats.classesNeededToRecover || 1} classes to reach 80%`
+                    : stats.safeBunksRemaining === 0
+                    ? `🟡 Caution: ${(stats.currentPercentage || 0).toFixed(0)}% — 0 safe bunks remaining (attend to stay safe)`
+                    : `✅ Attendance Safe: ${(stats.currentPercentage || 100).toFixed(0)}% (${stats.safeBunksRemaining || 4} safe bunks remaining before 80%)`}
+                </span>
+              </div>
               <span style={{
-                fontSize: '11px',
-                fontWeight: 600,
-                color: stats.tier === 'danger' ? 'var(--hanko)' : 'var(--moss)'
+                fontSize: '10px',
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 700,
+                color: stats.tier === 'danger' ? 'var(--hanko)' : stats.tier === 'warning' ? 'var(--ochre)' : 'var(--moss)',
+                flexShrink: 0
               }}>
-                Safe Attendance: {(stats.currentPercentage || 100).toFixed(0)}% (+{stats.safeBunksRemaining || 4} bunks safe)
+                80% Rule
               </span>
-              <ArrowRight size={12} color={stats.tier === 'danger' ? 'var(--hanko)' : 'var(--moss)'} />
             </div>
           </div>
 

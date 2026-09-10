@@ -119,6 +119,35 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
         </span>
       </div>
 
+      {/* How Getaways Work Explainer Ribbon */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '8px 14px',
+        backgroundColor: 'var(--card)',
+        borderRadius: '10px',
+        border: '1px solid var(--border)',
+        fontSize: '12px',
+        color: 'var(--ink-soft)',
+        flexShrink: 0
+      }}>
+        <span style={{
+          fontSize: '10px',
+          fontWeight: 800,
+          color: 'var(--ochre)',
+          backgroundColor: 'var(--wash-ochre)',
+          padding: '2px 7px',
+          borderRadius: '4px',
+          letterSpacing: '0.04em'
+        }}>
+          HOW IT WORKS
+        </span>
+        <span>
+          We analyze the official XLRI academic calendar, gazetted holidays, and lecture slots to pinpoint long weekend travel windows with minimal or zero bunk cost.
+        </span>
+      </div>
+
       {/* Main Vacation Cards Grid */}
       <div style={{
         flex: 1,
@@ -149,30 +178,30 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
                 gap: '14px'
               }}
             >
-              {/* Header Badge */}
+              {/* Header Badge: Bridge The Gap Trade-off */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span style={{
                   fontSize: '11px',
                   fontWeight: 700,
                   color: isZeroBunk ? 'var(--moss)' : 'var(--ochre)',
                   backgroundColor: isZeroBunk ? 'var(--wash-moss)' : 'var(--wash-ochre)',
-                  padding: '3px 8px',
+                  padding: '3px 9px',
                   borderRadius: '6px'
                 }}>
-                  {isZeroBunk ? '🌟 ZERO BUNKS' : `⚡ ${trip.classesMissed} CLASS MISSED`}
+                  {isZeroBunk ? '🌴 Zero Bunk Cost' : `⚡ Bridge the Gap: Skip ${trip.classesMissed} → ${trip.durationDays} Days Off`}
                 </span>
 
                 <span style={{
                   fontSize: '11px',
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--ink)',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   backgroundColor: 'var(--paper)',
                   padding: '2px 8px',
                   borderRadius: '6px',
                   border: '1px solid var(--border)'
                 }}>
-                  {trip.durationDays} Days
+                  {trip.durationDays} Days Off
                 </span>
               </div>
 

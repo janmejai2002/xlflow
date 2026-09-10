@@ -13,12 +13,12 @@ import {
 import { playTactileClick } from '../../services/soundEngine';
 
 export const SECTORS = [
-  { id: 'radar', index: 0, number: '01', name: 'Today Radar', icon: Compass, width: 1140 },
-  { id: 'timetable', index: 1, number: '02', name: 'Weekly Matrix', icon: Calendar, width: 1260 },
+  { id: 'radar', index: 0, number: '01', name: "Today's Radar", icon: Compass, width: 1140 },
+  { id: 'timetable', index: 1, number: '02', name: 'Timetable Matrix', icon: Calendar, width: 1260 },
   { id: 'bunkmeter', index: 2, number: '03', name: 'Bunk-O-Meter', icon: ShieldCheck, width: 1200 },
-  { id: 'trips', index: 3, number: '04', name: 'Getaways & Trips', icon: Palmtree, width: 1120 },
-  { id: 'deadlines', index: 4, number: '05', name: 'Deadlines & Quizzes', icon: CheckSquare, width: 1060 },
-  { id: 'synergy', index: 5, number: '06', name: 'Batch Synergy', icon: Users, width: 1150 }
+  { id: 'trips', index: 3, number: '04', name: 'Long Weekends', icon: Palmtree, width: 1120 },
+  { id: 'deadlines', index: 4, number: '05', name: 'Deadlines', icon: CheckSquare, width: 1060 },
+  { id: 'synergy', index: 5, number: '06', name: 'Campus Social', icon: Users, width: 1150 }
 ];
 
 export default function HorizonMiniMap({

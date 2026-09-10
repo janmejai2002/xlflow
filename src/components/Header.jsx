@@ -18,7 +18,8 @@ export default function Header({
   onToggleAmbient,
   onOpenCopilot,
   onOpenBooklet,
-  onToggleLayoutMode
+  onToggleLayoutMode,
+  onOpenQuickTour
 }) {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const menuRef = useRef(null);
@@ -244,6 +245,32 @@ export default function Header({
               gap: '4px',
               animation: 'fadeIn 0.15s ease-out'
             }}>
+              <button
+                onClick={() => {
+                  setIsMoreOpen(false);
+                  onOpenQuickTour?.();
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: 'var(--wash-ochre)',
+                  color: 'var(--ochre-text)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(194, 145, 58, 0.25)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--wash-ochre)'}
+              >
+                <Sparkles size={15} style={{ color: 'var(--ochre)' }} />
+                <span>30-Sec Quick Tour</span>
+              </button>
+
               <button
                 onClick={() => {
                   setIsMoreOpen(false);
