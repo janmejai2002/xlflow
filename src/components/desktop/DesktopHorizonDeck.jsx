@@ -120,9 +120,8 @@ export default function DesktopHorizonDeck({
           style={{
             flex: 1,
             height: '100%',
-            overflowX: 'hidden',
-            overflowY: 'auto',
-            padding: '20px 32px',
+            overflow: 'hidden',
+            padding: activeSectorIndex === 0 ? '12px 28px 8px 28px' : '16px 28px',
             position: 'relative'
           }}
         >
@@ -131,8 +130,11 @@ export default function DesktopHorizonDeck({
             data-sector-index="0"
             data-sector-id="radar"
             style={{
-              display: activeSectorIndex === 0 ? 'block' : 'none',
+              display: activeSectorIndex === 0 ? 'flex' : 'none',
+              flexDirection: 'column',
               height: '100%',
+              minHeight: 0,
+              overflow: 'hidden',
               animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
@@ -150,8 +152,11 @@ export default function DesktopHorizonDeck({
             data-sector-index="1"
             data-sector-id="timetable"
             style={{
-              display: activeSectorIndex === 1 ? 'block' : 'none',
+              display: activeSectorIndex === 1 ? 'flex' : 'none',
+              flexDirection: 'column',
               height: '100%',
+              minHeight: 0,
+              overflow: 'hidden',
               animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
@@ -167,8 +172,11 @@ export default function DesktopHorizonDeck({
             data-sector-index="2"
             data-sector-id="bunkmeter"
             style={{
-              display: activeSectorIndex === 2 ? 'block' : 'none',
+              display: activeSectorIndex === 2 ? 'flex' : 'none',
+              flexDirection: 'column',
               height: '100%',
+              minHeight: 0,
+              overflow: 'hidden',
               animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
@@ -184,8 +192,11 @@ export default function DesktopHorizonDeck({
             data-sector-index="3"
             data-sector-id="trips"
             style={{
-              display: activeSectorIndex === 3 ? 'block' : 'none',
+              display: activeSectorIndex === 3 ? 'flex' : 'none',
+              flexDirection: 'column',
               height: '100%',
+              minHeight: 0,
+              overflow: 'hidden',
               animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
@@ -201,8 +212,11 @@ export default function DesktopHorizonDeck({
             data-sector-index="4"
             data-sector-id="deadlines"
             style={{
-              display: activeSectorIndex === 4 ? 'block' : 'none',
+              display: activeSectorIndex === 4 ? 'flex' : 'none',
+              flexDirection: 'column',
               height: '100%',
+              minHeight: 0,
+              overflow: 'hidden',
               animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >
@@ -217,8 +231,11 @@ export default function DesktopHorizonDeck({
             data-sector-index="5"
             data-sector-id="synergy"
             style={{
-              display: activeSectorIndex === 5 ? 'block' : 'none',
+              display: activeSectorIndex === 5 ? 'flex' : 'none',
+              flexDirection: 'column',
               height: '100%',
+              minHeight: 0,
+              overflow: 'hidden',
               animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
           >

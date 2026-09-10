@@ -23,9 +23,14 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
 
-    // 1. Scene, Camera, Renderer
-    const width = container.clientWidth || 360;
-    const height = 380;
+    // 1. Scene, Camera, Renderer with Dynamic Flex Dimensions
+    const getTargetDimensions = () => {
+      const w = container.clientWidth || 360;
+      const h = canvas.parentElement?.clientHeight || (container.clientHeight ? Math.max(220, container.clientHeight - 80) : 320);
+      return { width: w, height: h };
+    };
+
+    const { width, height } = getTargetDimensions();
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
@@ -301,19 +306,31 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
 
     animate();
 
-    // 8. Responsive Resize
+    // 8. Responsive Dynamic Resize via ResizeObserver & Window Resize
     const handleResize = () => {
-      if (!container) return;
-      const newW = container.clientWidth || 360;
-      camera.aspect = newW / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(newW, height);
+      if (!container || !canvas || !renderer) return;
+      const { width: newW, height: newH } = getTargetDimensions();
+      if (newW > 0 && newH > 0) {
+        camera.aspect = newW / newH;
+        camera.updateProjectionMatrix();
+        renderer.setSize(newW, newH);
+      }
     };
     window.addEventListener('resize', handleResize);
+
+    let resizeObs = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObs = new ResizeObserver(() => {
+        handleResize();
+      });
+      if (container) resizeObs.observe(container);
+      if (canvas.parentElement) resizeObs.observe(canvas.parentElement);
+    }
 
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
+      if (resizeObs) resizeObs.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (observer && container) observer.disconnect();
       canvas.removeEventListener('pointerdown', onPointerDown);
@@ -343,13 +360,17 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
       ref={containerRef}
       style={{
         width: '100%',
+        height: '100%',
         backgroundColor: 'var(--card)',
         border: '1px solid var(--border)',
-        borderRadius: '20px',
-        padding: '16px',
+        borderRadius: '16px',
+        padding: '12px 16px',
         position: 'relative',
         boxShadow: 'var(--shadow-card)',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0
       }}
     >
       {/* 3D Canvas Header Controls */}
@@ -359,7 +380,8 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
         justifyContent: 'space-between',
         position: 'relative',
         zIndex: 10,
-        marginBottom: '6px'
+        marginBottom: '6px',
+        flexShrink: 0
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{
@@ -377,7 +399,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
           <div>
             <h3 style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '17px',
+              fontSize: '16px',
               fontWeight: 600,
               color: 'var(--ink)',
               margin: 0
@@ -400,7 +422,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
             display: 'flex',
             alignItems: 'center',
             gap: '4px',
-            padding: '4px 10px',
+            padding: '3px 9px',
             borderRadius: '9999px',
             border: '1px solid var(--border)',
             backgroundColor: isAutoRotate ? 'var(--wash-moss)' : 'var(--paper)',
@@ -415,8 +437,15 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
         </button>
       </div>
 
-      {/* WebGL Canvas */}
-      <div style={{ position: 'relative', width: '100%', height: '380px', borderRadius: '14px', overflow: 'hidden' }}>
+      {/* WebGL Canvas Wrapper - Flex Fill */}
+      <div style={{
+        position: 'relative',
+        width: '100%',
+        flex: 1,
+        minHeight: '200px',
+        borderRadius: '12px',
+        overflow: 'hidden'
+      }}>
         <canvas
           ref={canvasRef}
           style={{
@@ -424,7 +453,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
             height: '100%',
             display: 'block',
             cursor: 'grab',
-            touchAction: 'pan-y'
+            touchAction: 'none'
           }}
         />
 
@@ -468,9 +497,10 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
         justifyContent: 'center',
         gap: '8px',
         flexWrap: 'wrap',
-        marginTop: '10px',
-        paddingTop: '10px',
-        borderTop: '1px solid var(--border)'
+        marginTop: '6px',
+        paddingTop: '6px',
+        borderTop: '1px solid var(--border)',
+        flexShrink: 0
       }}>
         {orbitalDataTokens.map((item, idx) => (
           <div
@@ -482,7 +512,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
               fontSize: '11px',
               color: 'var(--ink)',
               fontWeight: 600,
-              padding: '2px 8px',
+              padding: '2px 7px',
               borderRadius: '6px',
               backgroundColor: item.wash,
               border: `1px solid ${item.border}`
