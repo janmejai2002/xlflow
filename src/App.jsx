@@ -366,6 +366,8 @@ export default function App() {
             {activeTab === 'bunkmeter' && (
               <BunkMeterView
                 courses={dataPayload.courses}
+                schedule={dataPayload.schedule}
+                student={dataPayload.student}
               />
             )}
 

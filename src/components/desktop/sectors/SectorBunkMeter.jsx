@@ -1,23 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   AlertTriangle,
   FileText
 } from 'lucide-react';
 import { calculateBunkStats } from '../../../services/bunkCalculator';
+import { selfAttendanceStore } from '../../../services/selfAttendanceStore';
+import AttendanceLogModal from '../../attendance/AttendanceLogModal';
 import { toast } from 'sonner';
 import CourseSafetyCard from '../../CourseSafetyCard';
 
-export default function SectorBunkMeter({ courses = [] }) {
+export default function SectorBunkMeter({ courses = [], schedule = [], student = {} }) {
   const [filterTerm, setFilterTerm] = useState('all');
+  const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [, setStoreVer] = useState(0);
+
+  useEffect(() => {
+    const unsub = selfAttendanceStore.subscribe(() => setStoreVer(v => v + 1));
+    return unsub;
+  }, []);
+
+  const sourceMode = selfAttendanceStore.getSourceMode();
 
   const evaluatedCourses = courses.map(course => {
-    const stats = calculateBunkStats(course.attended, course.conducted, course.totalPlanned);
+    const recon = selfAttendanceStore.getCourseStats(course, schedule);
     return {
       ...course,
-      stats
+      stats: recon ? recon.active : calculateBunkStats(course.attended, course.conducted, course.totalPlanned),
+      selfStats: recon?.self,
+      officialStats: recon?.official,
+      discrepancy: recon?.discrepancy
     };
   });
+
+  const discrepancies = evaluatedCourses.filter(c => c.discrepancy?.hasDiscrepancy);
 
   const filteredCourses = evaluatedCourses.filter(c => {
     if (filterTerm === 'all') return true;
@@ -45,7 +61,7 @@ export default function SectorBunkMeter({ courses = [] }) {
       gap: '16px'
     }}>
       {/* Sector Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
             width: '32px',
@@ -83,7 +99,99 @@ export default function SectorBunkMeter({ courses = [] }) {
         </div>
 
         {/* Action Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {/* Source Mode Toggle */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: 'var(--card)',
+            padding: '2px',
+            borderRadius: '8px',
+            border: '1px solid var(--border)'
+          }}>
+            <button
+              onClick={() => selfAttendanceStore.setSourceMode('hybrid')}
+              title="Ground reality: combines personal log with ERP"
+              style={{
+                padding: '5px 10px',
+                borderRadius: '6px',
+                border: 'none',
+                backgroundColor: sourceMode === 'hybrid' ? 'var(--mizu)' : 'transparent',
+                color: sourceMode === 'hybrid' ? '#FFFFFF' : 'var(--ink-soft)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              Hybrid Reality
+            </button>
+            <button
+              onClick={() => selfAttendanceStore.setSourceMode('self')}
+              title="Sovereign personal log only"
+              style={{
+                padding: '5px 10px',
+                borderRadius: '6px',
+                border: 'none',
+                backgroundColor: sourceMode === 'self' ? 'var(--moss)' : 'transparent',
+                color: sourceMode === 'self' ? '#FFFFFF' : 'var(--ink-soft)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              Self-Log
+            </button>
+            <button
+              onClick={() => selfAttendanceStore.setSourceMode('erp')}
+              title="Official ERP snapshot"
+              style={{
+                padding: '5px 10px',
+                borderRadius: '6px',
+                border: 'none',
+                backgroundColor: sourceMode === 'erp' ? 'var(--ink)' : 'transparent',
+                color: sourceMode === 'erp' ? '#FFFFFF' : 'var(--ink-soft)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              ERP Stale
+            </button>
+          </div>
+
+          {/* Self-Attendance Manager Trigger Button */}
+          <button
+            onClick={() => setIsLogModalOpen(true)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '7px 12px',
+              backgroundColor: discrepancies.length > 0 ? 'var(--wash-ochre)' : 'var(--wash-moss)',
+              border: `1px solid ${discrepancies.length > 0 ? 'rgba(217, 119, 6, 0.35)' : 'rgba(22, 163, 74, 0.35)'}`,
+              borderRadius: '8px',
+              color: discrepancies.length > 0 ? 'var(--ochre-text)' : 'var(--moss-text)',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            <ShieldCheck size={14} color={discrepancies.length > 0 ? 'var(--ochre)' : 'var(--moss)'} />
+            <span>Self-Log Manager</span>
+            {discrepancies.length > 0 && (
+              <span style={{
+                backgroundColor: 'var(--ochre)',
+                color: '#FFFFFF',
+                fontSize: '9px',
+                padding: '1px 5px',
+                borderRadius: '9999px',
+                fontWeight: 800
+              }}>
+                {discrepancies.length} Diff
+              </span>
+            )}
+          </button>
+
           <button
             onClick={handleExportAuditPdf}
             style={{
@@ -187,6 +295,44 @@ export default function SectorBunkMeter({ courses = [] }) {
         </div>
       </div>
 
+      {/* Discrepancy Alert Banner */}
+      {discrepancies.length > 0 && (
+        <div style={{
+          backgroundColor: 'var(--wash-ochre)',
+          border: '1px solid rgba(217, 119, 6, 0.35)',
+          borderRadius: '12px',
+          padding: '10px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontSize: '12px',
+          color: 'var(--ochre-text)',
+          animation: 'sectorFadeIn 0.2s ease-out'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertTriangle size={15} color="var(--ochre)" />
+            <span>
+              <strong>ERP Admin Lag Detected:</strong> {discrepancies.length} course(s) have differences between your personal attendance log and official ERP records.
+            </span>
+          </div>
+          <button
+            onClick={() => setIsLogModalOpen(true)}
+            style={{
+              padding: '4px 10px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--ochre)',
+              color: '#FFFFFF',
+              border: 'none',
+              fontWeight: 700,
+              fontSize: '11px',
+              cursor: 'pointer'
+            }}
+          >
+            Reconcile & Audit
+          </button>
+        </div>
+      )}
+
       {/* Responsive Course Grid */}
       <div style={{
         flex: 1,
@@ -211,6 +357,15 @@ export default function SectorBunkMeter({ courses = [] }) {
           />
         ))}
       </div>
+
+      {/* Sovereign Self-Attendance Log & Discrepancy Modal */}
+      <AttendanceLogModal
+        isOpen={isLogModalOpen}
+        onClose={() => setIsLogModalOpen(false)}
+        courses={courses}
+        schedule={schedule}
+        student={student}
+      />
     </div>
   );
 }

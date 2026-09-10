@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
-import { ShieldCheck, AlertTriangle, AlertCircle, Info, Calculator, Check } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, AlertTriangle, AlertCircle, Info, Calculator, Check, FileText, Layers, Sparkles } from 'lucide-react';
 import { calculateBunkStats, STATUTORY_THRESHOLD } from '../services/bunkCalculator';
+import { selfAttendanceStore } from '../services/selfAttendanceStore';
+import AttendanceLogModal from './attendance/AttendanceLogModal';
 import NumberFlow from '@number-flow/react';
 import CourseSafetyCard from './CourseSafetyCard';
 
-export default function BunkMeterView({ courses = [] }) {
+export default function BunkMeterView({ courses = [], schedule = [], student = {} }) {
   const [filterTerm, setFilterTerm] = useState('all'); // 'all' | 'Term-5' | 'Term-4'
+  const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [, setStoreVer] = useState(0);
 
-  // Compute stats for all courses
+  useEffect(() => {
+    const unsub = selfAttendanceStore.subscribe(() => setStoreVer(v => v + 1));
+    return unsub;
+  }, []);
+
+  const sourceMode = selfAttendanceStore.getSourceMode();
+
+  // Compute reconciled stats for all courses
   const evaluatedCourses = courses.map(course => {
-    const stats = calculateBunkStats(course.attended, course.conducted, course.totalPlanned);
+    const recon = selfAttendanceStore.getCourseStats(course, schedule);
     return {
       ...course,
-      stats
+      stats: recon ? recon.active : calculateBunkStats(course.attended, course.conducted, course.totalPlanned),
+      selfStats: recon?.self,
+      officialStats: recon?.official,
+      discrepancy: recon?.discrepancy
     };
   });
+
+  const discrepancies = evaluatedCourses.filter(c => c.discrepancy?.hasDiscrepancy);
 
   // Filtered courses
   const filteredCourses = evaluatedCourses.filter(c => {
@@ -30,20 +46,159 @@ export default function BunkMeterView({ courses = [] }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingBottom: '32px' }}>
       {/* Title & Statutory Banner */}
-      <div>
-        <h2 style={{
-          fontFamily: 'var(--font-brand)',
-          fontSize: '24px',
-          fontWeight: 800,
-          letterSpacing: '-0.025em',
-          color: 'var(--ink)'
-        }}>
-          Bunk-O-Meter
-        </h2>
-        <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '2px' }}>
-          Real-time safety margins calibrated for XLRI's mandatory 80.0% policy.
-        </p>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+        <div>
+          <h2 style={{
+            fontFamily: 'var(--font-brand)',
+            fontSize: '24px',
+            fontWeight: 800,
+            letterSpacing: '-0.025em',
+            color: 'var(--ink)'
+          }}>
+            Bunk-O-Meter
+          </h2>
+          <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '2px' }}>
+            Real-time safety margins calibrated for XLRI's mandatory 80.0% policy.
+          </p>
+        </div>
+
+        {/* Audit & Self-Log Button */}
+        <button
+          onClick={() => setIsLogModalOpen(true)}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '8px 14px',
+            borderRadius: '10px',
+            backgroundColor: 'var(--ink)',
+            color: 'var(--paper)',
+            border: 'none',
+            fontSize: '12px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
+          }}
+        >
+          <FileText size={14} />
+          <span>Self-Log Audit</span>
+          {discrepancies.length > 0 && (
+            <span style={{
+              fontSize: '10px',
+              padding: '1px 6px',
+              borderRadius: '999px',
+              backgroundColor: 'var(--ochre)',
+              color: '#FFFFFF',
+              fontWeight: 800
+            }}>
+              {discrepancies.length} Δ
+            </span>
+          )}
+        </button>
       </div>
+
+      {/* Source Mode Switcher Bar */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: 'var(--card)',
+        border: '1px solid var(--border)',
+        borderRadius: '12px',
+        padding: '6px 8px',
+        gap: '6px'
+      }}>
+        <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)', paddingLeft: '4px' }}>
+          Data Source:
+        </span>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <button
+            onClick={() => selfAttendanceStore.setSourceMode('hybrid')}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '8px',
+              border: 'none',
+              backgroundColor: sourceMode === 'hybrid' ? 'var(--mizu)' : 'transparent',
+              color: sourceMode === 'hybrid' ? '#FFFFFF' : 'var(--ink-soft)',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            Hybrid Reality
+          </button>
+          <button
+            onClick={() => selfAttendanceStore.setSourceMode('self')}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '8px',
+              border: 'none',
+              backgroundColor: sourceMode === 'self' ? 'var(--moss)' : 'transparent',
+              color: sourceMode === 'self' ? '#FFFFFF' : 'var(--ink-soft)',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            Self-Log
+          </button>
+          <button
+            onClick={() => selfAttendanceStore.setSourceMode('erp')}
+            style={{
+              padding: '5px 10px',
+              borderRadius: '8px',
+              border: 'none',
+              backgroundColor: sourceMode === 'erp' ? 'var(--ink)' : 'transparent',
+              color: sourceMode === 'erp' ? 'var(--paper)' : 'var(--ink-soft)',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            ERP (Official)
+          </button>
+        </div>
+      </div>
+
+      {/* Discrepancy Alert Banner if ERP != Self Log */}
+      {discrepancies.length > 0 && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '10px 14px',
+          borderRadius: '12px',
+          backgroundColor: 'var(--wash-ochre)',
+          border: '1px solid rgba(194, 145, 58, 0.35)',
+          gap: '10px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertTriangle size={16} color="var(--ochre)" style={{ flexShrink: 0 }} />
+            <div style={{ fontSize: '12px', color: 'var(--ochre-text)', lineHeight: 1.4 }}>
+              <strong>{discrepancies.length} Course Discrepanc{discrepancies.length > 1 ? 'ies' : 'y'} Detected:</strong> Admin ERP differs from your personal log.
+            </div>
+          </div>
+          <button
+            onClick={() => setIsLogModalOpen(true)}
+            style={{
+              padding: '4px 10px',
+              borderRadius: '6px',
+              border: '1px solid var(--ochre)',
+              backgroundColor: 'var(--card)',
+              color: 'var(--ochre-text)',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Review Δ
+          </button>
+        </div>
+      )}
 
       {/* Summary KPI Cards */}
       <div style={{
@@ -190,6 +345,15 @@ export default function BunkMeterView({ courses = [] }) {
           </div>
         </div>
       </div>
+
+      {/* Sovereign Attendance Log & Discrepancy Reconciliation Modal */}
+      <AttendanceLogModal
+        isOpen={isLogModalOpen}
+        onClose={() => setIsLogModalOpen(false)}
+        courses={courses}
+        schedule={schedule}
+        student={student}
+      />
     </div>
   );
 }

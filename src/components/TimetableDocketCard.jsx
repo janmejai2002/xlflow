@@ -3,6 +3,7 @@ import { Clock, MapPin, Calendar, User, Copy, Check, ExternalLink, ShieldCheck, 
 import { COURSE_COLORS } from '../data/rosterData';
 import { getGoogleCalendarUrl } from '../services/calendarExport';
 import { playTactileClick } from '../services/soundEngine';
+import SelfAttendanceMarkPill from './attendance/SelfAttendanceMarkPill';
 import { toast } from 'sonner';
 
 /**
@@ -220,6 +221,26 @@ export default function TimetableDocketCard({
           <User size={12} color="var(--ink-faint)" />
           <span>{session.faculty}</span>
         </p>
+      </div>
+
+      {/* Row 2.5: 1-Tap Self Attendance Marking */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '6px 10px',
+          backgroundColor: 'var(--paper)',
+          borderRadius: '10px',
+          border: '1px solid var(--border)',
+          gap: '8px'
+        }}
+      >
+        <span style={{ fontSize: '11px', color: 'var(--ink-soft)', fontWeight: 600 }}>
+          Attendance Log:
+        </span>
+        <SelfAttendanceMarkPill session={session} isCompact={true} />
       </div>
 
       {/* Row 3: Venue Pill, Academic Safety Context & Sync Action */}

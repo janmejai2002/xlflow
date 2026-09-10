@@ -174,6 +174,8 @@ export default function DesktopHorizonDeck({
           >
             <SectorBunkMeter
               courses={dataPayload.courses}
+              schedule={dataPayload.schedule}
+              student={dataPayload.student}
             />
           </section>
 
