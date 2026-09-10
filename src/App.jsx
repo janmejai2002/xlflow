@@ -328,6 +328,10 @@ export default function App() {
               toast(`Switched to ${next === 'desktop' ? 'Desktop Horizon Deck' : 'Mobile Shell'}`);
             }}
             isDesktop={false}
+            schedule={dataPayload.schedule}
+            courses={dataPayload.courses}
+            deadlines={dataPayload.deadlines}
+            onSelectTab={setActiveTab}
           />
 
           {/* Offline Alert Ribbon if disconnected */}

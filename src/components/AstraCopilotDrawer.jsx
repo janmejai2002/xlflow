@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Drawer } from 'vaul';
 import { Sparkles, Send, Bot, User, ArrowRight, Check, X, Headphones, Settings } from 'lucide-react';
 import { queryAstraAi, getStoredAiConfig } from '../services/aiProviderEngine';
+import ProactiveActionDeck from './copilot/ProactiveActionDeck';
 // Helper to safely render markdown in chat messages
 function renderFormattedMarkdown(text) {
   if (!text) return null;
@@ -237,6 +238,16 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
             flexDirection: 'column',
             gap: '12px'
           }}>
+            {/* 2026 Proactive Agentic Action Deck */}
+            <ProactiveActionDeck
+              context={context}
+              onExecuteAction={(action) => {
+                if (onExecuteAction) onExecuteAction(action);
+                onClose?.();
+              }}
+              isCompact={true}
+            />
+
             {messages.map((m, idx) => (
               <div
                 key={idx}

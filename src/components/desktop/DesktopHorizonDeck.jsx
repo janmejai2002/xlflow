@@ -117,6 +117,11 @@ export default function DesktopHorizonDeck({
         onToggleInspector={() => setIsInspectorOpen(prev => !prev)}
         onOpenBeaconModal={() => setIsBeaconModalOpen(true)}
         onOpenQuickTour={() => setIsQuickTourOpen(true)}
+        schedule={dataPayload.schedule}
+        courses={dataPayload.courses}
+        deadlines={dataPayload.deadlines}
+        onInspectSession={handleSelectSession}
+        onSelectTab={jumpToSector}
       />
 
       {/* 2. Focused Single-Active-Sector Workspace (Zero Horizontal Scroll, Zero Side Peek) */}

@@ -16,6 +16,7 @@ import {
   Compass
 } from 'lucide-react';
 import XlFlowLogo from '../XlFlowLogo';
+import DynamicAmbientIsland from '../DynamicAmbientIsland';
 import { playTactileClick } from '../../services/soundEngine';
 import { socialApi } from '../../services/socialApi';
 
@@ -38,7 +39,12 @@ export default function HorizonTopBar({
   isInspectorOpen,
   onToggleInspector,
   onOpenBeaconModal,
-  onOpenQuickTour
+  onOpenQuickTour,
+  schedule = [],
+  courses = [],
+  deadlines = [],
+  onInspectSession,
+  onSelectTab
 }) {
   const [myBeacon, setMyBeacon] = useState(() => socialApi.getMyStatus());
 
@@ -215,73 +221,90 @@ export default function HorizonTopBar({
         </div>
       </div>
 
-      {/* 2. Center: Command Palette / Spotlight Search (⌘K) */}
+      {/* 2. Center: Dynamic Ambient Island + Command Palette / Spotlight Search (⌘K) */}
       <div style={{
         flex: '1 1 auto',
-        maxWidth: '420px',
-        minWidth: '180px',
-        margin: '0 16px'
+        maxWidth: '720px',
+        minWidth: '220px',
+        margin: '0 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '12px'
       }}>
-        <button
-          onClick={() => {
-            playTactileClick(700);
-            onOpenSearch?.();
-          }}
-          title="Search batchmates, courses, faculty, venues (⌘K)"
-          aria-label="Search batchmates and courses"
-          style={{
-            width: '100%',
-            height: '34px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 10px 0 12px',
-            backgroundColor: 'var(--paper)',
-            border: '1px solid var(--border)',
-            borderRadius: '9999px',
-            color: 'var(--ink-soft)',
-            fontSize: '12px',
-            cursor: 'pointer',
-            transition: 'all 0.15s ease',
-            gap: '8px'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--mizu)';
-            e.currentTarget.style.boxShadow = '0 0 0 2px rgba(0, 169, 184, 0.12)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
-            <Search size={13} color="var(--ink-soft)" style={{ flexShrink: 0 }} />
-            <span style={{
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
+        <DynamicAmbientIsland
+          schedule={schedule}
+          courses={courses}
+          deadlines={deadlines}
+          isAmbientOn={isAmbientOn}
+          onToggleAmbient={onToggleAmbient}
+          onInspectSession={onInspectSession}
+          onSelectTab={onSelectTab}
+          isCompact={false}
+        />
+
+        <div style={{ flex: '1 1 auto', maxWidth: '320px', minWidth: '160px' }}>
+          <button
+            onClick={() => {
+              playTactileClick(700);
+              onOpenSearch?.();
+            }}
+            title="Search batchmates, courses, faculty, venues (⌘K)"
+            aria-label="Search batchmates and courses"
+            style={{
+              width: '100%',
+              height: '34px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0 10px 0 12px',
+              backgroundColor: 'var(--paper)',
+              border: '1px solid var(--border)',
+              borderRadius: '9999px',
+              color: 'var(--ink-soft)',
               fontSize: '12px',
-              color: 'var(--ink-soft)'
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--mizu)';
+              e.currentTarget.style.boxShadow = '0 0 0 2px rgba(0, 169, 184, 0.12)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, overflow: 'hidden' }}>
+              <Search size={13} color="var(--ink-soft)" style={{ flexShrink: 0 }} />
+              <span style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                fontSize: '12px',
+                color: 'var(--ink-soft)'
+              }}>
+                Search batchmates, courses...
+              </span>
+            </div>
+            <kbd style={{
+              fontSize: '10px',
+              padding: '2px 6px',
+              backgroundColor: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: '4px',
+              color: 'var(--ink)',
+              fontFamily: 'var(--font-mono)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '2px',
+              flexShrink: 0
             }}>
-              Search batchmates, courses, faculty...
-            </span>
-          </div>
-          <kbd style={{
-            fontSize: '10px',
-            padding: '2px 6px',
-            backgroundColor: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '4px',
-            color: 'var(--ink)',
-            fontFamily: 'var(--font-mono)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '2px',
-            flexShrink: 0
-          }}>
-            <Command size={10} /> K
-          </kbd>
-        </button>
+              <Command size={10} /> K
+            </kbd>
+          </button>
+        </div>
       </div>
 
       {/* 3. Right: Clustered Actions (AI, Focus Audio, System Capsule, Sync) */}
