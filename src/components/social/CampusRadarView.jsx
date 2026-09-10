@@ -167,7 +167,7 @@ export default function CampusRadarView({ currentUser, onOpenBeaconModal, onSele
             {myStatus && myRemainingMins > 0 ? (
               <>
                 <span>{myStatus.emoji}</span>
-                <span>{myRemainingMins}m left</span>
+                <span>{myRemainingMins}m left • Edit</span>
               </>
             ) : (
               <>
@@ -178,6 +178,90 @@ export default function CampusRadarView({ currentUser, onOpenBeaconModal, onSele
           </button>
         </div>
       </div>
+
+      {/* How Campus Radar Works: Explainer Ribbon */}
+      <div style={{
+        backgroundColor: 'var(--card)',
+        borderRadius: '14px',
+        border: '1px solid var(--border)',
+        padding: '12px 18px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--ink)' }}>
+          <Sparkles size={15} color="var(--mizu)" style={{ flexShrink: 0 }} />
+          <span>
+            <strong>How It Works:</strong> Tap <strong>+ Set My Beacon</strong> to let batchmates know where you are on campus (Library, Nescafe, Gym, CR). Beacons auto-expire in 30–90m.
+          </span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '11px', color: 'var(--ink-soft)' }}>
+          <span>🔒 Zero tracking (opt-in only)</span>
+          <span>⏱️ Auto-clears</span>
+          <span>👥 Tap any card to view schedule</span>
+        </div>
+      </div>
+
+      {/* Zero Active Beacons Prompt */}
+      {(!whosWhere?.zoneCounts?.total || whosWhere.zoneCounts.total === 0) && (
+        <div style={{
+          backgroundColor: 'var(--card)',
+          borderRadius: '14px',
+          border: '1px dashed var(--border)',
+          padding: '20px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '14px'
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '18px' }}>📍</span>
+              <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>
+                No active beacons right now
+              </span>
+            </div>
+            <p style={{ fontSize: '12px', color: 'var(--ink-soft)', margin: '4px 0 0 0' }}>
+              Be the first to broadcast where you are studying or grabbing coffee!
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={onOpenBeaconModal}
+              style={{
+                padding: '7px 14px',
+                borderRadius: '8px',
+                border: 'none',
+                backgroundColor: 'var(--ink)',
+                color: 'var(--paper)',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              + Broadcast My Spot
+            </button>
+            <button
+              onClick={handleShareRadar}
+              style={{
+                padding: '7px 12px',
+                borderRadius: '8px',
+                border: '1px solid var(--border)',
+                backgroundColor: 'var(--paper)',
+                color: 'var(--ink)',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              Share WhatsApp Link
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Campus Zones Grid */}
       <div style={{

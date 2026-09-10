@@ -56,6 +56,32 @@ export default function SectorSynergy({ currentUser, schedule = [], isMobile = f
   // My live beacon
   const [myBeacon, setMyBeacon] = useState(null);
 
+  // Real study squads / circles
+  const [squads, setSquads] = useState([]);
+  const [loadingSquads, setLoadingSquads] = useState(false);
+
+  const loadSquads = async () => {
+    setLoadingSquads(true);
+    try {
+      const list = await socialApi.getCircles(currentUser?.id || 'B25349');
+      setSquads(list || []);
+    } catch {
+      setSquads([]);
+    } finally {
+      setLoadingSquads(false);
+    }
+  };
+
+  useEffect(() => {
+    loadSquads();
+    const unsub = socialApi.subscribe((e) => {
+      if (e.type === 'CIRCLE_CREATED' || e.type === 'CIRCLE_JOINED') {
+        loadSquads();
+      }
+    });
+    return unsub;
+  }, [currentUser]);
+
   useEffect(() => {
     setMyBeacon(socialApi.getMyStatus());
     const unsub = socialApi.subscribe((e) => {
@@ -168,7 +194,8 @@ export default function SectorSynergy({ currentUser, schedule = [], isMobile = f
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      gap: '16px'
+      gap: '16px',
+      overflow: 'hidden'
     }}>
       {/* Sector Header */}
       <div style={{ 
@@ -176,7 +203,8 @@ export default function SectorSynergy({ currentUser, schedule = [], isMobile = f
         alignItems: isMobile ? 'flex-start' : 'center', 
         justifyContent: 'space-between',
         flexDirection: isMobile ? 'column' : 'row',
-        gap: isMobile ? '12px' : '0'
+        gap: isMobile ? '12px' : '0',
+        flexShrink: 0
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
@@ -368,70 +396,251 @@ export default function SectorSynergy({ currentUser, schedule = [], isMobile = f
               </button>
             </div>
 
-            {/* Quick Circles Preview Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '14px' }}>
-              {[
-                { code: 'XL-STRAT', name: 'Strategy Project Squad', course: 'STMAN', members: 4, desc: 'Term-5 case analysis & final presentation team' },
-                { code: 'XL-OMCR', name: 'Omnichannel Retailing Case', course: 'OMCR', members: 3, desc: 'D2C brand strategy & store operations modeling' },
-                { code: 'XL-COFFEE', name: 'Nescafe Coffee Crew', course: 'GENERAL', members: 5, desc: 'Quick coffee runs & post-lecture hangout coordination' }
-              ].map(c => (
-                <div
-                  key={c.code}
-                  style={{
-                    backgroundColor: 'var(--card)',
-                    borderRadius: '14px',
+            {/* Real Squads or Guided Onboarding */}
+            {squads.length === 0 ? (
+              <div style={{
+                backgroundColor: 'var(--card)',
+                borderRadius: '16px',
+                border: '1px solid var(--border)',
+                padding: '24px 22px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '20px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+                  <div style={{ maxWidth: '680px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--mizu)', letterSpacing: '0.05em' }}>
+                        HOW STUDY SQUADS WORK
+                      </span>
+                      <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>•</span>
+                      <span style={{ fontSize: '11px', color: 'var(--moss)', fontWeight: 600 }}>Zero Schedule Clashes</span>
+                    </div>
+                    <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--ink)', margin: '0 0 6px 0', letterSpacing: '-0.02em' }}>
+                      Coordinate Case Teams, Committee Meetings & Term Projects
+                    </h3>
+                    <p style={{ fontSize: '13px', color: 'var(--ink-soft)', lineHeight: 1.5, margin: 0 }}>
+                      Study squads allow project teams to synchronize schedules without manual back-and-forth. Create a squad for an elective (STMAN, OMCR, B2B) or join using a 6-character code from your group lead.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      onClick={() => setIsCircleModalOpen(true)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '9px 16px',
+                        backgroundColor: 'var(--ink)',
+                        color: 'var(--paper)',
+                        borderRadius: '10px',
+                        border: 'none',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        boxShadow: 'var(--shadow-card)'
+                      }}
+                    >
+                      <Plus size={14} />
+                      <span>Create a Squad</span>
+                    </button>
+                    <button
+                      onClick={() => setIsCircleModalOpen(true)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '9px 14px',
+                        backgroundColor: 'var(--paper)',
+                        color: 'var(--ink)',
+                        borderRadius: '10px',
+                        border: '1px solid var(--border)',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <span>Join with Code</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3-Step Guided Architecture Ribbon */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                  gap: '14px',
+                  paddingTop: '16px',
+                  borderTop: '1px solid var(--border-soft)'
+                }}>
+                  <div style={{
+                    backgroundColor: 'var(--paper)',
+                    borderRadius: '12px',
                     border: '1px solid var(--border)',
                     padding: '16px',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '10px'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--mizu)', backgroundColor: 'var(--wash-mizu)', padding: '2px 6px', borderRadius: '4px' }}>
-                      {c.course}
-                    </span>
-                    <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--ink)' }}>
-                      {c.code}
-                    </span>
-                  </div>
-                  <div>
-                    <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ink)', margin: 0 }}>
-                      {c.name}
-                    </h4>
-                    <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: '4px 0 0 0' }}>
-                      {c.desc}
+                    gap: '8px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--wash-mizu)',
+                        color: 'var(--mizu)',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>1</span>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>Create or Join Squad</span>
+                    </div>
+                    <p style={{ fontSize: '12px', color: 'var(--ink-soft)', margin: 0, lineHeight: 1.4 }}>
+                      Assign a name and course (e.g. STMAN Strategy Team). XL-Flow issues a unique 6-character squad code (e.g. <code>XL-A8B9</code>).
                     </p>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px', paddingTop: '10px', borderTop: '1px solid var(--border-soft)' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-                      👥 {c.members} members
-                    </span>
-                    <button
-                      onClick={() => setIsCircleModalOpen(true)}
-                      style={{
-                        background: 'none',
-                        border: '1px solid var(--border)',
-                        borderRadius: '6px',
-                        padding: '4px 10px',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        color: 'var(--ink)',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Manage
-                    </button>
+
+                  <div style={{
+                    backgroundColor: 'var(--paper)',
+                    borderRadius: '12px',
+                    border: '1px solid var(--border)',
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--wash-ochre)',
+                        color: 'var(--ochre)',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>2</span>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>Invite Teammates</span>
+                    </div>
+                    <p style={{ fontSize: '12px', color: 'var(--ink-soft)', margin: 0, lineHeight: 1.4 }}>
+                      Share the code or tap "Invite on WhatsApp" with pre-formatted deep links. Members join in 1-click with zero signup.
+                    </p>
+                  </div>
+
+                  <div style={{
+                    backgroundColor: 'var(--paper)',
+                    borderRadius: '12px',
+                    border: '1px solid var(--border)',
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--wash-moss)',
+                        color: 'var(--moss)',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>3</span>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>Instant Free Slot Heatmap</span>
+                    </div>
+                    <p style={{ fontSize: '12px', color: 'var(--ink-soft)', margin: 0, lineHeight: 1.4 }}>
+                      XL-Flow automatically overlays members' timetables on the Free Slot Matrix, pinpointing mutual gaps for project work.
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '14px' }}>
+                {squads.map(c => (
+                  <div
+                    key={c.code}
+                    style={{
+                      backgroundColor: 'var(--card)',
+                      borderRadius: '14px',
+                      border: '1px solid var(--border)',
+                      padding: '16px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '10px', fontWeight: 700, color: 'var(--mizu)', backgroundColor: 'var(--wash-mizu)', padding: '2px 6px', borderRadius: '4px' }}>
+                        {c.courseCode || 'GENERAL'}
+                      </span>
+                      <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', fontWeight: 700, color: 'var(--ink)' }}>
+                        {c.code}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: '14px', fontWeight: 800, color: 'var(--ink)', margin: 0 }}>
+                        {c.name}
+                      </h4>
+                      <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: '4px 0 0 0' }}>
+                        Created by {c.ownerName || c.ownerRoll} • {c.members?.length || 1} member(s)
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px', paddingTop: '10px', borderTop: '1px solid var(--border-soft)' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
+                        👥 {c.members?.length || 1} members
+                      </span>
+                      <button
+                        onClick={() => setIsCircleModalOpen(true)}
+                        style={{
+                          background: 'none',
+                          border: '1px solid var(--border)',
+                          borderRadius: '6px',
+                          padding: '4px 10px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          color: 'var(--ink)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Manage Squad
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
         {/* SUBTAB 3: FREE SLOT MATRIX (ORIGINAL SYNERGY ENGINE) */}
         {activeSubTab === 'synergy' && (
           <>
+            {/* Explainer Ribbon */}
+            <div style={{
+              backgroundColor: 'var(--card)',
+              borderRadius: '12px',
+              border: '1px solid var(--border)',
+              padding: '10px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              fontSize: '12px',
+              color: 'var(--ink)'
+            }}>
+              <Sparkles size={14} color="var(--mizu)" style={{ flexShrink: 0 }} />
+              <span>
+                <strong>How Free Slot Matrix Works:</strong> Add up to 4 batchmates or squad members below. XL-Flow calculates when all selected students are simultaneously free from lectures for committee meetings, study sessions, and case prep.
+              </span>
+            </div>
+
             {/* Member Selector Bar */}
             <div style={{
               display: 'grid',

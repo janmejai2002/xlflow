@@ -3,7 +3,7 @@ import { Check, X, Ban, Clock, Sparkles, ChevronRight } from 'lucide-react';
 import { selfAttendanceStore } from '../../services/selfAttendanceStore';
 import { playTactileClick } from '../../services/soundEngine';
 
-export default function PostLectureCheckinCard({ schedule = [], courses = [] }) {
+export default function PostLectureCheckinCard({ schedule = [], courses = [], isSlim = false }) {
   const [unmarkedLecture, setUnmarkedLecture] = useState(null);
   const [isDismissed, setIsDismissed] = useState(false);
 
@@ -34,6 +34,88 @@ export default function PostLectureCheckinCard({ schedule = [], courses = [] }) 
     });
     setUnmarkedLecture(null);
   };
+
+  if (isSlim) {
+    return (
+      <div style={{
+        backgroundColor: 'var(--card)',
+        border: '1px solid rgba(0, 169, 184, 0.3)',
+        borderRadius: '10px',
+        padding: '6px 12px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '10px',
+        flexShrink: 0,
+        animation: 'sectorFadeIn 0.2s ease'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+          <Sparkles size={13} color="var(--mizu)" style={{ flexShrink: 0 }} />
+          <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--mizu)', letterSpacing: '0.04em' }}>
+            CHECK-IN:
+          </span>
+          <span style={{ fontSize: '11px', color: 'var(--ink)', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            Did you attend {unmarkedLecture.courseCode} ({unmarkedLecture.venue})?
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+          <button
+            onClick={() => handleMark('present')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--moss)',
+              color: '#FFFFFF',
+              border: 'none',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            <Check size={11} />
+            <span>Present</span>
+          </button>
+          <button
+            onClick={() => handleMark('bunk')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--paper)',
+              color: 'var(--hanko)',
+              border: '1px solid rgba(210, 84, 63, 0.3)',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            <X size={11} />
+            <span>Bunk</span>
+          </button>
+          <button
+            onClick={() => setIsDismissed(true)}
+            title="Dismiss check-in"
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--ink-faint)',
+              fontSize: '10px',
+              cursor: 'pointer',
+              padding: '2px 4px'
+            }}
+          >
+            Dismiss
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{

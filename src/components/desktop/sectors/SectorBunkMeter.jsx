@@ -58,10 +58,11 @@ export default function SectorBunkMeter({ courses = [], schedule = [], student =
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      gap: '16px'
+      gap: '16px',
+      overflow: 'hidden'
     }}>
       {/* Sector Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
             width: '32px',
@@ -238,7 +239,8 @@ export default function SectorBunkMeter({ courses = [], schedule = [], student =
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '12px'
+        gap: '12px',
+        flexShrink: 0
       }}>
         <div style={{
           backgroundColor: 'var(--card)',
@@ -307,7 +309,8 @@ export default function SectorBunkMeter({ courses = [], schedule = [], student =
           justifyContent: 'space-between',
           fontSize: '12px',
           color: 'var(--ochre-text)',
-          animation: 'sectorFadeIn 0.2s ease-out'
+          animation: 'sectorFadeIn 0.2s ease-out',
+          flexShrink: 0
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <AlertTriangle size={15} color="var(--ochre)" />

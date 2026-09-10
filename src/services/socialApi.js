@@ -276,7 +276,7 @@ class SocialApiClient {
       if (raw) return JSON.parse(raw);
     } catch {}
 
-    const defaultFriends = ['B25308', 'B25304', 'B25317', 'B25350'];
+    const defaultFriends = [];
     return defaultFriends;
   }
 
@@ -331,10 +331,16 @@ class SocialApiClient {
 
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CIRCLES);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          const clean = parsed.filter(c => c.code !== 'XL-STRAT' && c.code !== 'XL-OMCR' && c.code !== 'XL-COFFEE');
+          return clean;
+        }
+      }
     } catch {}
 
-    return INITIAL_CIRCLES.filter(c => c.members.includes(rollNo));
+    return [];
   }
 
   async createCircle({ name, courseCode, ownerRoll, ownerName }) {
