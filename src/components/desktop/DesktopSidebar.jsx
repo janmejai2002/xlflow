@@ -42,11 +42,11 @@ export default function DesktopSidebar({
   onToggleAmbient
 }) {
   const navItems = [
-    { id: 'radar', label: 'Today Radar', icon: Compass, keyHint: '1', live: true },
-    { id: 'bunkmeter', label: 'Bunk-O-Meter', icon: ShieldCheck, keyHint: '2', badge: warningCount > 0 ? warningCount : null, badgeColor: 'var(--hanko)' },
-    { id: 'timetable', label: 'Weekly Matrix', icon: Calendar, keyHint: '3' },
-    { id: 'trips', label: 'Getaways & Trips', icon: Palmtree, keyHint: '4' },
-    { id: 'deadlines', label: 'Deadlines & Quizzes', icon: CheckSquare, keyHint: '5', badge: pendingDeadlinesCount > 0 ? pendingDeadlinesCount : null, badgeColor: 'var(--ochre)' },
+    { id: 'radar', label: "Today's Schedule", icon: Compass, keyHint: '1', live: true },
+    { id: 'bunkmeter', label: 'Attendance', icon: ShieldCheck, keyHint: '2', badge: warningCount > 0 ? warningCount : null, badgeColor: 'var(--hanko)' },
+    { id: 'timetable', label: 'Timetable', icon: Calendar, keyHint: '3' },
+    { id: 'trips', label: 'Trip Planner', icon: Palmtree, keyHint: '4' },
+    { id: 'deadlines', label: 'Deadlines', icon: CheckSquare, keyHint: '5', badge: pendingDeadlinesCount > 0 ? pendingDeadlinesCount : null, badgeColor: 'var(--ochre)' },
   ];
 
   return (

@@ -124,10 +124,10 @@ XLRI Jamshedpur / Delhi-NCR`;
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--moss)', letterSpacing: '0.06em' }}>
-                SECTOR 03
+                ATTENDANCE
               </span>
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>•</span>
-              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Statutory Attendance Safety & Compliance Tracker</span>
+              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>80% Requirement & Safe Leave Tracker</span>
             </div>
             <h2 style={{
               fontFamily: 'var(--font-brand)',
@@ -137,7 +137,7 @@ XLRI Jamshedpur / Delhi-NCR`;
               margin: '2px 0 0 0',
               letterSpacing: '-0.025em'
             }}>
-              Bunk-O-Meter Safety Matrix
+              Attendance & Bunk Calculator
             </h2>
           </div>
         </div>

@@ -136,7 +136,7 @@
       <div class="xlflow-drawer-header">
         <div>
           <div style="font-size: 11px; font-weight: 700; color: #38BDF8; letter-spacing: 0.05em; text-transform: uppercase;">
-            XLRI Academic Continuum
+            XLRI Student Schedule
           </div>
           <h2 style="font-size: 18px; font-weight: 800; margin: 2px 0 0 0; color: #FFFFFF;">
             Quick Class HUD

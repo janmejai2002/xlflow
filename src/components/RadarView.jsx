@@ -364,7 +364,7 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
               }}
             >
               <CalendarDays size={12} />
-              <span>Horizon Heatmap</span>
+              <span>Schedule Heatmap</span>
             </button>
 
             <button
@@ -384,12 +384,12 @@ export default function RadarView({ schedule = [], courses = [], deadlines = [],
               }}
             >
               <Globe size={12} />
-              <span>3D Chronos Continuum</span>
+              <span>3D Timeline</span>
             </button>
           </div>
 
           <span style={{ fontSize: '10px', color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)' }}>
-            {spatialMode === '3d' ? 'Three.js Spatial View' : 'Campus Density Grid'}
+            {spatialMode === '3d' ? '3D View' : 'Schedule Heatmap'}
           </span>
         </div>
 

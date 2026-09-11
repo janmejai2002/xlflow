@@ -105,7 +105,7 @@ export default function DesktopInspectorDock({
   const [copilotMessages, setCopilotMessages] = useState([
     {
       role: 'assistant',
-      text: "Hello! I am **Astra**, your Term-5 Neural Co-Pilot. Click any lecture on the grid or ask me about bunks, schedules, or batchmates!"
+      text: "Hello! I am **Astra**, your Term-5 AI Assistant. Click any lecture on the grid or ask me about bunks, schedules, or batchmates!"
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -792,7 +792,7 @@ export default function DesktopInspectorDock({
                   color: 'var(--ink-soft)'
                 }}>
                   <Sparkles size={13} style={{ color: 'var(--mizu)', animation: 'pulse 1.5s infinite' }} />
-                  <span>Astra is analyzing academic schedule & formulas...</span>
+                  <span>Astra is checking your schedule...</span>
                 </div>
               )}
               <div ref={messagesEndRef} />
@@ -818,7 +818,7 @@ export default function DesktopInspectorDock({
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask Astra Co-Pilot..."
+                placeholder="Ask Astra about schedule or attendance..."
                 style={{
                   flex: 1,
                   background: 'none',

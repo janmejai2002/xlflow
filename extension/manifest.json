@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "XL-Flow | Academic Continuum & Bunk-O-Meter",
+  "name": "XL-Flow | Student Schedule & Attendance",
   "version": "1.0.0",
-  "description": "Next-Generation Spatial Academic Command Centre & Statutory Attendance Safeguard for XLRI students.",
+  "description": "Real-time class schedule, room venues, and attendance tracking for XLRI students.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -10,7 +10,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Open XL-Flow Command Centre",
+    "default_title": "Open XL-Flow",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png"

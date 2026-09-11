@@ -404,10 +404,10 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
               color: 'var(--ink)',
               margin: 0
             }}>
-              Chronos Continuum
+              Interactive Timeline
             </h3>
             <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0 }}>
-              Spatial orbital view of Term-5 commitments
+              3D interactive view of Term-5 class schedule
             </p>
           </div>
         </div>
@@ -417,7 +417,7 @@ export default function ChronosOrb3D({ schedule = [], courses = [], onSelectSess
             playTactileClick();
             setIsAutoRotate(prev => !prev);
           }}
-          aria-label={isAutoRotate ? "Pause 3D orbital rotation" : "Resume 3D orbital rotation"}
+          aria-label={isAutoRotate ? "Pause 3D rotation" : "Resume 3D rotation"}
           style={{
             display: 'flex',
             alignItems: 'center',

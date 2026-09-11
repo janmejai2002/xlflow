@@ -54,7 +54,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      text: "Hello Janmejai! I am **Astra**, your Term-5 Neural Co-Pilot. I can answer questions, simulate attendance margins, and control XL-Flow for you. What would you like to explore?"
+      text: "Hello Janmejai! I am **Astra**, your Term-5 AI Assistant. I can answer questions about your courses, calculate attendance margins, and help you navigate XL-Flow. What would you like to check?"
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -180,10 +180,10 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
                   color: 'var(--ink)',
                   margin: 0
                 }}>
-                  Astra Neural Co-Pilot
+                  Astra AI Assistant
                 </Drawer.Title>
                 <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0 }}>
-                  Agentic assistant with direct UI state control
+                  Direct schedule and attendance assistant
                 </p>
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <button
                 onClick={() => onOpenAiSettings?.()}
-                title="Configure Free AI Providers"
+                title="Configure AI Settings"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -207,7 +207,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
                 }}
               >
                 <Settings size={12} />
-                <span>AI Vault</span>
+                <span>AI Settings</span>
               </button>
 
               <button
@@ -326,7 +326,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
                 color: 'var(--ink-soft)'
               }}>
                 <Sparkles size={13} style={{ color: 'var(--mizu)', animation: 'pulse 1.5s infinite' }} />
-                <span>Astra is analyzing academic schedule & formulas...</span>
+                <span>Astra is checking your schedule & attendance...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -377,7 +377,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask Astra or control the UI..."
+              placeholder="Ask Astra about schedule, bunks, or courses..."
               style={{
                 flex: 1,
                 padding: '10px 14px',

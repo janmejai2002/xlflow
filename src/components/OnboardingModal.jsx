@@ -53,7 +53,7 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
           marginBottom: '20px',
           lineHeight: 1.5
         }}>
-          The next-generation academic command centre designed for XLRI Term-5 (Sections E, F, G).
+          Class schedules, attendance tracker, and timetable for XLRI Term-5 students.
         </div>
 
         {/* 3 Pillar Features */}
@@ -76,7 +76,7 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
           }}>
             <div style={{ color: 'var(--moss)', fontWeight: 700 }}>🟢</div>
             <div style={{ fontSize: '12.5px' }}>
-              <strong>80% Bunk-O-Meter:</strong> Live statutory safety margins and debarment alerts.
+              <strong>80% Attendance Tracker:</strong> Track safe leave margins and avoid attendance penalties.
             </div>
           </div>
 
@@ -89,9 +89,9 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
             backgroundColor: 'var(--card)',
             border: '1px solid var(--border)'
           }}>
-            <div style={{ color: 'var(--mizu)', fontWeight: 700 }}>🪐</div>
+            <div style={{ color: 'var(--mizu)', fontWeight: 700 }}>📅</div>
             <div style={{ fontSize: '12.5px' }}>
-              <strong>3D Chronos Sphere:</strong> Spatial timetable with time travel dial.
+              <strong>Interactive 3D Timeline:</strong> Visual weekly schedule and course timeline.
             </div>
           </div>
 
@@ -104,9 +104,9 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
             backgroundColor: 'var(--card)',
             border: '1px solid var(--border)'
           }}>
-            <div style={{ color: 'var(--ochre)', fontWeight: 700 }}>🔒</div>
+            <div style={{ color: 'var(--ochre)', fontWeight: 700 }}>☁️</div>
             <div style={{ fontSize: '12.5px' }}>
-              <strong>100% Privacy:</strong> Zero server storage. Your tokens never leave your phone.
+              <strong>Cloud & Offline Sync:</strong> Automatic Google Sheets backup and offline access.
             </div>
           </div>
         </div>
@@ -156,7 +156,7 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
               cursor: 'pointer'
             }}
           >
-            Enter Student Command Centre (Janmejai Singh • Term-5)
+            Open Student Dashboard (Janmejai Singh • Term-5)
           </button>
         </div>
 

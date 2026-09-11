@@ -206,7 +206,7 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '14px' }}>Check Today's Radar & Schedule</div>
                     <div style={{ color: 'var(--ink-muted)', fontSize: '12.5px', marginTop: '2px' }}>
-                      The <strong>Radar</strong> tab displays your next lecture, classroom venue (e.g. <code>CR-04</code>), countdown timer, and the interactive 3D celestial continuum.
+                      The <strong>Radar</strong> tab displays your next lecture, classroom venue (e.g. <code>CR-04</code>), countdown timer, and the interactive 3D timeline.
                     </div>
                   </div>
                 </div>
@@ -474,7 +474,7 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '14px' }}>
                 <div style={{ padding: '14px', borderRadius: '14px', backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '13.5px' }}>1. In-App Astra Neural Co-Pilot:</div>
+                  <div style={{ fontWeight: 700, fontSize: '13.5px' }}>1. In-App Astra AI Assistant:</div>
                   <div style={{ fontSize: '12.5px', color: 'var(--ink-muted)', marginTop: '4px' }}>
                     Click the <strong>Astra</strong> button in the header. Ask questions like <em>"Can I bunk OMCR?"</em> or <em>"Find 4-day getaways"</em>. Astra executes real actions on the screen!
                   </div>
