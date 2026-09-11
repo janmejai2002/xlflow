@@ -28,6 +28,17 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   }
 });
 
+// Content Script Message Listener (Tabs & Deck Launcher)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'OPEN_FULL_DECK') {
+    const targetUrl = message.url || 'https://janmejai2002.github.io/xlflow/';
+    chrome.tabs.create({ url: targetUrl }, (tab) => {
+      sendResponse({ ok: true, tabId: tab?.id });
+    });
+    return true;
+  }
+});
+
 async function performBackgroundSync() {
   console.log('[XL-Flow Background] Running background sync...');
 

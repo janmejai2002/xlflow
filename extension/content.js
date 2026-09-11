@@ -283,13 +283,34 @@
     // Launch full app
     const launchBtn = document.getElementById('xlflow-launch-full-btn');
     const openSocialBtn = document.getElementById('xlflow-open-social-btn');
-    const appUrl = typeof chrome !== 'undefined' && chrome.runtime?.getURL ? chrome.runtime.getURL('dist/index.html') : 'https://janmejai2002.github.io/xlflow/';
+
+    function navigateToApp(queryParam = '') {
+      const liveBase = 'https://janmejai2002.github.io/xlflow/';
+      const targetUrl = queryParam ? `${liveBase}?${queryParam.replace(/^\?/, '')}` : liveBase;
+
+      // 1. Communicate with background worker to create tab (immune to Brave shields & popup blockers)
+      if (typeof chrome !== 'undefined' && chrome.runtime?.sendMessage) {
+        try {
+          chrome.runtime.sendMessage({ action: 'OPEN_FULL_DECK', url: targetUrl }, (res) => {
+            if (chrome.runtime.lastError || !res?.ok) {
+              window.open(targetUrl, '_blank');
+            }
+          });
+          return;
+        } catch (err) {
+          // Fallback to direct navigation
+        }
+      }
+
+      // 2. Direct browser navigation fallback
+      window.open(targetUrl, '_blank');
+    }
 
     if (launchBtn) {
-      launchBtn.onclick = () => window.open(appUrl, '_blank');
+      launchBtn.onclick = () => navigateToApp();
     }
     if (openSocialBtn) {
-      openSocialBtn.onclick = () => window.open(appUrl + '?tab=synergy', '_blank');
+      openSocialBtn.onclick = () => navigateToApp('tab=synergy');
     }
 
     // Invite Friends button
