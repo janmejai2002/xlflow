@@ -25,7 +25,7 @@ export default function ClassDetailDrawer({ isOpen, onClose, session, course }) 
           zIndex: 80,
           backdropFilter: 'blur(3px)'
         }} />
-        <Drawer.Content style={{
+        <Drawer.Content className="max-h-[85vh] overflow-y-auto" style={{
           position: 'fixed',
           bottom: 0,
           left: '50%',

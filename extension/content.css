@@ -64,6 +64,8 @@
   right: 0;
   bottom: 0;
   width: 380px;
+  max-width: min(380px, 100vw);
+  box-sizing: border-box;
   background: #0F172A;
   color: #F8F9FA;
   border-left: 1px solid rgba(255, 255, 255, 0.12);
@@ -74,6 +76,17 @@
   flex-direction: column;
   z-index: 2147483646;
   padding: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.xlflow-slide-drawer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.xlflow-slide-drawer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
 }
 
 .xlflow-slide-drawer.open {

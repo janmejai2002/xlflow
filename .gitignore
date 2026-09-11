@@ -40,3 +40,6 @@ blob-report/
 playwright/.cache/
 *.png
 !public/*.png
+scratch/
+*.visual-check.*
+xlflow-craft-report.html

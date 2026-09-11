@@ -122,7 +122,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
           zIndex: 85,
           backdropFilter: 'blur(4px)'
         }} />
-        <Drawer.Content style={{
+        <Drawer.Content className="max-h-[85vh] overflow-y-auto" style={{
           position: 'fixed',
           bottom: 0,
           left: '50%',

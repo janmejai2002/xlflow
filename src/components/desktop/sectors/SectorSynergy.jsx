@@ -310,7 +310,7 @@ export default function SectorSynergy({ currentUser, schedule = [], isMobile = f
               cursor: 'pointer'
             }}
           >
-            <Radio size={12} className={myBeacon ? 'animate-pulse' : ''} />
+            <Radio size={12} className={myBeacon ? 'animate-pulse motion-reduce:animate-none' : ''} />
             <span>{myBeacon ? (myBeacon.emoji + ' ' + (myBeacon.zone || 'Campus')) : '+ Beacon'}</span>
           </button>
 

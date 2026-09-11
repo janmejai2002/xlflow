@@ -149,7 +149,7 @@ export default function StatusBeaconModal({ isOpen, onClose, currentUser, onStat
               alignItems: 'center',
               justifyContent: 'center'
             }}>
-              <Radio size={18} className="animate-pulse" />
+              <Radio size={18} className="animate-pulse motion-reduce:animate-none" />
             </div>
             <div>
               <h3 style={{

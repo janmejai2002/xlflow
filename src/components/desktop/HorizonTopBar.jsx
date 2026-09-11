@@ -398,7 +398,7 @@ export default function HorizonTopBar({
           >
             <RefreshCw
               size={12}
-              className={isSyncing ? 'animate-spin' : ''}
+              className={isSyncing ? 'animate-spin motion-reduce:animate-none' : ''}
               color={isSyncing ? 'var(--ochre)' : 'currentColor'}
             />
           </button>

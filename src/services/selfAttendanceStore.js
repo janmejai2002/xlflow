@@ -5,6 +5,7 @@
  */
 
 import { calculateBunkStats } from './bunkCalculator';
+import { saveCloudAttendance, fetchCloudAttendance, restoreFromCloud } from './cloudStorage';
 
 const STORAGE_KEY = 'xlflow_self_attendance_v1';
 
@@ -21,6 +22,12 @@ class SelfAttendanceStore {
   constructor() {
     this.state = this.loadFromStorage();
     this.listeners = new Set();
+    this.isSyncingWithCloud = false;
+
+    // Trigger non-blocking cloud reconciliation on startup
+    if (typeof window !== 'undefined') {
+      setTimeout(() => this.syncWithCloud(), 1200);
+    }
   }
 
   loadFromStorage() {
@@ -92,7 +99,75 @@ class SelfAttendanceStore {
     }
 
     this.notify();
+
+    // Asynchronously sync mark to Google Sheets in background
+    const roll = this.getCurrentRoll();
+    if (roll) {
+      saveCloudAttendance(roll, sessionId, status, metadata.userSection || '').catch(err => {
+        console.warn('[SelfAttendance] Cloud sync error for session', sessionId, err);
+      });
+    }
+
     return this.state.markedSessions[sessionId];
+  }
+
+  getCurrentRoll() {
+    if (typeof window === 'undefined') return 'B25349';
+    try {
+      const explicitRoll = localStorage.getItem('xlflow_roll');
+      if (explicitRoll && /^B25[0-9]{3}$/i.test(explicitRoll)) return explicitRoll.toUpperCase();
+
+      const userRaw = localStorage.getItem('xlflow_user_data');
+      if (userRaw) {
+        const parsed = JSON.parse(userRaw);
+        if (parsed?.student?.rollNo) return parsed.student.rollNo.toUpperCase();
+        if (parsed?.student?.email) {
+          const prefix = parsed.student.email.split('@')[0].toUpperCase();
+          if (/^B25[0-9]{3}$/.test(prefix)) return prefix;
+        }
+      }
+    } catch (e) {}
+    return 'B25349';
+  }
+
+  async syncWithCloud(forcedRoll = null) {
+    if (this.isSyncingWithCloud) return;
+    const roll = forcedRoll || this.getCurrentRoll();
+    if (!roll) return;
+
+    this.isSyncingWithCloud = true;
+    try {
+      const cloudMarks = await fetchCloudAttendance(roll);
+      let changed = false;
+
+      if (cloudMarks && typeof cloudMarks === 'object') {
+        // Merge cloud attendance into local state (fills in any gaps after cache wipe)
+        Object.entries(cloudMarks).forEach(([skey, status]) => {
+          if (!this.state.markedSessions[skey] && status) {
+            this.state.markedSessions[skey] = {
+              status: status === 'absent' ? 'absent' : (status === 'present' ? 'present' : status),
+              markedAt: new Date().toISOString(),
+              reason: status === 'absent' ? 'personal' : '',
+              note: 'Restored from Google Sheets cloud',
+              courseCode: skey.split('_')[0] || '',
+              courseName: '',
+              classDate: '',
+              venue: ''
+            };
+            changed = true;
+          }
+        });
+      }
+
+      if (changed) {
+        console.log(`[SelfAttendance] Restored ${Object.keys(cloudMarks).length} records from Google Sheets for ${roll}.`);
+        this.notify();
+      }
+    } catch (err) {
+      console.warn('[SelfAttendance] syncWithCloud encountered an issue:', err);
+    } finally {
+      this.isSyncingWithCloud = false;
+    }
   }
 
   getSessionStatus(sessionId) {
@@ -103,6 +178,11 @@ class SelfAttendanceStore {
     if (this.state.markedSessions[sessionId]) {
       delete this.state.markedSessions[sessionId];
       this.notify();
+
+      const roll = this.getCurrentRoll();
+      if (roll) {
+        saveCloudAttendance(roll, sessionId, '', '').catch(() => {});
+      }
     }
   }
 

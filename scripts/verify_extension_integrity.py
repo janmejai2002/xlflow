@@ -6,7 +6,7 @@ import zipfile
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-ROOT_DIR = r"c:\Users\Janmejai\Documents\antigravity\jolly-meitner\xlflow"
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 BUILD_DIR = os.path.join(ROOT_DIR, "build_extension")
 ZIP_PATH = os.path.join(ROOT_DIR, "dist", "xlflow-extension.zip")
 

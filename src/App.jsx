@@ -29,6 +29,8 @@ import { StorageKeys, fetchLiveStudentData, getSampleDataPayload } from './servi
 import { calculateBunkStats } from './services/bunkCalculator';
 import { toggleAmbientSoundscape, playChime } from './services/soundEngine';
 import { fireStreakConfetti } from './services/confetti';
+import { selfAttendanceStore } from './services/selfAttendanceStore';
+import { fetchCloudPrefs } from './services/cloudStorage';
 import { WifiOff } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 
@@ -119,6 +121,25 @@ export default function App() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  // Universal Cloud Persistence Sync (Google Sheets)
+  useEffect(() => {
+    const roll = dataPayload.student?.id || selfAttendanceStore.getCurrentRoll();
+    if (roll) {
+      selfAttendanceStore.syncWithCloud(roll);
+      fetchCloudPrefs(roll).then(prefs => {
+        if (prefs && prefs.section && prefs.section !== dataPayload.student?.section) {
+          setDataPayload(prev => ({
+            ...prev,
+            student: {
+              ...prev.student,
+              section: prefs.section
+            }
+          }));
+        }
+      }).catch(err => console.warn('[App] Cloud prefs sync failed:', err));
+    }
+  }, [dataPayload.student?.id]);
 
   // 3. Sync / Refresh handler
   const handleRefresh = async () => {

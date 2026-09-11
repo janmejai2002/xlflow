@@ -1,0 +1,2853 @@
+{
+  "enrolled_courses": [
+    {
+      "id": "2b97e846-7bd9-44b4-bc5f-287dc82e1af5",
+      "courseOfferCode": "SISBD25-6",
+      "courseId": "a17b7bdc-288f-4b44-9dc2-9b06a8278508",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-12-14T00:00:00.000Z",
+      "endDate": "2027-02-20T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 46,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:52.437Z",
+      "updatedAt": "2026-05-24T07:47:52.437Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "a17b7bdc-288f-4b44-9dc2-9b06a8278508",
+        "courseCode": "SIS",
+        "courseName": "Strategy Implementation through Simulation",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "78432e87-6b90-43a9-af3c-86a8f2b82a5d",
+          "termId": "6fe86522-e7ab-40ef-8c8c-44487458d43d",
+          "termName": "PGDM-BMD (2025-2027) Term-6",
+          "termCode": "BD25-6"
+        },
+        {
+          "id": "ede8857b-5c2a-4701-b6c6-47debfd44b45",
+          "termId": "3a06fc53-980d-46ea-98c6-592d85097d48",
+          "termName": "PGDM (IEV) (2025-2027) Term-6",
+          "termCode": "V25-6"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "d3079a32-a2cf-4371-bde5-4882a2342d15",
+      "courseOfferCode": "MKCIBD25-6",
+      "courseId": "7e648673-c9a5-451d-8e00-d734eb7de689",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-12-14T00:00:00.000Z",
+      "endDate": "2027-02-20T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 79,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:52.335Z",
+      "updatedAt": "2026-05-24T07:47:52.335Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "7e648673-c9a5-451d-8e00-d734eb7de689",
+        "courseCode": "MKCI",
+        "courseName": "Marketing of Creative Industries",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "6fce63e7-bac7-41bc-ad34-545ee11763d9",
+          "termId": "6fe86522-e7ab-40ef-8c8c-44487458d43d",
+          "termName": "PGDM-BMD (2025-2027) Term-6",
+          "termCode": "BD25-6"
+        },
+        {
+          "id": "96371fa9-e199-44b6-ae6d-f8fb4fbe546c",
+          "termId": "3a06fc53-980d-46ea-98c6-592d85097d48",
+          "termName": "PGDM (IEV) (2025-2027) Term-6",
+          "termCode": "V25-6"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "ccf8a9d2-5c55-45df-86d6-0504200123cc",
+      "courseOfferCode": "MI4EBD25-6",
+      "courseId": "947710ed-856d-4df5-8c99-17b1b1d94c4a",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-12-14T00:00:00.000Z",
+      "endDate": "2027-02-20T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 65,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:52.315Z",
+      "updatedAt": "2026-05-24T07:47:52.315Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "947710ed-856d-4df5-8c99-17b1b1d94c4a",
+        "courseCode": "MI4E",
+        "courseName": "Managing Industry 4.0 Ecosystem",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "df27228e-c842-4a63-a758-66e4344d9659",
+          "termId": "6fe86522-e7ab-40ef-8c8c-44487458d43d",
+          "termName": "PGDM-BMD (2025-2027) Term-6",
+          "termCode": "BD25-6"
+        },
+        {
+          "id": "062ebef3-561e-4df6-85c7-92dcf4535a23",
+          "termId": "3a06fc53-980d-46ea-98c6-592d85097d48",
+          "termName": "PGDM (IEV) (2025-2027) Term-6",
+          "termCode": "V25-6"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "36b42f9e-6e79-4327-921a-277224dc3206",
+      "courseOfferCode": "ASPBD25-6",
+      "courseId": "3dfffa47-4105-495f-b225-1a1b72815350",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-12-14T00:00:00.000Z",
+      "endDate": "2027-02-20T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 36,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:52.166Z",
+      "updatedAt": "2026-05-24T07:47:52.166Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "3dfffa47-4105-495f-b225-1a1b72815350",
+        "courseCode": "ASP",
+        "courseName": "Advertising and Sales Promotion",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "b79f7254-2181-43a9-afd2-46672e389f4a",
+          "termId": "6fe86522-e7ab-40ef-8c8c-44487458d43d",
+          "termName": "PGDM-BMD (2025-2027) Term-6",
+          "termCode": "BD25-6"
+        },
+        {
+          "id": "18b9d716-e551-464e-b970-c795d62f3ec0",
+          "termId": "3a06fc53-980d-46ea-98c6-592d85097d48",
+          "termName": "PGDM (IEV) (2025-2027) Term-6",
+          "termCode": "V25-6"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseId": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-09-11T00:00:00.000Z",
+      "endDate": "2026-11-19T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 33,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:52.050Z",
+      "updatedAt": "2026-05-24T07:47:52.050Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseCode": "OMCR",
+        "courseName": "Omnichannel Retailing",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "296715d1-3ac9-41d6-9348-d3c6e2c2384f",
+          "termId": "d541cb0e-8cf1-46e8-827e-2f7e7de9a30e",
+          "termName": "PGDM-BMD (2025-2027) Term-5",
+          "termCode": "BD25-5"
+        },
+        {
+          "id": "7fa479b5-39bc-4d0f-bcfe-0518847d284d",
+          "termId": "3f8c0f4a-f39f-486a-87ff-f7d3764c0763",
+          "termName": "PGDM (IEV) (2025-2027) Term-5",
+          "termCode": "V25-5"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseId": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-09-11T00:00:00.000Z",
+      "endDate": "2026-11-19T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 73,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.951Z",
+      "updatedAt": "2026-05-24T07:47:51.951Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseCode": "IMCE",
+        "courseName": "International Business Models for the Circular Economy",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "81eb51a3-646d-4822-93c3-834008964028",
+          "termId": "d541cb0e-8cf1-46e8-827e-2f7e7de9a30e",
+          "termName": "PGDM-BMD (2025-2027) Term-5",
+          "termCode": "BD25-5"
+        },
+        {
+          "id": "4093f4c0-8712-402e-a5da-776ee9b9c0e6",
+          "termId": "3f8c0f4a-f39f-486a-87ff-f7d3764c0763",
+          "termName": "PGDM (IEV) (2025-2027) Term-5",
+          "termCode": "V25-5"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseId": "16527577-9d8d-41dc-992f-15a172d9d827",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-09-11T00:00:00.000Z",
+      "endDate": "2026-11-19T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 42,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.767Z",
+      "updatedAt": "2026-05-24T07:47:51.767Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseCode": "BDM",
+        "courseName": "Brand Management",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "f7c869dc-ddeb-47d9-a548-4ca2b9a1b378",
+          "termId": "d541cb0e-8cf1-46e8-827e-2f7e7de9a30e",
+          "termName": "PGDM-BMD (2025-2027) Term-5",
+          "termCode": "BD25-5"
+        },
+        {
+          "id": "b3e721de-1a83-4e19-8127-7a8ef2c0ad5b",
+          "termId": "3f8c0f4a-f39f-486a-87ff-f7d3764c0763",
+          "termName": "PGDM (IEV) (2025-2027) Term-5",
+          "termCode": "V25-5"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "12c92e98-4744-429c-b915-adb77d94c4e7",
+      "courseOfferCode": "B2BBD25-5",
+      "courseId": "ec3c8888-245a-47d3-899a-72c750a047de",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-09-11T00:00:00.000Z",
+      "endDate": "2026-11-19T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 88,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.726Z",
+      "updatedAt": "2026-05-24T07:47:51.726Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "ec3c8888-245a-47d3-899a-72c750a047de",
+        "courseCode": "B2B",
+        "courseName": "Business to Business Marketing",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "be0751e2-0f90-4197-ab82-c63ff069f867",
+          "termId": "d541cb0e-8cf1-46e8-827e-2f7e7de9a30e",
+          "termName": "PGDM-BMD (2025-2027) Term-5",
+          "termCode": "BD25-5"
+        },
+        {
+          "id": "42f86d7d-3757-4875-a00f-02b965a253e9",
+          "termId": "3f8c0f4a-f39f-486a-87ff-f7d3764c0763",
+          "termName": "PGDM (IEV) (2025-2027) Term-5",
+          "termCode": "V25-5"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "2cff91c9-e309-4fb6-96cc-078cb65fb95b",
+      "courseOfferCode": "PMGBD25-4",
+      "courseId": "507eea15-12fc-4a6e-bb05-9531bd7b4995",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-06-15T00:00:00.000Z",
+      "endDate": "2026-08-31T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 37,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.601Z",
+      "updatedAt": "2026-05-24T07:47:51.601Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "507eea15-12fc-4a6e-bb05-9531bd7b4995",
+        "courseCode": "PMG",
+        "courseName": "Product Management",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "3e3ab324-4b35-4817-a501-5187ebfb3051",
+          "termId": "36a66ea7-7556-4d6b-ad97-7bec72b94065",
+          "termName": "PGDM-BMD (2025-2027) Term-4",
+          "termCode": "BD25-4"
+        },
+        {
+          "id": "5cf557d9-fc79-453f-afe2-505aceef396d",
+          "termId": "2b2885f3-8d12-4267-8714-543d6643554a",
+          "termName": "PGDM (IEV) (2025-2027) Term-4",
+          "termCode": "V25-4"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "ebd3239b-a74c-4d42-b869-244bbd21086c",
+      "courseOfferCode": "DPCCBD25-4",
+      "courseId": "2486c13d-a8bd-4413-a87c-95d11fe4afc4",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-06-15T00:00:00.000Z",
+      "endDate": "2026-08-31T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 90,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.436Z",
+      "updatedAt": "2026-05-24T07:47:51.436Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "2486c13d-a8bd-4413-a87c-95d11fe4afc4",
+        "courseCode": "DPCC",
+        "courseName": "Digital Product Management: Concept to Commercialization",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "2e966ffb-9640-4a1f-9a12-9b2ea3146236",
+          "termId": "36a66ea7-7556-4d6b-ad97-7bec72b94065",
+          "termName": "PGDM-BMD (2025-2027) Term-4",
+          "termCode": "BD25-4"
+        },
+        {
+          "id": "86ffc468-6624-4d3f-9e98-451620632684",
+          "termId": "2b2885f3-8d12-4267-8714-543d6643554a",
+          "termName": "PGDM (IEV) (2025-2027) Term-4",
+          "termCode": "V25-4"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "5837fed5-0536-42a2-98b8-651b5ca8d47c",
+      "courseOfferCode": "DGMBD25-4",
+      "courseId": "9397fcb3-4d4e-4f0b-8306-7d7d6707f292",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-06-15T00:00:00.000Z",
+      "endDate": "2026-08-31T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 104,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.377Z",
+      "updatedAt": "2026-05-24T07:47:51.377Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "9397fcb3-4d4e-4f0b-8306-7d7d6707f292",
+        "courseCode": "DGM",
+        "courseName": "Digital Marketing",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "7dfc92f6-8f20-413f-9a70-c19e3f6ff3ce",
+          "termId": "36a66ea7-7556-4d6b-ad97-7bec72b94065",
+          "termName": "PGDM-BMD (2025-2027) Term-4",
+          "termCode": "BD25-4"
+        },
+        {
+          "id": "2450b459-12d7-4ac3-ac8f-42bf6f28d1cf",
+          "termId": "2b2885f3-8d12-4267-8714-543d6643554a",
+          "termName": "PGDM (IEV) (2025-2027) Term-4",
+          "termCode": "V25-4"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "ee201cd8-d62d-460c-a1b6-1c66a559a3a1",
+      "courseOfferCode": "CSPBD25-4",
+      "courseId": "e6e89f4a-0c7d-43a0-8408-c8f97d71bcbf",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-06-15T00:00:00.000Z",
+      "endDate": "2026-08-31T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 20,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.356Z",
+      "updatedAt": "2026-05-24T07:47:51.356Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "e6e89f4a-0c7d-43a0-8408-c8f97d71bcbf",
+        "courseCode": "CSP",
+        "courseName": "Corporate Sustainability in Practice",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "7b025810-1ed4-4765-8ac6-51ee15e92656",
+          "termId": "36a66ea7-7556-4d6b-ad97-7bec72b94065",
+          "termName": "PGDM-BMD (2025-2027) Term-4",
+          "termCode": "BD25-4"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "6e2e419e-2660-4fd1-bace-22b86cc2e340",
+      "courseOfferCode": "CNBBD25-4",
+      "courseId": "79e4a873-c47d-42a8-be49-b66e4800746d",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-06-15T00:00:00.000Z",
+      "endDate": "2026-08-31T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 71,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.337Z",
+      "updatedAt": "2026-05-24T07:47:51.337Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "79e4a873-c47d-42a8-be49-b66e4800746d",
+        "courseCode": "CNB",
+        "courseName": "Consumer Behaviour",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "de17b9b5-8fe9-4246-baa9-f3573f8548b9",
+          "termId": "36a66ea7-7556-4d6b-ad97-7bec72b94065",
+          "termName": "PGDM-BMD (2025-2027) Term-4",
+          "termCode": "BD25-4"
+        },
+        {
+          "id": "f1a78bd0-bd52-46bd-8579-1b176b1118a5",
+          "termId": "2b2885f3-8d12-4267-8714-543d6643554a",
+          "termName": "PGDM (IEV) (2025-2027) Term-4",
+          "termCode": "V25-4"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "6d00e5bd-bc70-42c1-929e-41989c2a5642",
+      "courseOfferCode": "CMNBD25-4",
+      "courseId": "08a86a5e-45df-46d8-93ac-a9fe48541cca",
+      "credit": "3.00",
+      "type": "Elective",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-06-15T00:00:00.000Z",
+      "endDate": "2026-08-31T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": false,
+      "studentEnrolledCount": 62,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-05-24T07:47:51.313Z",
+      "updatedAt": "2026-05-24T07:47:51.313Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "08a86a5e-45df-46d8-93ac-a9fe48541cca",
+        "courseCode": "CMN",
+        "courseName": "Conflicts Management and Negotiations",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "fdebc1c6-f126-4f91-9ad8-6858e0f10c79",
+          "termId": "36a66ea7-7556-4d6b-ad97-7bec72b94065",
+          "termName": "PGDM-BMD (2025-2027) Term-4",
+          "termCode": "BD25-4"
+        },
+        {
+          "id": "17d47e5a-73e9-4e00-b11b-d1aa4f66e245",
+          "termId": "2b2885f3-8d12-4267-8714-543d6643554a",
+          "termName": "PGDM (IEV) (2025-2027) Term-4",
+          "termCode": "V25-4"
+        }
+      ],
+      "faculty": []
+    },
+    {
+      "id": "cd437a7e-b28c-4be9-8d2e-ca775758d42c",
+      "courseOfferCode": "STMBD25-3",
+      "courseId": "9f187367-cceb-4ad4-81d3-81238d864f60",
+      "credit": "3.00",
+      "type": "Core",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-01-05T00:00:00.000Z",
+      "endDate": "2026-03-24T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": true,
+      "studentEnrolledCount": 173,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-04-30T07:21:25.615Z",
+      "updatedAt": "2026-04-30T07:21:25.615Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "9f187367-cceb-4ad4-81d3-81238d864f60",
+        "courseCode": "STM",
+        "courseName": "Strategic Management",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "1aa1f2eb-9fbd-484d-97e2-cd341a6798a1",
+          "termId": "c4058d73-a113-47f4-9c9a-0f9828e75559",
+          "termName": "PGDM-BMD (2025-2027) Term-3",
+          "termCode": "BD25-3"
+        }
+      ],
+      "faculty": [
+        {
+          "id": "570ce390-3657-400c-9d22-ceef7fd93677",
+          "facultyId": "d19339cb-3cbd-4595-a5ac-9f0acc71084a",
+          "noOfSessions": 13,
+          "name": "Faisal Mohammad Ahsan",
+          "feedbackStatus": "Closed",
+          "viewFeedback": "Closed",
+          "feedbackEndTime": null,
+          "teachingAssistants": []
+        }
+      ]
+    },
+    {
+      "id": "3a6aa606-4b4c-43e8-a05e-c3acb664b55a",
+      "courseOfferCode": "ORM2BD25-3",
+      "courseId": "8b5ec642-4877-4a45-9830-756bf167180d",
+      "credit": "3.00",
+      "type": "Core",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-01-05T00:00:00.000Z",
+      "endDate": "2026-03-24T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": true,
+      "studentEnrolledCount": 173,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-04-30T07:21:24.824Z",
+      "updatedAt": "2026-04-30T07:21:24.824Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "8b5ec642-4877-4a45-9830-756bf167180d",
+        "courseCode": "ORM2",
+        "courseName": "Operations Management - II",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "cc23c9c8-02e1-4738-ac80-f5ac08d7f46a",
+          "termId": "c4058d73-a113-47f4-9c9a-0f9828e75559",
+          "termName": "PGDM-BMD (2025-2027) Term-3",
+          "termCode": "BD25-3"
+        }
+      ],
+      "faculty": [
+        {
+          "id": "4c91f768-497a-42ad-8593-4cbdb4e6ff25",
+          "facultyId": "ba3fccb0-7fea-45ba-95f6-8ce4239a2587",
+          "noOfSessions": 12,
+          "name": "Dipankar Bose",
+          "feedbackStatus": "Closed",
+          "viewFeedback": "Closed",
+          "feedbackEndTime": null,
+          "teachingAssistants": []
+        }
+      ]
+    },
+    {
+      "id": "a8010789-b2b2-4e8b-8d21-b09c5f7b5ca6",
+      "courseOfferCode": "OPRBD25-3",
+      "courseId": "99b1cd4e-653d-4d39-8130-c439fa03b8ba",
+      "credit": "2.00",
+      "type": "Core",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-01-05T00:00:00.000Z",
+      "endDate": "2026-03-24T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": true,
+      "studentEnrolledCount": 173,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-04-30T07:21:24.041Z",
+      "updatedAt": "2026-04-30T07:21:24.041Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "99b1cd4e-653d-4d39-8130-c439fa03b8ba",
+        "courseCode": "OPR",
+        "courseName": "Operations Research",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "70e34be0-fab7-4e22-84a8-31a3fd121171",
+          "termId": "c4058d73-a113-47f4-9c9a-0f9828e75559",
+          "termName": "PGDM-BMD (2025-2027) Term-3",
+          "termCode": "BD25-3"
+        }
+      ],
+      "faculty": [
+        {
+          "id": "3ca49e8a-7f72-40f0-b4c4-68acca0bb83b",
+          "facultyId": "8b9eb71b-df84-451c-98d7-d4b678a14e38",
+          "noOfSessions": 9,
+          "name": "Sayan Mukherjee",
+          "feedbackStatus": "Closed",
+          "viewFeedback": "Closed",
+          "feedbackEndTime": null,
+          "teachingAssistants": []
+        }
+      ]
+    },
+    {
+      "id": "e7a2af87-3ee6-47eb-8598-81e20702e7b2",
+      "courseOfferCode": "HRMBD25-3",
+      "courseId": "7d109e08-d1b1-4293-ae3b-846684382707",
+      "credit": "2.00",
+      "type": "Core",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-01-05T00:00:00.000Z",
+      "endDate": "2026-03-24T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": true,
+      "studentEnrolledCount": 173,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-04-30T07:21:23.381Z",
+      "updatedAt": "2026-04-30T07:21:23.381Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "7d109e08-d1b1-4293-ae3b-846684382707",
+        "courseCode": "HRM",
+        "courseName": "Human Resource Management",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "2d4a2370-3936-4b8f-8915-8b27cd6a8ab4",
+          "termId": "c4058d73-a113-47f4-9c9a-0f9828e75559",
+          "termName": "PGDM-BMD (2025-2027) Term-3",
+          "termCode": "BD25-3"
+        }
+      ],
+      "faculty": [
+        {
+          "id": "2d7f7af6-d116-4f84-a894-6cd1ba8ded21",
+          "facultyId": "f803129e-9fcf-44a8-aa7d-83bf9b2d3de4",
+          "noOfSessions": 7,
+          "name": "Abhishek Singh",
+          "feedbackStatus": "Closed",
+          "viewFeedback": "Closed",
+          "feedbackEndTime": null,
+          "teachingAssistants": []
+        }
+      ]
+    },
+    {
+      "id": "ff6590ea-9759-409d-8402-88382240d995",
+      "courseOfferCode": "FM2BD25-3",
+      "courseId": "b2404476-0b4c-4949-bd7f-3e4184edc712",
+      "credit": "3.00",
+      "type": "Core",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-01-05T00:00:00.000Z",
+      "endDate": "2026-03-24T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": true,
+      "studentEnrolledCount": 173,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-04-30T07:21:22.596Z",
+      "updatedAt": "2026-04-30T07:21:22.596Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "b2404476-0b4c-4949-bd7f-3e4184edc712",
+        "courseCode": "FM2",
+        "courseName": "Financial Management - II",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "350b1b0e-516a-45ee-8795-497563fa6082",
+          "termId": "c4058d73-a113-47f4-9c9a-0f9828e75559",
+          "termName": "PGDM-BMD (2025-2027) Term-3",
+          "termCode": "BD25-3"
+        }
+      ],
+      "faculty": [
+        {
+          "id": "c5cb28e0-b6c7-4ed7-9f30-d7799105081e",
+          "facultyId": "bfbe1044-d7c0-4a99-b06d-218f131d7a68",
+          "noOfSessions": 10,
+          "name": "Vaibhav Lalwani",
+          "feedbackStatus": "Closed",
+          "viewFeedback": "Closed",
+          "feedbackEndTime": null,
+          "teachingAssistants": [
+            {
+              "id": "e27d6f2e-b25c-4e8f-83c1-fe26e328b502",
+              "teachingAssistantId": "88883a9f-3546-4187-8958-85087431c093",
+              "user": {
+                "id": "88883a9f-3546-4187-8958-85087431c093",
+                "firstName": "Ruchika",
+                "middleName": null,
+                "lastName": "Michael",
+                "email": "ruchika@xlri.ac.in"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bc0b3a12-d9d3-47d9-9d28-d4a79f250d8d",
+      "courseOfferCode": "BRMBD25-3",
+      "courseId": "93bbbcb7-3bf0-417a-ae8b-a36116be2930",
+      "credit": "2.00",
+      "type": "Core",
+      "registrationStatus": "Closed",
+      "courseStatus": "Open",
+      "startDate": "2026-01-05T00:00:00.000Z",
+      "endDate": "2026-03-24T00:00:00.000Z",
+      "isActive": true,
+      "isFreezed": false,
+      "isGradingDone": true,
+      "studentEnrolledCount": 173,
+      "minIntake": 0,
+      "maxIntake": null,
+      "createdAt": "2026-04-30T07:21:21.937Z",
+      "updatedAt": "2026-04-30T07:21:21.937Z",
+      "isepCourseName": null,
+      "isepCourseDesc": null,
+      "isepAreaId": null,
+      "isepArea": null,
+      "course": {
+        "id": "93bbbcb7-3bf0-417a-ae8b-a36116be2930",
+        "courseCode": "BRM",
+        "courseName": "Business Research Methods",
+        "credits": 3
+      },
+      "institute": {
+        "id": "a38fe8cf-fa68-406a-b62d-bd0721d9dbee",
+        "code": "XLRI-Delhi-NCR",
+        "name": "XLRI Delhi-NCR"
+      },
+      "terms": [
+        {
+          "id": "273fde1a-5b05-4be7-b2ea-c2e827519290",
+          "termId": "c4058d73-a113-47f4-9c9a-0f9828e75559",
+          "termName": "PGDM-BMD (2025-2027) Term-3",
+          "termCode": "BD25-3"
+        }
+      ],
+      "faculty": [
+        {
+          "id": "e9acd5ef-482a-443a-b2bf-9b8658514d91",
+          "facultyId": "100ce066-0339-46fc-89fd-b8137c2fd8e3",
+          "noOfSessions": 13,
+          "name": "Sakhhi Chhabra",
+          "feedbackStatus": "Closed",
+          "viewFeedback": "Closed",
+          "feedbackEndTime": null,
+          "teachingAssistants": []
+        }
+      ]
+    }
+  ],
+  "upcoming_sessions": {
+    "today": {
+      "date": "2026-09-09",
+      "sessions": []
+    },
+    "tomorrow": {
+      "date": "2026-09-10",
+      "sessions": []
+    }
+  },
+  "schedule": [
+    {
+      "sessionId": "f70628b6-dbae-465d-bca2-ffef0730e633",
+      "classDate": "2026-09-11",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "72f3f354-4fdc-4830-8c23-3193f112088b",
+      "classDate": "2026-09-12",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "d8230958-518f-4a50-9d4a-d5f61bf594d6",
+      "classDate": "2026-09-12",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "171c3c2f-0256-4806-83a0-638b80859087",
+      "classDate": "2026-09-14",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "d1a19f94-67b6-40e6-bf9f-85068cd5fe63",
+      "classDate": "2026-09-15",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "f732478c-0ed3-4c57-8b28-11613f2fc028",
+      "classDate": "2026-09-17",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "18:15:00",
+      "endTime": "19:45:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "2940a87c-b2d5-40d7-b72f-7837f8c2de8c",
+      "classDate": "2026-09-18",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "08:30:00",
+      "endTime": "10:00:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "86e14b5d-fdcd-44f7-9797-fa7df1d42f27",
+      "classDate": "2026-09-19",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "08:30:00",
+      "endTime": "10:00:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "22ce8907-80c9-450b-b268-642726bfee7e",
+      "classDate": "2026-10-05",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "c3034e8c-e62c-415f-8370-949621a5fb3b",
+      "classDate": "2026-10-05",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "048b026d-1f40-4efe-846a-506791cdccc9",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "ec3c8888-245a-47d3-899a-72c750a047de",
+        "courseName": "Business to Business Marketing",
+        "courseCode": "B2B"
+      },
+      "courseOfferId": "12c92e98-4744-429c-b915-adb77d94c4e7",
+      "courseOfferCode": "B2BBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "a4f1b9d9-99f8-4c9c-a72e-a40e90c8a606",
+        "prefix": "Dr.",
+        "userId": "4a9dc1ad-f98c-46cf-9db1-2fcd052a5021",
+        "firstName": "Mohit",
+        "middleName": null,
+        "lastName": "Malhan"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "ef897b2a-9fef-417a-83d5-263dcfc7a8cb",
+      "classDate": "2026-10-05",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "18:15:00",
+      "endTime": "19:45:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "d14332f4-c46a-4068-b2c6-ac491bf11e82",
+      "classDate": "2026-10-06",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "3e35edd2-f4dc-4ebf-8298-020e48b71242",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseName": "International Business Models for the Circular Economy",
+        "courseCode": "IMCE"
+      },
+      "courseOfferId": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "e2b3d014-1d38-4b1b-b3e1-d9a73aa98ca5",
+        "prefix": "Dr.",
+        "userId": "5c8c5118-50d6-408d-b833-8f25f352e3e2",
+        "firstName": "Sanchayan",
+        "middleName": null,
+        "lastName": "Nath"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "4f49a3b9-6192-484d-83c5-05602dca8e5c",
+      "classDate": "2026-10-06",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "8e64d6c9-5920-42bf-b7fb-0eafff1c177b",
+      "classDate": "2026-10-07",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "3e35edd2-f4dc-4ebf-8298-020e48b71242",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseName": "International Business Models for the Circular Economy",
+        "courseCode": "IMCE"
+      },
+      "courseOfferId": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "e2b3d014-1d38-4b1b-b3e1-d9a73aa98ca5",
+        "prefix": "Dr.",
+        "userId": "5c8c5118-50d6-408d-b833-8f25f352e3e2",
+        "firstName": "Sanchayan",
+        "middleName": null,
+        "lastName": "Nath"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "ea54eb89-2e8a-4fb0-81d0-214862fb6b10",
+      "classDate": "2026-10-07",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "048b026d-1f40-4efe-846a-506791cdccc9",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "ec3c8888-245a-47d3-899a-72c750a047de",
+        "courseName": "Business to Business Marketing",
+        "courseCode": "B2B"
+      },
+      "courseOfferId": "12c92e98-4744-429c-b915-adb77d94c4e7",
+      "courseOfferCode": "B2BBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "a4f1b9d9-99f8-4c9c-a72e-a40e90c8a606",
+        "prefix": "Dr.",
+        "userId": "4a9dc1ad-f98c-46cf-9db1-2fcd052a5021",
+        "firstName": "Mohit",
+        "middleName": null,
+        "lastName": "Malhan"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "b1e0307e-35e0-4000-bd76-516897b797dd",
+      "classDate": "2026-10-07",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "16:30:00",
+      "endTime": "18:00:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "f1a5a5e1-bc85-4491-b9b5-82c53358c262",
+      "classDate": "2026-10-07",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "18:15:00",
+      "endTime": "19:45:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "67c2d2cb-43e9-4cf3-9182-f5904f028977",
+      "classDate": "2026-10-08",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "3e35edd2-f4dc-4ebf-8298-020e48b71242",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseName": "International Business Models for the Circular Economy",
+        "courseCode": "IMCE"
+      },
+      "courseOfferId": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "e2b3d014-1d38-4b1b-b3e1-d9a73aa98ca5",
+        "prefix": "Dr.",
+        "userId": "5c8c5118-50d6-408d-b833-8f25f352e3e2",
+        "firstName": "Sanchayan",
+        "middleName": null,
+        "lastName": "Nath"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "d68b025e-0373-46d2-a8fb-085ec1d8fd54",
+      "classDate": "2026-10-08",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "d94f5990-7f88-4919-96f2-1211140345a1",
+      "classDate": "2026-10-09",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "f2ce6ad8-9299-4089-bb27-e03eafa8f7f2",
+      "classDate": "2026-10-09",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "20:00:00",
+      "endTime": "21:30:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "b467fb50-ad68-4dad-979b-de6fae8fce36",
+      "classDate": "2026-10-10",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "5c116623-9f77-478e-95d4-5e028d63c5d7",
+      "classDate": "2026-10-12",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "048b026d-1f40-4efe-846a-506791cdccc9",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "ec3c8888-245a-47d3-899a-72c750a047de",
+        "courseName": "Business to Business Marketing",
+        "courseCode": "B2B"
+      },
+      "courseOfferId": "12c92e98-4744-429c-b915-adb77d94c4e7",
+      "courseOfferCode": "B2BBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "a4f1b9d9-99f8-4c9c-a72e-a40e90c8a606",
+        "prefix": "Dr.",
+        "userId": "4a9dc1ad-f98c-46cf-9db1-2fcd052a5021",
+        "firstName": "Mohit",
+        "middleName": null,
+        "lastName": "Malhan"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "fdf8bf8d-48a5-4337-9269-9651114bb3aa",
+      "classDate": "2026-10-12",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "5acf9e9d-66ec-4692-be7b-ccc286a999be",
+      "classDate": "2026-10-13",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "3e35edd2-f4dc-4ebf-8298-020e48b71242",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseName": "International Business Models for the Circular Economy",
+        "courseCode": "IMCE"
+      },
+      "courseOfferId": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "e2b3d014-1d38-4b1b-b3e1-d9a73aa98ca5",
+        "prefix": "Dr.",
+        "userId": "5c8c5118-50d6-408d-b833-8f25f352e3e2",
+        "firstName": "Sanchayan",
+        "middleName": null,
+        "lastName": "Nath"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "5a8f2946-53a1-4a0c-9d8f-945e44eaa320",
+      "classDate": "2026-10-14",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "3e35edd2-f4dc-4ebf-8298-020e48b71242",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseName": "International Business Models for the Circular Economy",
+        "courseCode": "IMCE"
+      },
+      "courseOfferId": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "e2b3d014-1d38-4b1b-b3e1-d9a73aa98ca5",
+        "prefix": "Dr.",
+        "userId": "5c8c5118-50d6-408d-b833-8f25f352e3e2",
+        "firstName": "Sanchayan",
+        "middleName": null,
+        "lastName": "Nath"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "9f78b9cc-a8b1-48b1-8c0c-a603bac39f4b",
+      "classDate": "2026-10-14",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": "Guest Session",
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "7247d899-265a-4504-914b-4c49a0fccf58",
+      "classDate": "2026-10-15",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "048b026d-1f40-4efe-846a-506791cdccc9",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "ec3c8888-245a-47d3-899a-72c750a047de",
+        "courseName": "Business to Business Marketing",
+        "courseCode": "B2B"
+      },
+      "courseOfferId": "12c92e98-4744-429c-b915-adb77d94c4e7",
+      "courseOfferCode": "B2BBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "a4f1b9d9-99f8-4c9c-a72e-a40e90c8a606",
+        "prefix": "Dr.",
+        "userId": "4a9dc1ad-f98c-46cf-9db1-2fcd052a5021",
+        "firstName": "Mohit",
+        "middleName": null,
+        "lastName": "Malhan"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "9bb58714-899a-4050-81da-273f611d2467",
+      "classDate": "2026-10-16",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "3e35edd2-f4dc-4ebf-8298-020e48b71242",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseName": "International Business Models for the Circular Economy",
+        "courseCode": "IMCE"
+      },
+      "courseOfferId": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "e2b3d014-1d38-4b1b-b3e1-d9a73aa98ca5",
+        "prefix": "Dr.",
+        "userId": "5c8c5118-50d6-408d-b833-8f25f352e3e2",
+        "firstName": "Sanchayan",
+        "middleName": null,
+        "lastName": "Nath"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "dd6cacd6-6cec-454c-a834-163cbb99df23",
+      "classDate": "2026-10-17",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": "Guest Session",
+      "courseOfferFacultySectionId": "0aacc1da-978d-4b7b-8401-d89ec00c057f",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "16527577-9d8d-41dc-992f-15a172d9d827",
+        "courseName": "Brand Management",
+        "courseCode": "BDM"
+      },
+      "courseOfferId": "12b13012-6276-4e02-9c85-db14c0834978",
+      "courseOfferCode": "BDMBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "7b75faa5-a1ba-4c73-abc4-f5a778d999b0",
+        "prefix": "Dr",
+        "userId": "c3b9a2d2-61c5-4d65-aa62-160b65de5a7c",
+        "firstName": "Madhu",
+        "middleName": null,
+        "lastName": "Mandal"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "ae835d96-e87f-4aaa-a082-26b26f5ba423",
+      "classDate": "2026-10-21",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "3e35edd2-f4dc-4ebf-8298-020e48b71242",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "59a37ccb-fa77-4d9d-8aa9-f0937482fcc9",
+        "courseName": "International Business Models for the Circular Economy",
+        "courseCode": "IMCE"
+      },
+      "courseOfferId": "1816cbed-adac-4205-ae1c-83d139a12d90",
+      "courseOfferCode": "IMCEBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "e2b3d014-1d38-4b1b-b3e1-d9a73aa98ca5",
+        "prefix": "Dr.",
+        "userId": "5c8c5118-50d6-408d-b833-8f25f352e3e2",
+        "firstName": "Sanchayan",
+        "middleName": null,
+        "lastName": "Nath"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "27ced951-0f5e-49af-acd5-4255bd28950e",
+      "classDate": "2026-10-21",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "048b026d-1f40-4efe-846a-506791cdccc9",
+      "startTime": "12:10:00",
+      "endTime": "13:40:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "ec3c8888-245a-47d3-899a-72c750a047de",
+        "courseName": "Business to Business Marketing",
+        "courseCode": "B2B"
+      },
+      "courseOfferId": "12c92e98-4744-429c-b915-adb77d94c4e7",
+      "courseOfferCode": "B2BBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "a4f1b9d9-99f8-4c9c-a72e-a40e90c8a606",
+        "prefix": "Dr.",
+        "userId": "4a9dc1ad-f98c-46cf-9db1-2fcd052a5021",
+        "firstName": "Mohit",
+        "middleName": null,
+        "lastName": "Malhan"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "1f542255-d7cf-43f8-9eef-25ce24aca9f5",
+      "classDate": "2026-10-22",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "048b026d-1f40-4efe-846a-506791cdccc9",
+      "startTime": "10:20:00",
+      "endTime": "11:50:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "ec3c8888-245a-47d3-899a-72c750a047de",
+        "courseName": "Business to Business Marketing",
+        "courseCode": "B2B"
+      },
+      "courseOfferId": "12c92e98-4744-429c-b915-adb77d94c4e7",
+      "courseOfferCode": "B2BBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "a4f1b9d9-99f8-4c9c-a72e-a40e90c8a606",
+        "prefix": "Dr.",
+        "userId": "4a9dc1ad-f98c-46cf-9db1-2fcd052a5021",
+        "firstName": "Mohit",
+        "middleName": null,
+        "lastName": "Malhan"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+        "sectionName": "E",
+        "sectionCode": "BD25-5-E"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "47657cea-c0b3-426d-bfa9-4cf6626ab72d",
+          "sectionName": "E",
+          "sectionCode": "BD25-5-E"
+        }
+      ]
+    },
+    {
+      "sessionId": "2c3caeba-a9d3-4257-b7e5-f10c88bb001b",
+      "classDate": "2026-10-23",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "14:45:00",
+      "endTime": "16:15:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    },
+    {
+      "sessionId": "e9859063-8262-4f19-8703-b0316555ddc5",
+      "classDate": "2026-10-24",
+      "status": "scheduled",
+      "isCancelled": false,
+      "cancelReason": null,
+      "isRescheduled": false,
+      "originalDate": null,
+      "originalStartTime": null,
+      "originalEndTime": null,
+      "remarks": null,
+      "courseOfferFacultySectionId": "6050c312-2073-4a90-85e7-3d6a89c7013b",
+      "startTime": "08:30:00",
+      "endTime": "10:00:00",
+      "venue": {
+        "id": "f8ed9228-87b2-40ba-be48-182d5a04ba5f",
+        "name": "MCR 07",
+        "code": "MCR-07",
+        "building": "Academic Building"
+      },
+      "course": {
+        "id": "58b3b44d-099a-4223-98a8-d1fa53caf9bb",
+        "courseName": "Omnichannel Retailing",
+        "courseCode": "OMCR"
+      },
+      "courseOfferId": "578f9735-bd1a-4c8e-b7a9-17fe9d2d10aa",
+      "courseOfferCode": "OMCRBD25-5",
+      "courseOfferType": "Elective",
+      "faculty": {
+        "id": "64ea8e69-041d-4a0b-a957-c8f193377fbc",
+        "prefix": "Dr.",
+        "userId": "0288fc32-ddeb-40c8-80f2-2e811acc51ba",
+        "firstName": "Smitu",
+        "middleName": null,
+        "lastName": "Malhotra"
+      },
+      "sectionKind": "elective",
+      "section": {
+        "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+        "sectionName": "EF",
+        "sectionCode": "BD25-5-EF"
+      },
+      "batch": null,
+      "program": null,
+      "attendingSections": [
+        {
+          "id": "2e224214-2f58-4b10-8daa-875594c84cc0",
+          "sectionName": "EF",
+          "sectionCode": "BD25-5-EF"
+        }
+      ]
+    }
+  ],
+  "fetched_at": "2026-09-09T22:04:18.726047"
+}

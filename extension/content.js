@@ -2,41 +2,118 @@
  * XL-Flow Content Script — Ambient In-Page ERP Companion
  * Injected strictly into https://xlerp.xlri.ac.in/*
  * Capabilities:
- * - Passive, zero-touch token acquisition from localStorage
- * - Local-only secure persistence in chrome.storage.local
- * - Ambient floating pill HUD with real-time class status
- * - Slide-over quick HUD drawer
+ * - Intelligent, zero-touch token acquisition from localStorage / sessionStorage / JWT patterns
+ * - Real-time in-page schedule synchronization with XLRI ERP API
+ * - Bundled high-fidelity fallback schedule for instant zero-latency display
+ * - Ambient floating pill HUD with real-time class status & next lecture alert
+ * - Slide-over quick HUD drawer with keyboard navigation and click-outside dismissal
  */
 
 (function initXlFlowContentScript() {
   console.log('[XL-Flow] Injected into XLRI ERP session.');
 
-  // 1. Passive Token Ingestion Engine
+  // Pre-bundled fallback schedule from official ERP scraping (35 Term sessions)
+  const FALLBACK_SCHEDULE = [{"classDate": "2026-09-11", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-09-12", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-09-12", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-09-14", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-09-15", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-09-17", "startTime": "18:15:00", "endTime": "19:45:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-09-18", "startTime": "08:30:00", "endTime": "10:00:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-09-19", "startTime": "08:30:00", "endTime": "10:00:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-05", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-05", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "B2B", "courseName": "Business to Business Marketing", "faculty": "Dr. Mohit Malhan"}, {"classDate": "2026-10-05", "startTime": "18:15:00", "endTime": "19:45:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-10-06", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "IMCE", "courseName": "International Business Models for the Circular Economy", "faculty": "Dr. Sanchayan Nath"}, {"classDate": "2026-10-06", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-07", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "IMCE", "courseName": "International Business Models for the Circular Economy", "faculty": "Dr. Sanchayan Nath"}, {"classDate": "2026-10-07", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "B2B", "courseName": "Business to Business Marketing", "faculty": "Dr. Mohit Malhan"}, {"classDate": "2026-10-07", "startTime": "16:30:00", "endTime": "18:00:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-07", "startTime": "18:15:00", "endTime": "19:45:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-10-08", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "IMCE", "courseName": "International Business Models for the Circular Economy", "faculty": "Dr. Sanchayan Nath"}, {"classDate": "2026-10-08", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-09", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-10-09", "startTime": "20:00:00", "endTime": "21:30:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-10", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-12", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "B2B", "courseName": "Business to Business Marketing", "faculty": "Dr. Mohit Malhan"}, {"classDate": "2026-10-12", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-10-13", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "IMCE", "courseName": "International Business Models for the Circular Economy", "faculty": "Dr. Sanchayan Nath"}, {"classDate": "2026-10-14", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "IMCE", "courseName": "International Business Models for the Circular Economy", "faculty": "Dr. Sanchayan Nath"}, {"classDate": "2026-10-14", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-10-15", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "B2B", "courseName": "Business to Business Marketing", "faculty": "Dr. Mohit Malhan"}, {"classDate": "2026-10-16", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "IMCE", "courseName": "International Business Models for the Circular Economy", "faculty": "Dr. Sanchayan Nath"}, {"classDate": "2026-10-17", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "BDM", "courseName": "Brand Management", "faculty": "Dr Madhu Mandal"}, {"classDate": "2026-10-21", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "IMCE", "courseName": "International Business Models for the Circular Economy", "faculty": "Dr. Sanchayan Nath"}, {"classDate": "2026-10-21", "startTime": "12:10:00", "endTime": "13:40:00", "venue": "MCR 07", "courseCode": "B2B", "courseName": "Business to Business Marketing", "faculty": "Dr. Mohit Malhan"}, {"classDate": "2026-10-22", "startTime": "10:20:00", "endTime": "11:50:00", "venue": "MCR 07", "courseCode": "B2B", "courseName": "Business to Business Marketing", "faculty": "Dr. Mohit Malhan"}, {"classDate": "2026-10-23", "startTime": "14:45:00", "endTime": "16:15:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}, {"classDate": "2026-10-24", "startTime": "08:30:00", "endTime": "10:00:00", "venue": "MCR 07", "courseCode": "OMCR", "courseName": "Omnichannel Retailing", "faculty": "Dr. Smitu Malhotra"}];
+
+  // 1. Robust Token Discovery Engine
+  function findTokenInStorage() {
+    const candidates = ['erp_token', 'token', 'access_token', 'accessToken', 'auth_token', 'jwt', 'xlflow_token', 'id_token'];
+    for (const k of candidates) {
+      try {
+        const val = localStorage.getItem(k) || sessionStorage.getItem(k);
+        if (val && typeof val === 'string' && val.length > 20) return val;
+      } catch (e) {}
+    }
+    // Scan all keys for JWT pattern (header.payload.signature)
+    for (let i = 0; i < localStorage.length; i++) {
+      try {
+        const key = localStorage.key(i);
+        const val = localStorage.getItem(key);
+        if (val && typeof val === 'string') {
+          if (val.startsWith('ey') && val.split('.').length === 3) return val;
+          try {
+            const parsed = JSON.parse(val);
+            if (parsed && (parsed.token || parsed.accessToken || parsed.access_token)) {
+              return parsed.token || parsed.accessToken || parsed.access_token;
+            }
+          } catch (e) {}
+        }
+      } catch (e) {}
+    }
+    return null;
+  }
+
   function captureErpToken() {
-    try {
-      const token = localStorage.getItem('erp_token') || sessionStorage.getItem('erp_token');
-      if (token && typeof chrome !== 'undefined' && chrome.storage?.local) {
-        chrome.storage.local.get(['erp_token'], (res) => {
-          if (res.erp_token !== token) {
-            chrome.storage.local.set({ erp_token: token, tokenCapturedAt: Date.now() }, () => {
-              console.log('[XL-Flow] Token synchronized securely to local extension storage.');
-            });
-          }
-        });
-      }
-    } catch (e) {
-      console.warn('[XL-Flow] Token capture check failed:', e);
+    const token = findTokenInStorage();
+    if (token && typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.get(['erp_token'], (res) => {
+        if (res.erp_token !== token) {
+          chrome.storage.local.set({ erp_token: token, tokenCapturedAt: Date.now() }, () => {
+            console.log('[XL-Flow] Token synchronized securely to local extension storage.');
+            fetchLiveScheduleInPage(token);
+          });
+        }
+      });
     }
   }
 
-  // Check immediately and hook into storage events
-  captureErpToken();
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'erp_token') captureErpToken();
-  });
-  setInterval(captureErpToken, 10000);
+  // 2. In-Page Live Schedule Fetcher
+  async function fetchLiveScheduleInPage(token) {
+    try {
+      const headers = { 'Accept': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  // 2. In-Page Ambient Floating HUD
+      const today = new Date();
+      const start = new Date(today.getTime() - 2 * 86400000).toISOString().split('T')[0];
+      const end = new Date(today.getTime() + 45 * 86400000).toISOString().split('T')[0];
+
+      const res = await fetch(`https://xlerp.xlri.ac.in/api/v1/schedule/my-schedule/student?startDate=${start}&endDate=${end}`, {
+        headers,
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        const sessions = json.data || json;
+        if (Array.isArray(sessions) && sessions.length > 0) {
+          if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+            chrome.storage.local.set({ cached_schedule: sessions, lastSyncTimestamp: Date.now() });
+          }
+          updateHudWithSessions(sessions);
+          return sessions;
+        }
+      }
+    } catch (e) {
+      console.warn('[XL-Flow] In-page schedule fetch error:', e);
+    }
+    return null;
+  }
+
+  captureErpToken();
+  window.addEventListener('storage', captureErpToken);
+  setInterval(captureErpToken, 15000);
+
+  // 3. Find Next Upcoming Session
+  function getNextSession(sessions) {
+    if (!Array.isArray(sessions) || sessions.length === 0) return null;
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+    const timeStr = now.toTimeString().slice(0, 8);
+
+    // Look for sessions today or upcoming
+    const upcoming = sessions.filter(s => {
+      const d = s.classDate || '';
+      const t = s.endTime || s.startTime || '23:59:59';
+      if (d > todayStr) return true;
+      if (d === todayStr && t >= timeStr) return true;
+      return false;
+    });
+
+    if (upcoming.length > 0) return upcoming[0];
+    return sessions[0];
+  }
+
+  // 4. In-Page Ambient Floating HUD
   function mountAmbientHud() {
     if (document.getElementById('xlflow-overlay-root')) return;
 
@@ -49,7 +126,7 @@
     pill.innerHTML = `
       <span class="xlflow-pill-status"></span>
       <span class="xlflow-pill-title">XL-Flow HUD</span>
-      <span class="xlflow-pill-badge">Term-5 Live</span>
+      <span class="xlflow-pill-badge" id="xlflow-pill-badge">Term-5 Live</span>
     `;
 
     // Slide-Over Companion Drawer
@@ -133,72 +210,115 @@
     const closeBtn = drawer.querySelector('.xlflow-drawer-close');
     closeBtn.addEventListener('click', () => drawer.classList.remove('open'));
 
+    // Smooth click-outside and escape-key dismissal
+    document.addEventListener('pointerdown', (e) => {
+      if (drawer.classList.contains('open') && !drawer.contains(e.target) && !pill.contains(e.target)) {
+        drawer.classList.remove('open');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) {
+        drawer.classList.remove('open');
+      }
+    });
+
     root.appendChild(pill);
     root.appendChild(drawer);
     document.body.appendChild(root);
 
-    function hydrateDrawerData() {
-      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
-        chrome.storage.local.get(['cached_schedule'], (res) => {
-          if (res.cached_schedule && res.cached_schedule.length > 0) {
-            const next = res.cached_schedule[0];
-            const titleEl = document.getElementById('xlflow-course-title');
-            const metaEl = document.getElementById('xlflow-course-meta');
-            if (titleEl) titleEl.textContent = `${next.courseCode} - ${next.courseName}`;
-            if (metaEl) metaEl.textContent = `${next.classDate} • ${next.startTime.slice(0,5)} • Room: ${next.venue}`;
+    // Initial render with fallback data immediately so it never shows stalled loader
+    hydrateDrawerData();
+  }
 
-            const copyBtn = document.getElementById('xlflow-copy-room-btn');
-            if (copyBtn) {
-              copyBtn.onclick = () => {
-                navigator.clipboard.writeText(next.venue);
-                copyBtn.textContent = 'Copied!';
-                setTimeout(() => { copyBtn.textContent = 'Copy Venue'; }, 1800);
-              };
+  // 5. Lecture Card DOM Updater
+  function updateHudWithSessions(sessions) {
+    const next = getNextSession(sessions);
+    if (!next) return;
+
+    const code = next.course?.courseCode || next.courseCode || 'XLRI';
+    const name = next.course?.courseName || next.courseName || next.courseOfferCode || 'Scheduled Lecture';
+    const venueName = typeof next.venue === 'object' ? (next.venue.name || next.venue.code || 'Campus') : (next.venue || 'MCR 07');
+    const facultyStr = next.faculty ? (typeof next.faculty === 'object' ? ((next.faculty.prefix || '') + ' ' + (next.faculty.firstName || '') + ' ' + (next.faculty.lastName || '')).trim() : next.faculty) : '';
+    const dateStr = next.classDate || 'Today';
+    const startStr = (next.startTime || '10:00').slice(0, 5);
+    const endStr = next.endTime ? ` - ${next.endTime.slice(0, 5)}` : '';
+
+    const titleEl = document.getElementById('xlflow-course-title');
+    const metaEl = document.getElementById('xlflow-course-meta');
+    const badgeEl = document.getElementById('xlflow-pill-badge');
+
+    if (titleEl) titleEl.textContent = `${code} - ${name}`;
+    if (metaEl) metaEl.textContent = `${dateStr} • ${startStr}${endStr} • Room: ${venueName}${facultyStr ? ' • ' + facultyStr : ''}`;
+    if (badgeEl) badgeEl.textContent = `${code} @ ${startStr}`;
+
+    const copyBtn = document.getElementById('xlflow-copy-room-btn');
+    if (copyBtn) {
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(venueName);
+        copyBtn.textContent = `Copied ${venueName}!`;
+        setTimeout(() => { copyBtn.textContent = 'Copy Venue'; }, 1800);
+      };
+    }
+  }
+
+  function hydrateDrawerData() {
+    // Check local storage first
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.get(['cached_schedule', 'erp_token'], (res) => {
+        let sessions = res.cached_schedule;
+        if (!Array.isArray(sessions) || sessions.length === 0) {
+          sessions = FALLBACK_SCHEDULE;
+        }
+        updateHudWithSessions(sessions);
+
+        // Also trigger fresh in-page fetch
+        const token = res.erp_token || findTokenInStorage();
+        fetchLiveScheduleInPage(token);
+      });
+    } else {
+      updateHudWithSessions(FALLBACK_SCHEDULE);
+    }
+
+    // Launch full app
+    const launchBtn = document.getElementById('xlflow-launch-full-btn');
+    const openSocialBtn = document.getElementById('xlflow-open-social-btn');
+    const appUrl = typeof chrome !== 'undefined' && chrome.runtime?.getURL ? chrome.runtime.getURL('dist/index.html') : 'https://janmejai2002.github.io/xlflow/';
+
+    if (launchBtn) {
+      launchBtn.onclick = () => window.open(appUrl, '_blank');
+    }
+    if (openSocialBtn) {
+      openSocialBtn.onclick = () => window.open(appUrl + '?tab=synergy', '_blank');
+    }
+
+    // Invite Friends button
+    const inviteBtn = document.getElementById('xlflow-invite-btn');
+    if (inviteBtn) {
+      inviteBtn.onclick = () => {
+        const inviteText = "Hey! Check out XL-Flow to see live campus hotspots and compare our free slots: https://janmejai2002.github.io/xlflow/?meet=B25349";
+        navigator.clipboard.writeText(inviteText);
+        inviteBtn.textContent = 'Copied Link!';
+        setTimeout(() => { inviteBtn.textContent = 'Invite Friends'; }, 2000);
+      };
+    }
+
+    // Live social presence from local daemon
+    try {
+      fetch('http://localhost:3101/api/social/whos-where', { signal: AbortSignal.timeout(1500) })
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.zoneCounts) {
+            const countEl = document.getElementById('xlflow-radar-headcount');
+            const beaconsEl = document.getElementById('xlflow-radar-beacons');
+            if (countEl) countEl.textContent = `${data.zoneCounts.total || 0} on campus`;
+            if (beaconsEl) {
+              beaconsEl.textContent = `☕ Nescafe (${data.zoneCounts.nescafe || 0}) • 📚 Library (${data.zoneCounts.library || 0}) • 🏛️ Academic (${data.zoneCounts.academic || 0})`;
             }
           }
-        });
-      }
-
-      // Launch full app
-      const launchBtn = document.getElementById('xlflow-launch-full-btn');
-      const openSocialBtn = document.getElementById('xlflow-open-social-btn');
-      const appUrl = typeof chrome !== 'undefined' && chrome.runtime?.getURL ? chrome.runtime.getURL('dist/index.html') : 'https://janmejai2002.github.io/xlflow/';
-
-      if (launchBtn) {
-        launchBtn.onclick = () => window.open(appUrl, '_blank');
-      }
-      if (openSocialBtn) {
-        openSocialBtn.onclick = () => window.open(appUrl + '?tab=synergy', '_blank');
-      }
-
-      // Invite Friends button
-      const inviteBtn = document.getElementById('xlflow-invite-btn');
-      if (inviteBtn) {
-        inviteBtn.onclick = () => {
-          const inviteText = "Hey! Check out XL-Flow to see live campus hotspots and compare our free slots: https://janmejai2002.github.io/xlflow/?meet=B25349";
-          navigator.clipboard.writeText(inviteText);
-          inviteBtn.textContent = 'Copied Link!';
-          setTimeout(() => { inviteBtn.textContent = 'Invite Friends'; }, 2000);
-        };
-      }
-
-      // Hydrate live social presence from local daemon
-      try {
-        fetch('http://localhost:3101/api/social/whos-where', { signal: AbortSignal.timeout(1500) })
-          .then(r => r.json())
-          .then(data => {
-            if (data && data.zoneCounts) {
-              const countEl = document.getElementById('xlflow-radar-headcount');
-              const beaconsEl = document.getElementById('xlflow-radar-beacons');
-              if (countEl) countEl.textContent = `${data.zoneCounts.total || 0} on campus`;
-              if (beaconsEl) {
-                beaconsEl.textContent = `☕ Nescafe (${data.zoneCounts.nescafe || 0}) • 📚 Library (${data.zoneCounts.library || 0}) • 🏛️ Academic (${data.zoneCounts.academic || 0})`;
-              }
-            }
-          })
-          .catch(() => {});
-      } catch (e) {}
-    }
+        })
+        .catch(() => {});
+    } catch (e) {}
   }
 
   // Mount when document body is ready
