@@ -22,7 +22,8 @@
   },
   "permissions": [
     "storage",
-    "alarms"
+    "alarms",
+    "tabs"
   ],
   "host_permissions": [
     "https://xlerp.xlri.ac.in/*"
@@ -33,6 +34,12 @@
       "js": ["content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["dist/*", "icons/*"],
+      "matches": ["https://xlerp.xlri.ac.in/*"]
     }
   ],
   "content_security_policy": {
