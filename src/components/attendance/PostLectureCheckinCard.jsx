@@ -10,11 +10,38 @@ export default function PostLectureCheckinCard({ schedule = [], courses = [], is
   useEffect(() => {
     if (isDismissed || !schedule.length) return;
 
-    // Find any past or today's lecture that has not been marked in self-attendance
-    const today = new Date().toISOString().slice(0, 10);
-    
-    // Look for today's lectures or most recent conducted lecture
-    const pending = schedule.find(s => {
+    // Only prompt check-in for lectures that have ALREADY finished
+    const now = new Date();
+    const todayStr = now.toISOString().slice(0, 10);
+    const currentTimeStr = now.toTimeString().slice(0, 8);
+
+    const isClassCompleted = (s) => {
+      if (!s.classDate) return false;
+      if (s.classDate < todayStr) return true;
+      if (s.classDate === todayStr) {
+        if (s.endTime) {
+          return s.endTime <= currentTimeStr;
+        }
+        if (s.startTime) {
+          const [h, m] = s.startTime.split(':').map(Number);
+          const endMinutes = h * 60 + m + 90;
+          const currentMinutes = now.getHours() * 60 + now.getMinutes();
+          return currentMinutes >= endMinutes;
+        }
+      }
+      return false;
+    };
+
+    // Filter only completed lectures, sorted most recent first
+    const completedSessions = schedule
+      .filter(isClassCompleted)
+      .sort((a, b) => {
+        const timeA = `${a.classDate}T${a.endTime || a.startTime || '00:00:00'}`;
+        const timeB = `${b.classDate}T${b.endTime || b.startTime || '00:00:00'}`;
+        return timeB.localeCompare(timeA);
+      });
+
+    const pending = completedSessions.find(s => {
       const isMarked = selfAttendanceStore.getSessionStatus(s.sessionId);
       return !isMarked;
     });

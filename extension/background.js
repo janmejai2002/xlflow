@@ -9,14 +9,16 @@ const SYNC_ALARM_NAME = 'xlflow-periodic-sync';
 chrome.runtime.onInstalled.addListener(() => {
   console.log('[XL-Flow Background] Extension installed/updated.');
   
-  // Set default badge
   chrome.action.setBadgeText({ text: 'LIVE' });
   chrome.action.setBadgeBackgroundColor({ color: '#16A34A' });
 
-  // Create periodic sync alarm (every 30 minutes)
+  // Create periodic sync alarm (every 15 minutes)
   chrome.alarms.create(SYNC_ALARM_NAME, {
-    periodInMinutes: 30
+    periodInMinutes: 15
   });
+
+  // Run immediate sync
+  performBackgroundSync();
 });
 
 // Alarm Listener
@@ -27,46 +29,61 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 async function performBackgroundSync() {
-  console.log('[XL-Flow Background] Running periodic sync...');
+  console.log('[XL-Flow Background] Running background sync...');
 
   chrome.storage.local.get(['erp_token'], async (result) => {
     const token = result.erp_token;
     if (!token) {
-      chrome.action.setBadgeText({ text: 'OFF' });
-      chrome.action.setBadgeBackgroundColor({ color: '#64748B' });
+      chrome.action.setBadgeText({ text: 'LIVE' });
+      chrome.action.setBadgeBackgroundColor({ color: '#16A34A' });
       return;
     }
 
     try {
-      // Query official XLRI ERP upcoming schedule endpoint
-      const response = await fetch('https://xlerp.xlri.ac.in/api/v1/schedule/my-schedule/student/upcoming', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json'
+      };
+
+      // 1. Fetch upcoming sessions
+      let sessions = [];
+      try {
+        const upRes = await fetch('https://xlerp.xlri.ac.in/api/v1/schedule/my-schedule/student/upcoming', { headers });
+        if (upRes.status === 401) {
+          console.warn('[XL-Flow Background] Token expired (401).');
+          chrome.action.setBadgeText({ text: 'AUTH' });
+          chrome.action.setBadgeBackgroundColor({ color: '#DC2626' });
+          return;
         }
-      });
+        if (upRes.ok) {
+          const upJson = await upRes.json();
+          const raw = upJson.data || upJson;
+          if (Array.isArray(raw)) sessions = raw;
+          else if (raw && typeof raw === 'object') {
+            sessions = [...(raw.today || []), ...(raw.tomorrow || [])];
+          }
+        }
+      } catch (e) {}
 
-      if (response.status === 401) {
-        console.warn('[XL-Flow Background] Token expired (401). Clearing stale session.');
-        chrome.storage.local.remove(['erp_token']);
-        chrome.action.setBadgeText({ text: 'AUTH' });
-        chrome.action.setBadgeBackgroundColor({ color: '#DC2626' });
-        return;
+      // 2. Fetch rolling 45-day schedule if needed
+      if (!sessions || sessions.length === 0) {
+        const today = new Date();
+        const start = new Date(today.getTime() - 2 * 86400000).toISOString().split('T')[0];
+        const end = new Date(today.getTime() + 45 * 86400000).toISOString().split('T')[0];
+        const fullRes = await fetch(`https://xlerp.xlri.ac.in/api/v1/schedule/my-schedule/student?startDate=${start}&endDate=${end}`, { headers });
+        if (fullRes.ok) {
+          const fullJson = await fullRes.json();
+          sessions = fullJson.data || fullJson || [];
+        }
       }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-
-      const scheduleData = await response.json();
-      if (Array.isArray(scheduleData) && scheduleData.length > 0) {
+      if (Array.isArray(sessions) && sessions.length > 0) {
         chrome.storage.local.set({
-          cached_schedule: scheduleData,
+          cached_schedule: sessions,
           lastSyncTimestamp: Date.now()
         });
 
-        // Set badge with next class venue or count
-        chrome.action.setBadgeText({ text: `${scheduleData.length}` });
+        chrome.action.setBadgeText({ text: `${sessions.length}` });
         chrome.action.setBadgeBackgroundColor({ color: '#0284C7' });
       }
     } catch (err) {

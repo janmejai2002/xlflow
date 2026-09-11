@@ -83,7 +83,7 @@ export default function CampusRadarView({ currentUser, onOpenBeaconModal, onSele
             justifyContent: 'center',
             boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)'
           }}>
-            <Compass size={20} className="animate-spin-slow" />
+            <Compass size={20} className="animate-spin-slow motion-reduce:animate-none" />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -124,7 +124,7 @@ export default function CampusRadarView({ currentUser, onOpenBeaconModal, onSele
             }}
             title="Refresh presence"
           >
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            <RefreshCw size={14} className={loading ? 'animate-spin motion-reduce:animate-none' : ''} />
           </button>
 
           <button

@@ -314,7 +314,7 @@ export default function AiSettingsModal({ isOpen, onClose }) {
               cursor: isTesting ? 'wait' : 'pointer'
             }}
           >
-            <RefreshCw size={12} className={isTesting ? 'animate-spin' : ''} />
+            <RefreshCw size={12} className={isTesting ? 'animate-spin motion-reduce:animate-none' : ''} />
             {isTesting ? 'Testing...' : 'Test Connection'}
           </button>
 

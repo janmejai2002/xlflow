@@ -223,7 +223,7 @@ export default function DesktopTopBar({
             alignItems: 'center'
           }}
         >
-          <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} color="var(--ink-soft)" />
+          <RefreshCw size={14} className={isSyncing ? 'animate-spin motion-reduce:animate-none' : ''} color="var(--ink-soft)" />
         </button>
       </div>
     </header>
