@@ -102,6 +102,10 @@ Janmejai Singh (B25349)`;
   return (
     <div
       className={`course-safety-card ${className}`}
+      onClick={() => {
+        playTactileClick();
+        onOpenDeepSim?.(course.code);
+      }}
       style={{
         backgroundColor: 'var(--card)',
         border: '1px solid var(--border)',
@@ -115,6 +119,7 @@ Janmejai Singh (B25349)`;
         gap: '14px',
         position: 'relative',
         overflow: 'hidden',
+        cursor: 'pointer',
         transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
       }}
       onMouseEnter={(e) => {
@@ -595,7 +600,8 @@ Janmejai Singh (B25349)`;
 
         {/* Detailed Course Standing Trigger */}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             playTactileClick();
             onOpenDeepSim?.(course.code);
           }}

@@ -9,6 +9,7 @@ import CourseSafetyCard from './CourseSafetyCard';
 export default function BunkMeterView({ courses = [], schedule = [], student = {} }) {
   const [filterTerm, setFilterTerm] = useState('all'); // 'all' | 'Term-5' | 'Term-4'
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [selectedCourseForModal, setSelectedCourseForModal] = useState(null);
   const [, setStoreVer] = useState(0);
 
   useEffect(() => {
@@ -282,6 +283,10 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
           <CourseSafetyCard
             key={course.code}
             course={course}
+            onOpenDeepSim={(code) => {
+              setSelectedCourseForModal(code);
+              setIsLogModalOpen(true);
+            }}
           />
         ))}
       </div>
@@ -349,10 +354,14 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
       {/* Sovereign Attendance Log & Discrepancy Reconciliation Modal */}
       <AttendanceLogModal
         isOpen={isLogModalOpen}
-        onClose={() => setIsLogModalOpen(false)}
+        onClose={() => {
+          setIsLogModalOpen(false);
+          setSelectedCourseForModal(null);
+        }}
         courses={courses}
         schedule={schedule}
         student={student}
+        initialCourseCode={selectedCourseForModal}
       />
     </div>
   );
