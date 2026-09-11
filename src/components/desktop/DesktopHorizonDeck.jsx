@@ -135,7 +135,7 @@ export default function DesktopHorizonDeck({
             position: 'relative'
           }}
         >
-          {/* SECTOR 01: Chronos Radar & Live Flight Deck */}
+          {/* SECTOR 01: Daily Schedule & Next Class */}
           <section
             data-sector-index="0"
             data-sector-id="radar"

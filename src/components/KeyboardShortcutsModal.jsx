@@ -16,18 +16,18 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const shortcuts = [
-    { key: '1', action: 'Jump to Radar Live HUD', category: 'Navigation' },
-    { key: '2', action: 'Jump to Bunk-O-Meter', category: 'Navigation' },
-    { key: '3', action: 'Jump to Weekly Timetable Matrix', category: 'Navigation' },
-    { key: '4', action: 'Jump to Batch Synergy & Free Windows', category: 'Navigation' },
-    { key: '5', action: 'Jump to Getaways & Natural Trips', category: 'Navigation' },
-    { key: '6', action: 'Jump to Academic Deadlines & Quizzes', category: 'Navigation' },
-    { key: '⌘ + K', action: 'Search 178 Batchmates & Roster', category: 'Omni-Search' },
-    { key: '⌘ + \\', action: 'Toggle Astra Neural Co-Pilot Dock', category: 'AI Assistant' },
-    { key: 'T', action: 'Toggle Light / wAIbi-sabi Dark Theme', category: 'Appearance' },
-    { key: 'V', action: 'Toggle Desktop Horizon Deck / Mobile Shell View', category: 'Layout' },
-    { key: 'M', action: 'Toggle 432Hz Generative Focus Soundscape', category: 'Audio' },
-    { key: '?', action: 'Open this Keyboard Shortcuts cheat sheet', category: 'Help' },
+    { key: '1', action: 'Jump to Daily Schedule', category: 'Navigation' },
+    { key: '2', action: 'Jump to Attendance Calculator', category: 'Navigation' },
+    { key: '3', action: 'Jump to Weekly Timetable', category: 'Navigation' },
+    { key: '4', action: 'Jump to Batchmates & Free Slots', category: 'Navigation' },
+    { key: '5', action: 'Jump to Trip Planner', category: 'Navigation' },
+    { key: '6', action: 'Jump to Deadlines & Quizzes', category: 'Navigation' },
+    { key: '⌘ + K', action: 'Search Batchmates & Roster', category: 'Search' },
+    { key: '⌘ + \\', action: 'Toggle Astra AI Assistant', category: 'AI Assistant' },
+    { key: 'T', action: 'Toggle Light / Dark Theme', category: 'Appearance' },
+    { key: 'V', action: 'Toggle Desktop / Mobile View', category: 'Layout' },
+    { key: 'M', action: 'Toggle Focus Ambient Audio', category: 'Audio' },
+    { key: '?', action: 'Open Keyboard Shortcuts cheat sheet', category: 'Help' },
     { key: 'Esc', action: 'Close open modal, drawer, or search', category: 'System' },
   ];
 

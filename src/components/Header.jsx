@@ -166,11 +166,11 @@ export default function Header({
           </span>
         </button>
 
-        {/* Astra Neural Co-Pilot Trigger */}
+        {/* Astra AI Assistant Trigger */}
         <button
           onClick={onOpenCopilot}
-          title="Open Astra Neural Co-Pilot"
-          aria-label="Open Astra Neural Co-Pilot AI"
+          title="Open Astra AI Assistant"
+          aria-label="Open Astra AI Assistant"
           style={{
             background: 'var(--wash-mizu)',
             border: '1px solid rgba(0, 169, 184, 0.35)',

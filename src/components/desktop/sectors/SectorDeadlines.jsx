@@ -86,10 +86,10 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--mizu)', letterSpacing: '0.06em' }}>
-                SECTOR 05
+                DELIVERABLES
               </span>
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>•</span>
-              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Midterm Quotas & Deliverables Flight Deck</span>
+              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Assignments, Quizzes & Projects</span>
             </div>
             <h2 style={{
               fontFamily: 'var(--font-brand)',
@@ -99,7 +99,7 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
               margin: '2px 0 0 0',
               letterSpacing: '-0.025em'
             }}>
-              Deadlines, Quizzes & Case Pipeline
+              Upcoming Deadlines & Quizzes
             </h2>
           </div>
         </div>

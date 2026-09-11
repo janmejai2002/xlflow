@@ -1,7 +1,7 @@
 {
-  "name": "XL-Flow | Academic Continuum",
+  "name": "XL-Flow | Student Schedule & Attendance",
   "short_name": "XL-Flow",
-  "description": "The Next-Generation Spatial Academic Command Centre for XLRI Term-5",
+  "description": "Class schedule, attendance tracker, and timetable for XLRI students",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -55,10 +55,10 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
             letterSpacing: '-0.025em',
             color: 'var(--ink)'
           }}>
-            Bunk-O-Meter
+            Attendance & Bunk Calculator
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '2px' }}>
-            Real-time safety margins calibrated for XLRI's mandatory 80.0% policy.
+            Real-time safety margins for XLRI's mandatory 80.0% attendance requirement.
           </p>
         </div>
 

@@ -24,12 +24,12 @@ export default function DesktopTopBar({
 }) {
   const getTabTitle = () => {
     switch (activeTab) {
-      case 'radar': return { title: 'Today Radar', desc: 'Live Academic HUD & Celestial Chronos Continuum' };
-      case 'bunkmeter': return { title: 'Bunk-O-Meter', desc: 'Statutory Attendance Safety & Compliance Monitor' };
-      case 'timetable': return { title: 'Weekly Timetable Matrix', desc: '6-Day Academic Schedule & Conflict Navigator' };
-      case 'trips': return { title: 'Getaways & Trips', desc: 'Long Weekend Vacation Optimizer & Attendance Arbitrage' };
-      case 'deadlines': return { title: 'Deadlines & Quizzes', desc: 'Academic Deliverables, Midterms & Case Tracker' };
-      default: return { title: 'Command Centre', desc: 'Term-5 Academic Operations' };
+      case 'radar': return { title: "Today's Schedule", desc: 'Live class status, venues, and countdown' };
+      case 'bunkmeter': return { title: 'Attendance Calculator', desc: '80% rule tracking and safe bunk planner' };
+      case 'timetable': return { title: 'Weekly Timetable', desc: 'Full weekly schedule, courses, and classroom venues' };
+      case 'trips': return { title: 'Trip Planner', desc: 'Find long weekends and travel windows without attendance risk' };
+      case 'deadlines': return { title: 'Assignments & Quizzes', desc: 'Track upcoming submissions, projects, and exams' };
+      default: return { title: 'Dashboard', desc: 'XLRI Term-5 student portal' };
     }
   };
 

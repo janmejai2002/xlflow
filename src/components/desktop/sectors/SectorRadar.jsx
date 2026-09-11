@@ -124,10 +124,10 @@ export default function SectorRadar({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--mizu)', letterSpacing: '0.06em' }}>
-                SECTOR 01
+                SCHEDULE
               </span>
               <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>•</span>
-              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Live Spatial Flight Deck</span>
+              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Daily Classes & Timeline</span>
             </div>
             <h2 style={{
               fontFamily: 'var(--font-brand)',
@@ -137,7 +137,7 @@ export default function SectorRadar({
               color: 'var(--ink)',
               margin: 0
             }}>
-              Today's Radar & Chronos Continuum
+              Today's Classes & Schedule
             </h2>
           </div>
         </div>
@@ -514,7 +514,7 @@ export default function SectorRadar({
           </div>
         </div>
 
-        {/* Right Column: Spatial Continuum & Horizon Heatmap Visualizer Deck */}
+        {/* Right Column: 3D Timeline & Heatmap Visualizer Deck */}
         <div style={{
           display: 'flex',
           flexDirection: 'column',
@@ -563,7 +563,7 @@ export default function SectorRadar({
                   }}
                 >
                   <Globe size={12} />
-                  <span>3D Chronos Continuum</span>
+                  <span>3D Timeline</span>
                 </button>
 
                 <button
@@ -584,12 +584,12 @@ export default function SectorRadar({
                   }}
                 >
                   <CalendarDays size={12} />
-                  <span>Horizon Heatmap</span>
+                  <span>Schedule Heatmap</span>
                 </button>
               </div>
 
               <span style={{ fontSize: '10px', color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)' }}>
-                {spatialMode === '3d' ? 'Three.js Spatial Engine' : '28-Day Density Matrix'}
+                {spatialMode === '3d' ? '3D View' : '28-Day Heatmap'}
               </span>
             </div>
 
