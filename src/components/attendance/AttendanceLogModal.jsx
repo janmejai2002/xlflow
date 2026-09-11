@@ -22,13 +22,20 @@ export default function AttendanceLogModal({
   onClose,
   courses = [],
   schedule = [],
-  student = {}
+  student = {},
+  initialCourseCode = null
 }) {
-  const [selectedCourseCode, setSelectedCourseCode] = useState(courses[0]?.code || 'ALL');
+  const [selectedCourseCode, setSelectedCourseCode] = useState(() => initialCourseCode || courses[0]?.code || 'ALL');
   const [storeState, setStoreState] = useState(() => selfAttendanceStore.state);
   const [editingSessionId, setEditingSessionId] = useState(null);
   const [editReason, setEditReason] = useState('personal');
   const [editNote, setEditNote] = useState('');
+
+  useEffect(() => {
+    if (initialCourseCode) {
+      setSelectedCourseCode(initialCourseCode);
+    }
+  }, [initialCourseCode, isOpen]);
 
   useEffect(() => {
     const unsub = selfAttendanceStore.subscribe((newState) => {

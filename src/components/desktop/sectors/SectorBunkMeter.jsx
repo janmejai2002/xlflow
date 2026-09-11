@@ -14,6 +14,7 @@ import { playHapticSuccess } from '../../../services/soundEngine';
 export default function SectorBunkMeter({ courses = [], schedule = [], student = {} }) {
   const [filterTerm, setFilterTerm] = useState('all');
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [selectedCourseForModal, setSelectedCourseForModal] = useState(null);
   const [, setStoreVer] = useState(0);
 
   useEffect(() => {
@@ -456,7 +457,8 @@ XLRI Jamshedpur / Delhi-NCR`;
             course={course}
             isCompact={true}
             onOpenDeepSim={(code) => {
-              toast.info(`Opening detailed scenario planner for ${code}`);
+              setSelectedCourseForModal(code);
+              setIsLogModalOpen(true);
             }}
           />
         ))}
@@ -465,10 +467,14 @@ XLRI Jamshedpur / Delhi-NCR`;
       {/* Sovereign Self-Attendance Log & Discrepancy Modal */}
       <AttendanceLogModal
         isOpen={isLogModalOpen}
-        onClose={() => setIsLogModalOpen(false)}
+        onClose={() => {
+          setIsLogModalOpen(false);
+          setSelectedCourseForModal(null);
+        }}
         courses={courses}
         schedule={schedule}
         student={student}
+        initialCourseCode={selectedCourseForModal}
       />
     </div>
   );
