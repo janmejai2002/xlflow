@@ -8,7 +8,7 @@ import { calculateBunkStats } from '../../../services/bunkCalculator';
 import { selfAttendanceStore } from '../../../services/selfAttendanceStore';
 import AttendanceLogModal from '../../attendance/AttendanceLogModal';
 import { toast } from 'sonner';
-import CourseSafetyCard from '../../CourseSafetyCard';
+import AttendanceCourseCard from '../../attendance/AttendanceCourseCard';
 import { playHapticSuccess } from '../../../services/soundEngine';
 
 export default function SectorBunkMeter({ courses = [], schedule = [], student = {} }) {
@@ -22,17 +22,10 @@ export default function SectorBunkMeter({ courses = [], schedule = [], student =
     return unsub;
   }, []);
 
-  const sourceMode = selfAttendanceStore.getSourceMode();
-
   const evaluatedCourses = courses.map(course => {
-    const recon = selfAttendanceStore.getCourseStats(course, schedule);
-    return {
-      ...course,
-      stats: recon ? recon.active : calculateBunkStats(course.attended, course.conducted, course.totalPlanned),
-      selfStats: recon?.self,
-      officialStats: recon?.official,
-      discrepancy: recon?.discrepancy
-    };
+    const recon = selfAttendanceStore.getCourseStats(course, schedule)
+      || { active: calculateBunkStats(course.attended, course.conducted, course.totalPlanned) };
+    return { ...course, recon, stats: recon.active, discrepancy: recon.discrepancy };
   });
 
   const discrepancies = evaluatedCourses.filter(c => c.discrepancy?.hasDiscrepancy);
@@ -145,64 +138,6 @@ XLRI Jamshedpur / Delhi-NCR`;
 
         {/* Action Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          {/* Source Mode Toggle */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: 'var(--card)',
-            padding: '2px',
-            borderRadius: '8px',
-            border: '1px solid var(--border)'
-          }}>
-            <button
-              onClick={() => selfAttendanceStore.setSourceMode('hybrid')}
-              title="Ground reality: combines personal log with ERP"
-              style={{
-                padding: '5px 10px',
-                borderRadius: '6px',
-                border: 'none',
-                backgroundColor: sourceMode === 'hybrid' ? 'var(--mizu)' : 'transparent',
-                color: sourceMode === 'hybrid' ? '#FFFFFF' : 'var(--ink-soft)',
-                fontSize: '11px',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              Hybrid Reality
-            </button>
-            <button
-              onClick={() => selfAttendanceStore.setSourceMode('self')}
-              title="Sovereign personal log only"
-              style={{
-                padding: '5px 10px',
-                borderRadius: '6px',
-                border: 'none',
-                backgroundColor: sourceMode === 'self' ? 'var(--moss)' : 'transparent',
-                color: sourceMode === 'self' ? '#FFFFFF' : 'var(--ink-soft)',
-                fontSize: '11px',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              Self-Log
-            </button>
-            <button
-              onClick={() => selfAttendanceStore.setSourceMode('erp')}
-              title="Official ERP snapshot"
-              style={{
-                padding: '5px 10px',
-                borderRadius: '6px',
-                border: 'none',
-                backgroundColor: sourceMode === 'erp' ? 'var(--ink)' : 'transparent',
-                color: sourceMode === 'erp' ? '#FFFFFF' : 'var(--ink-soft)',
-                fontSize: '11px',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              ERP Stale
-            </button>
-          </div>
 
           {/* Self-Attendance Manager Trigger Button */}
           <button
@@ -452,11 +387,15 @@ XLRI Jamshedpur / Delhi-NCR`;
         paddingRight: '6px'
       }}>
         {filteredCourses.map(course => (
-          <CourseSafetyCard
+          <AttendanceCourseCard
             key={course.id || course.code}
             course={course}
-            isCompact={true}
-            onOpenDeepSim={(code) => {
+            recon={course.recon}
+            onOpenDetails={(code) => {
+              setSelectedCourseForModal(code);
+              setIsLogModalOpen(true);
+            }}
+            onMarkClass={(code) => {
               setSelectedCourseForModal(code);
               setIsLogModalOpen(true);
             }}

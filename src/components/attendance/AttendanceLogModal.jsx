@@ -145,23 +145,12 @@ export default function AttendanceLogModal({
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: 'var(--ink)' }}>
-                  Self-Attendance Log & Discrepancy Manager
+                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--ink)' }}>
+                  Class log
                 </h3>
-                <span style={{
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  backgroundColor: 'var(--wash-mizu)',
-                  color: 'var(--mizu)',
-                  padding: '2px 7px',
-                  borderRadius: '9999px',
-                  border: '1px solid rgba(var(--mizu-rgb), 0.25)'
-                }}>
-                  Student Sovereign
-                </span>
               </div>
               <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: 'var(--ink-soft)' }}>
-                Keep an accurate personal audit trail independent of administrative ERP delay.
+                Mark each class yourself so you are not relying on the ERP being up to date.
               </p>
             </div>
           </div>
@@ -238,7 +227,7 @@ export default function AttendanceLogModal({
         </div>
 
         {/* Modal Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
           {/* Active Course Reconciliation Cockpit */}
           {courseStats && (
@@ -257,174 +246,138 @@ export default function AttendanceLogModal({
                     {courseStats.courseCode} • {courseStats.courseName}
                   </div>
                   <div style={{ fontSize: '12px', color: 'var(--ink-soft)' }}>
-                    Mandatory 80.0% statutory threshold • {courseStats.official.totalPlanned} planned sessions
+                    {courseStats.official.totalPlanned} classes planned • 80% needed
                   </div>
                 </div>
 
-                {/* Mode Selector */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'var(--card)',
-                  padding: '2px',
-                  borderRadius: '8px',
-                  border: '1px solid var(--border)'
-                }}>
-                  <button
-                    onClick={() => selfAttendanceStore.setSourceMode('hybrid')}
-                    style={{
-                      padding: '4px 10px',
-                      borderRadius: '6px',
-                      border: 'none',
-                      backgroundColor: courseStats.sourceMode === 'hybrid' ? 'var(--mizu)' : 'transparent',
-                      color: courseStats.sourceMode === 'hybrid' ? '#FFFFFF' : 'var(--ink-soft)',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Hybrid Reality
-                  </button>
-                  <button
-                    onClick={() => selfAttendanceStore.setSourceMode('self')}
-                    style={{
-                      padding: '4px 10px',
-                      borderRadius: '6px',
-                      border: 'none',
-                      backgroundColor: courseStats.sourceMode === 'self' ? 'var(--moss)' : 'transparent',
-                      color: courseStats.sourceMode === 'self' ? '#FFFFFF' : 'var(--ink-soft)',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Self Only
-                  </button>
-                  <button
-                    onClick={() => selfAttendanceStore.setSourceMode('erp')}
-                    style={{
-                      padding: '4px 10px',
-                      borderRadius: '6px',
-                      border: 'none',
-                      backgroundColor: courseStats.sourceMode === 'erp' ? 'var(--ink)' : 'transparent',
-                      color: courseStats.sourceMode === 'erp' ? '#FFFFFF' : 'var(--ink-soft)',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      cursor: 'pointer'
-                    }}
-                  >
-                    ERP Stale
-                  </button>
-                </div>
               </div>
 
-              {/* Comparison Metrics Grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
-                
-                {/* 1. Self Logged Stand */}
+              {/* Comparison — stacks on a phone, three across on a wide screen */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+                  gap: '10px'
+                }}
+              >
+                {/* 1. What you logged */}
                 <div style={{
                   backgroundColor: 'var(--card)',
                   borderRadius: '12px',
                   padding: '12px 14px',
                   border: '1px solid rgba(var(--moss-rgb), 0.25)'
                 }}>
-                  <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--moss)', textTransform: 'uppercase' }}>
-                    Self-Tracked Reality
+                  <div style={{ fontSize: '10px', fontWeight: 800, letterSpacing: '0.08em', color: 'var(--moss-text)', textTransform: 'uppercase' }}>
+                    You logged
                   </div>
-                  <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--ink)', margin: '4px 0' }}>
+                  <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--ink)', margin: '4px 0', fontFamily: 'var(--font-mono)' }}>
                     {courseStats.self.attended} / {courseStats.self.conducted}
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--moss)', marginLeft: '6px' }}>
-                      ({courseStats.self.currentPercentage}%)
-                    </span>
+                    {courseStats.self.conducted > 0 && (
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--moss-text)', marginLeft: '6px' }}>
+                        ({courseStats.self.currentPercentage}%)
+                      </span>
+                    )}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-                    +{courseStats.self.safeBunksRemaining} safe bunks remaining
+                    {courseStats.self.conducted === 0
+                      ? 'Nothing marked yet'
+                      : 'Can miss ' + courseStats.self.safeBunksRemaining + ' more'}
                   </div>
                 </div>
 
-                {/* 2. Official ERP Stored */}
+                {/* 2. What the ERP says */}
                 <div style={{
                   backgroundColor: 'var(--card)',
                   borderRadius: '12px',
                   padding: '12px 14px',
                   border: '1px solid var(--border)'
                 }}>
-                  <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--ink-faint)', textTransform: 'uppercase' }}>
-                    Official ERP Snapshot
+                  <div style={{ fontSize: '10px', fontWeight: 800, letterSpacing: '0.08em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>
+                    ERP
                   </div>
-                  <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--ink)', margin: '4px 0' }}>
+                  <div style={{ fontSize: '20px', fontWeight: 800, color: 'var(--ink)', margin: '4px 0', fontFamily: 'var(--font-mono)' }}>
                     {courseStats.official.attended} / {courseStats.official.conducted}
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ink-soft)', marginLeft: '6px' }}>
-                      ({courseStats.official.currentPercentage}%)
-                    </span>
+                    {courseStats.official.conducted > 0 && (
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ink-soft)', marginLeft: '6px' }}>
+                        ({courseStats.official.currentPercentage}%)
+                      </span>
+                    )}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-                    {courseStats.official.conducted === 0 ? 'Admin has not entered term data' : 'Last sync from ERP'}
+                    {courseStats.official.conducted === 0 ? 'No term data entered yet' : 'As of the last sync'}
                   </div>
                 </div>
 
-                {/* 3. Discrepancy & Quick Adjust */}
+                {/* 3. Whether they agree, and a manual correction if not */}
                 <div style={{
                   backgroundColor: 'var(--card)',
                   borderRadius: '12px',
                   padding: '12px 14px',
                   border: courseStats.discrepancy.hasDiscrepancy ? '1px solid rgba(var(--ochre-rgb), 0.35)' : '1px solid var(--border)'
                 }}>
-                  <div style={{ fontSize: '10px', fontWeight: 700, color: courseStats.discrepancy.hasDiscrepancy ? 'var(--ochre)' : 'var(--moss)', textTransform: 'uppercase' }}>
-                    {courseStats.discrepancy.hasDiscrepancy ? 'ERP Lag Discrepancy' : 'Perfect Sync'}
+                  <div style={{
+                    fontSize: '10px',
+                    fontWeight: 800,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    color: courseStats.discrepancy.hasDiscrepancy ? 'var(--ochre-text)' : 'var(--ink-faint)'
+                  }}>
+                    {courseStats.discrepancy.hasDiscrepancy ? 'They disagree' : 'They agree'}
                   </div>
-                  <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)', margin: '4px 0' }}>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)', margin: '4px 0', lineHeight: 1.35 }}>
                     {courseStats.discrepancy.hasDiscrepancy
-                      ? `${courseStats.discrepancy.conductedDiff > 0 ? `+${courseStats.discrepancy.conductedDiff}` : courseStats.discrepancy.conductedDiff} sessions diff`
-                      : '0 discrepancies detected'}
+                      ? Math.abs(courseStats.discrepancy.conductedDiff) + ' class' + (Math.abs(courseStats.discrepancy.conductedDiff) === 1 ? '' : 'es') + ' apart'
+                      : 'Nothing to reconcile'}
                   </div>
 
-                  {/* Term Quick Adjust Buttons */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
                     <button
                       onClick={() => selfAttendanceStore.quickAdjustCourse(courseStats.courseCode, 'add_present')}
-                      title="Add 1 Attended class to self-log"
+                      title="Record one extra class you attended"
                       style={{
-                        padding: '3px 8px',
-                        borderRadius: '6px',
+                        minHeight: '34px',
+                        padding: '0 10px',
+                        borderRadius: '8px',
                         border: '1px solid var(--border)',
                         backgroundColor: 'var(--paper)',
-                        fontSize: '10px',
+                        fontSize: '11px',
                         fontWeight: 700,
-                        color: 'var(--moss)',
+                        color: 'var(--moss-text)',
                         cursor: 'pointer'
                       }}
                     >
-                      + Attend
+                      + Attended
                     </button>
 
                     <button
                       onClick={() => selfAttendanceStore.quickAdjustCourse(courseStats.courseCode, 'add_absent')}
-                      title="Add 1 Bunked class to self-log"
+                      title="Record one extra class you missed"
                       style={{
-                        padding: '3px 8px',
-                        borderRadius: '6px',
+                        minHeight: '34px',
+                        padding: '0 10px',
+                        borderRadius: '8px',
                         border: '1px solid var(--border)',
                         backgroundColor: 'var(--paper)',
-                        fontSize: '10px',
+                        fontSize: '11px',
                         fontWeight: 700,
-                        color: 'var(--hanko)',
+                        color: 'var(--hanko-text)',
                         cursor: 'pointer'
                       }}
                     >
-                      + Bunk
+                      + Missed
                     </button>
 
                     {(courseStats.selfCounts.adjAttended !== 0 || courseStats.selfCounts.adjConducted !== 0) && (
                       <button
                         onClick={() => selfAttendanceStore.resetCourseAdjustment(courseStats.courseCode)}
-                        title="Reset manual adjustments"
+                        title="Clear manual corrections"
                         style={{
-                          padding: '3px 6px',
-                          borderRadius: '6px',
+                          minHeight: '34px',
+                          padding: '0 8px',
+                          borderRadius: '8px',
                           border: 'none',
                           backgroundColor: 'transparent',
-                          fontSize: '10px',
+                          fontSize: '11px',
                           color: 'var(--ink-faint)',
                           cursor: 'pointer'
                         }}
@@ -434,7 +387,6 @@ export default function AttendanceLogModal({
                     )}
                   </div>
                 </div>
-
               </div>
             </div>
           )}
@@ -442,12 +394,10 @@ export default function AttendanceLogModal({
           {/* Session Timeline Breakdown */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--ink)', textTransform: 'uppercase' }}>
-                Session-by-Session Audit Trail ({filteredSessions.length} sessions)
+              <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--ink)' }}>
+                Every class ({filteredSessions.length})
               </div>
-              <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-                Tap status to toggle • Add reason for waiver appeals
-              </span>
+              <span style={{ fontSize: '11px', color: 'var(--ink-faint)' }}>Tap to change</span>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -601,7 +551,7 @@ export default function AttendanceLogModal({
               }}
             >
               <Download size={13} />
-              <span>Export Audit CSV</span>
+              <span>Export CSV</span>
             </button>
 
             <button
@@ -622,7 +572,7 @@ export default function AttendanceLogModal({
               }}
             >
               <Printer size={13} />
-              <span>Print Official Appeal</span>
+              <span>Print appeal</span>
             </button>
           </div>
 

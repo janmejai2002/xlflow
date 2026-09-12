@@ -1,368 +1,276 @@
-import React, { useState, useEffect } from 'react';
-import { ShieldCheck, AlertTriangle, AlertCircle, Info, Calculator, Check, FileText, Layers, Sparkles } from 'lucide-react';
-import { calculateBunkStats, STATUTORY_THRESHOLD } from '../services/bunkCalculator';
+import React, { useState, useEffect, useMemo } from 'react';
+import { ChevronDown, AlertTriangle } from 'lucide-react';
 import { selfAttendanceStore } from '../services/selfAttendanceStore';
 import AttendanceLogModal from './attendance/AttendanceLogModal';
-import NumberFlow from '@number-flow/react';
-import CourseSafetyCard from './CourseSafetyCard';
+import AttendanceCourseCard from './attendance/AttendanceCourseCard';
+import QuickMarkStrip, { getUnmarkedSessions } from './attendance/QuickMarkStrip';
 
+/**
+ * Attendance.
+ *
+ * Two numbers per course — what you logged and what the ERP says — and one
+ * sentence telling you how much room that leaves. Anything that needed a
+ * paragraph of explanation was either removed or moved into the details modal.
+ */
 export default function BunkMeterView({ courses = [], schedule = [], student = {} }) {
-  const [filterTerm, setFilterTerm] = useState('all'); // 'all' | 'Term-5' | 'Term-4'
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [selectedCourseForModal, setSelectedCourseForModal] = useState(null);
-  const [, setStoreVer] = useState(0);
+  const [isRuleOpen, setIsRuleOpen] = useState(false);
+  const [onlyAtRisk, setOnlyAtRisk] = useState(false);
+  const [showEarlier, setShowEarlier] = useState(false);
+  const [storeVer, setStoreVer] = useState(0);
 
   useEffect(() => {
-    const unsub = selfAttendanceStore.subscribe(() => setStoreVer(v => v + 1));
+    const unsub = selfAttendanceStore.subscribe(() => setStoreVer((v) => v + 1));
     return unsub;
   }, []);
 
-  const sourceMode = selfAttendanceStore.getSourceMode();
+  // The ERP hands back every course the student has ever taken, tagged with
+  // strings like "PGDM-BMD (2025-2027) Term-6". Only the latest term can still
+  // be influenced, so that is what the page opens on.
+  const termOf = (c) => {
+    const m = /Term-(\d+)/i.exec(c.term || '');
+    return m ? Number(m[1]) : 0;
+  };
+  const currentTerm = useMemo(() => Math.max(0, ...courses.map(termOf)), [courses]);
 
-  // Compute reconciled stats for all courses
-  const evaluatedCourses = courses.map(course => {
-    const recon = selfAttendanceStore.getCourseStats(course, schedule);
-    return {
-      ...course,
-      stats: recon ? recon.active : calculateBunkStats(course.attended, course.conducted, course.totalPlanned),
-      selfStats: recon?.self,
-      officialStats: recon?.official,
-      discrepancy: recon?.discrepancy
-    };
-  });
+  const allEvaluated = useMemo(
+    () =>
+      courses
+        .map((course) => ({ course, recon: selfAttendanceStore.getCourseStats(course, schedule) }))
+        .filter((e) => e.recon),
+    // storeVer is the subscription tick: marks mutate the store in place, so it
+    // is the only signal that the derived stats need recomputing.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [courses, schedule, storeVer]
+  );
 
-  const discrepancies = evaluatedCourses.filter(c => c.discrepancy?.hasDiscrepancy);
+  const earlierCount = allEvaluated.filter((e) => termOf(e.course) !== currentTerm).length;
+  const evaluated = showEarlier ? allEvaluated : allEvaluated.filter((e) => termOf(e.course) === currentTerm);
 
-  // Filtered courses
-  const filteredCourses = evaluatedCourses.filter(c => {
-    if (filterTerm === 'all') return true;
-    return c.term?.includes(filterTerm);
-  });
+  const unmarked = useMemo(
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    () => getUnmarkedSessions(schedule),
+    [schedule, storeVer]
+  );
 
-  // Overall metrics
-  const totalCourses = evaluatedCourses.length;
-  const warningOrDanger = evaluatedCourses.filter(c => c.stats.tier === 'warning' || c.stats.tier === 'danger').length;
-  const safeCount = evaluatedCourses.filter(c => c.stats.tier === 'safe').length;
+  const atRisk = evaluated.filter((e) => e.recon.active.tier !== 'safe');
+  const mismatched = evaluated.filter((e) => e.recon.discrepancy.hasDiscrepancy);
+  const visible = onlyAtRisk ? atRisk : evaluated;
+
+  const openDetails = (code) => {
+    setSelectedCourseForModal(code);
+    setIsLogModalOpen(true);
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingBottom: '32px' }}>
-      {/* Title & Statutory Banner */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
-        <div>
-          <h2 style={{
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingBottom: '28px' }}>
+      {/* Header */}
+      <div>
+        <h2
+          style={{
             fontFamily: 'var(--font-brand)',
-            fontSize: '24px',
+            fontSize: '23px',
             fontWeight: 800,
             letterSpacing: '-0.025em',
-            color: 'var(--ink)'
-          }}>
-            Attendance & Bunk Calculator
-          </h2>
-          <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '2px' }}>
-            Real-time safety margins for XLRI's mandatory 80.0% attendance requirement.
-          </p>
-        </div>
-
-        {/* Audit & Self-Log Button */}
-        <button
-          onClick={() => setIsLogModalOpen(true)}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '8px 14px',
-            borderRadius: '10px',
-            backgroundColor: 'var(--ink)',
-            color: 'var(--paper)',
-            border: 'none',
-            fontSize: '12px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
+            color: 'var(--ink)',
+            margin: 0
           }}
         >
-          <FileText size={14} />
-          <span>Self-Log Audit</span>
-          {discrepancies.length > 0 && (
-            <span style={{
-              fontSize: '10px',
-              padding: '1px 6px',
-              borderRadius: '999px',
-              backgroundColor: 'var(--ochre)',
-              color: '#FFFFFF',
-              fontWeight: 800
-            }}>
-              {discrepancies.length} Δ
-            </span>
-          )}
-        </button>
+          Attendance
+        </h2>
+        <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '3px' }}>
+          Your log against the ERP. You need 80% in every course.
+        </p>
       </div>
 
-      {/* Source Mode Switcher Bar */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'var(--card)',
-        border: '1px solid var(--border)',
-        borderRadius: '12px',
-        padding: '6px 8px',
-        gap: '6px'
-      }}>
-        <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ink-soft)', paddingLeft: '4px' }}>
-          Data Source:
-        </span>
-        <div style={{ display: 'flex', gap: '4px' }}>
-          <button
-            onClick={() => selfAttendanceStore.setSourceMode('hybrid')}
-            style={{
-              padding: '5px 10px',
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: sourceMode === 'hybrid' ? 'var(--mizu)' : 'transparent',
-              color: sourceMode === 'hybrid' ? '#FFFFFF' : 'var(--ink-soft)',
-              fontSize: '11px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            Hybrid Reality
-          </button>
-          <button
-            onClick={() => selfAttendanceStore.setSourceMode('self')}
-            style={{
-              padding: '5px 10px',
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: sourceMode === 'self' ? 'var(--moss)' : 'transparent',
-              color: sourceMode === 'self' ? '#FFFFFF' : 'var(--ink-soft)',
-              fontSize: '11px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            Self-Log
-          </button>
-          <button
-            onClick={() => selfAttendanceStore.setSourceMode('erp')}
-            style={{
-              padding: '5px 10px',
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: sourceMode === 'erp' ? 'var(--ink)' : 'transparent',
-              color: sourceMode === 'erp' ? 'var(--paper)' : 'var(--ink-soft)',
-              fontSize: '11px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            ERP (Official)
-          </button>
-        </div>
-      </div>
+      {/* Fast path: clear the backlog of unmarked classes */}
+      <QuickMarkStrip sessions={unmarked} />
 
-      {/* Discrepancy Alert Banner if ERP != Self Log */}
-      {discrepancies.length > 0 && (
-        <div style={{
+      {/* Status line — doubles as the at-risk filter */}
+      <button
+        onClick={() => atRisk.length > 0 && setOnlyAtRisk((v) => !v)}
+        aria-pressed={onlyAtRisk}
+        disabled={atRisk.length === 0}
+        style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '10px 14px',
+          gap: '10px',
+          width: '100%',
+          minHeight: '44px',
+          padding: '0 14px',
           borderRadius: '12px',
-          backgroundColor: 'var(--wash-ochre)',
-          border: '1px solid rgba(var(--ochre-rgb), 0.35)',
-          gap: '10px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AlertTriangle size={16} color="var(--ochre)" style={{ flexShrink: 0 }} />
-            <div style={{ fontSize: '12px', color: 'var(--ochre-text)', lineHeight: 1.4 }}>
-              <strong>{discrepancies.length} Course Discrepanc{discrepancies.length > 1 ? 'ies' : 'y'} Detected:</strong> Admin ERP differs from your personal log.
-            </div>
-          </div>
-          <button
-            onClick={() => setIsLogModalOpen(true)}
-            style={{
-              padding: '4px 10px',
-              borderRadius: '6px',
-              border: '1px solid var(--ochre)',
-              backgroundColor: 'var(--card)',
-              color: 'var(--ochre-text)',
-              fontSize: '11px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            Review Δ
-          </button>
+          backgroundColor: onlyAtRisk ? 'var(--ink)' : 'var(--card)',
+          border: `1px solid ${onlyAtRisk ? 'var(--ink)' : 'var(--border)'}`,
+          color: onlyAtRisk ? 'var(--paper)' : 'var(--ink)',
+          fontSize: '13px',
+          fontWeight: 600,
+          cursor: atRisk.length > 0 ? 'pointer' : 'default',
+          textAlign: 'left'
+        }}
+      >
+        <span>
+          <strong style={{ fontFamily: 'var(--font-mono)' }}>{evaluated.length}</strong> courses ·{' '}
+          <strong style={{ fontFamily: 'var(--font-mono)', color: onlyAtRisk ? 'var(--paper)' : 'var(--moss-text)' }}>
+            {evaluated.length - atRisk.length}
+          </strong>{' '}
+          safe ·{' '}
+          <strong style={{ fontFamily: 'var(--font-mono)', color: onlyAtRisk ? 'var(--paper)' : 'var(--hanko-text)' }}>
+            {atRisk.length}
+          </strong>{' '}
+          at risk
+        </span>
+        {atRisk.length > 0 && (
+          <span style={{ fontSize: '11.5px', fontWeight: 700, opacity: 0.85, whiteSpace: 'nowrap' }}>
+            {onlyAtRisk ? 'Show all' : 'Show at risk'}
+          </span>
+        )}
+      </button>
+
+      {/* Only surfaced when the ERP and your log actually disagree somewhere */}
+      {mismatched.length > 0 && !onlyAtRisk && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '9px',
+            padding: '10px 13px',
+            borderRadius: '12px',
+            backgroundColor: 'var(--wash-ochre)',
+            border: '1px solid rgba(var(--ochre-rgb), 0.3)',
+            fontSize: '12.5px',
+            color: 'var(--ochre-text)',
+            lineHeight: 1.4
+          }}
+        >
+          <AlertTriangle size={15} style={{ flexShrink: 0 }} />
+          <span>
+            {mismatched.length} course{mismatched.length === 1 ? "'s" : "s'"} ERP numbers don't match your log. Margins
+            below use whichever side is worse.
+          </span>
         </div>
       )}
 
-      {/* Summary KPI Cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '8px'
-      }}>
-        <div style={{
+      {/* Courses */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {visible.map(({ course, recon }) => (
+          <AttendanceCourseCard
+            key={course.code}
+            course={course}
+            recon={recon}
+            onOpenDetails={openDetails}
+            onMarkClass={openDetails}
+          />
+        ))}
+
+        {visible.length === 0 && (
+          <div
+            style={{
+              padding: '28px 16px',
+              textAlign: 'center',
+              color: 'var(--ink-faint)',
+              fontSize: '13px',
+              backgroundColor: 'var(--card)',
+              border: '1px dashed var(--border)',
+              borderRadius: '14px'
+            }}
+          >
+            No courses to show.
+          </div>
+        )}
+      </div>
+
+      {earlierCount > 0 && !onlyAtRisk && (
+        <button
+          onClick={() => setShowEarlier((v) => !v)}
+          style={{
+            minHeight: '44px',
+            borderRadius: '12px',
+            border: '1px dashed var(--border-strong)',
+            backgroundColor: 'transparent',
+            color: 'var(--ink-soft)',
+            fontSize: '12.5px',
+            fontWeight: 600,
+            cursor: 'pointer'
+          }}
+        >
+          {showEarlier ? 'Hide earlier terms' : `Show ${earlierCount} course${earlierCount === 1 ? '' : 's'} from earlier terms`}
+        </button>
+      )}
+
+      {/* The rule, folded away until asked for */}
+      <div
+        style={{
           backgroundColor: 'var(--card)',
           border: '1px solid var(--border)',
           borderRadius: '12px',
-          padding: '12px',
-          textAlign: 'center'
-        }}>
-          <span style={{ fontSize: '11px', color: 'var(--ink-soft)', fontWeight: 500 }}>Tracked</span>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--ink)', marginTop: '2px' }}>
-            <NumberFlow value={totalCourses} />
-          </div>
-        </div>
-
-        <div style={{
-          backgroundColor: 'var(--wash-moss)',
-          border: '1px solid rgba(var(--moss-rgb), 0.25)',
-          borderRadius: '12px',
-          padding: '12px',
-          textAlign: 'center'
-        }}>
-          <span style={{ fontSize: '11px', color: 'var(--moss-text)', fontWeight: 600 }}>Safe (&ge;85%)</span>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: 'var(--moss-text)', marginTop: '2px' }}>
-            <NumberFlow value={safeCount} />
-          </div>
-        </div>
-
-        <div style={{
-          backgroundColor: warningOrDanger > 0 ? 'var(--wash-hanko)' : 'var(--card)',
-          border: `1px solid ${warningOrDanger > 0 ? 'rgba(var(--hanko-rgb), 0.25)' : 'var(--border)'}`,
-          borderRadius: '12px',
-          padding: '12px',
-          textAlign: 'center'
-        }}>
-          <span style={{ fontSize: '11px', color: warningOrDanger > 0 ? 'var(--hanko-text)' : 'var(--ink-soft)', fontWeight: 600 }}>
-            Risk / Action
-          </span>
-          <div style={{ fontSize: '20px', fontWeight: 700, color: warningOrDanger > 0 ? 'var(--hanko-text)' : 'var(--ink)', marginTop: '2px' }}>
-            <NumberFlow value={warningOrDanger} />
-          </div>
-        </div>
-      </div>
-
-      {/* Term Filter Pills */}
-      <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '2px' }}>
-        {[
-          { id: 'all', label: 'All Terms' },
-          { id: 'Term-5', label: 'Term-5 (Current)' },
-          { id: 'Term-4', label: 'Term-4 (Historical)' }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setFilterTerm(tab.id)}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '9999px',
-              border: filterTerm === tab.id ? '1px solid var(--ink)' : '1px solid var(--border)',
-              backgroundColor: filterTerm === tab.id ? 'var(--ink)' : 'var(--card)',
-              color: filterTerm === tab.id ? 'var(--paper)' : 'var(--ink-soft)',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s'
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Course Cards List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        {filteredCourses.map(course => (
-          <CourseSafetyCard
-            key={course.code}
-            course={course}
-            onOpenDeepSim={(code) => {
-              setSelectedCourseForModal(code);
-              setIsLogModalOpen(true);
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Statutory Attendance Policy Reference */}
-      <div style={{
-        backgroundColor: 'var(--card)',
-        border: '1px solid var(--border)',
-        borderRadius: '16px',
-        padding: '18px',
-        boxShadow: 'var(--shadow-card)',
-        marginTop: '8px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-          <div style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '8px',
-            backgroundColor: 'var(--wash-mizu)',
+          overflow: 'hidden'
+        }}
+      >
+        <button
+          onClick={() => setIsRuleOpen((v) => !v)}
+          aria-expanded={isRuleOpen}
+          style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--mizu)'
-          }}>
-            <ShieldCheck size={18} />
-          </div>
-          <div>
-            <h3 style={{ fontFamily: 'var(--font-brand)', fontSize: '15px', fontWeight: 700, color: 'var(--ink)' }}>
-              XLRI Statutory Attendance Policy (80.0% Rule)
-            </h3>
-            <p style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>
-              Academic Committee Regulations & Debarment Protocol
+            justifyContent: 'space-between',
+            width: '100%',
+            minHeight: '44px',
+            padding: '0 14px',
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--ink-soft)',
+            fontSize: '12.5px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            textAlign: 'left'
+          }}
+        >
+          <span>How the 80% rule works</span>
+          <ChevronDown
+            size={16}
+            style={{ transform: isRuleOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+          />
+        </button>
+        {isRuleOpen && (
+          <div
+            style={{
+              padding: '0 14px 14px',
+              fontSize: '12.5px',
+              color: 'var(--ink-soft)',
+              lineHeight: 1.55,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px'
+            }}
+          >
+            <p style={{ margin: 0 }}>
+              You must attend at least <strong style={{ color: 'var(--ink)' }}>80% of the classes held</strong> in a
+              course to sit its end-term exam. Below that, without approved leave, the course is open to grade reduction
+              or debarment.
+            </p>
+            <p style={{ margin: 0 }}>
+              "Can miss N more" counts the absences still available to you across the rest of the term before you cross
+              that line. At zero, every remaining class is compulsory.
             </p>
           </div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px', color: 'var(--ink-soft)', lineHeight: 1.5 }}>
-          <div style={{
-            padding: '10px 12px',
-            borderRadius: '10px',
-            backgroundColor: 'var(--paper)',
-            border: '1px solid var(--border)'
-          }}>
-            <strong style={{ color: 'var(--ink)' }}>• Mandatory Threshold:</strong> Students must maintain a minimum of <strong>80.0% physical presence</strong> across all enrolled courses to qualify for end-term examinations.
-          </div>
-          <div style={{
-            padding: '10px 12px',
-            borderRadius: '10px',
-            backgroundColor: 'var(--paper)',
-            border: '1px solid var(--border)'
-          }}>
-            <strong style={{ color: 'var(--ink)' }}>• Safe Bunk Buffer:</strong> The indicator reflects exact permissible absences before breaching 80.0%. Courses at 0 safe buffer require 100% presence.
-          </div>
-          <div style={{
-            padding: '10px 12px',
-            borderRadius: '10px',
-            backgroundColor: 'var(--paper)',
-            border: '1px solid var(--border)'
-          }}>
-            <strong style={{ color: 'var(--ink)' }}>• Automatic Debarment Flag:</strong> Any course falling below 80.0% without approved institutional or medical leave is subjected to automatic grade reduction or debarment.
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Sovereign Attendance Log & Discrepancy Reconciliation Modal */}
-      <AttendanceLogModal
-        isOpen={isLogModalOpen}
-        onClose={() => {
-          setIsLogModalOpen(false);
-          setSelectedCourseForModal(null);
-        }}
-        courses={courses}
-        schedule={schedule}
-        student={student}
-        initialCourseCode={selectedCourseForModal}
-      />
+      {isLogModalOpen && (
+        <AttendanceLogModal
+          isOpen={isLogModalOpen}
+          onClose={() => {
+            setIsLogModalOpen(false);
+            setSelectedCourseForModal(null);
+          }}
+          courses={courses}
+          schedule={schedule}
+          student={student}
+          initialCourseCode={selectedCourseForModal}
+        />
+      )}
     </div>
   );
 }
