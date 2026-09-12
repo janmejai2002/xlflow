@@ -191,15 +191,15 @@ export const ROSTER = Object.fromEntries(
 
 // Course accent colors for wAIbi-sabi design (WCAG 2.1 AA compliant)
 export const COURSE_COLORS = {
-  OMCR: { accent: '#00A9B8', border: '#00A9B8', wash: 'rgba(0, 169, 184, 0.12)', bg: 'rgba(0, 169, 184, 0.08)', label: 'Mizu Blue' },
-  BDM:  { accent: '#8A6690', border: '#8A6690', wash: 'rgba(138, 102, 144, 0.12)', bg: 'rgba(138, 102, 144, 0.08)', label: 'Plum Aubergine' },
-  B2B:  { accent: '#4E6E9C', border: '#4E6E9C', wash: 'rgba(78, 110, 156, 0.12)', bg: 'rgba(78, 110, 156, 0.08)', label: 'Deep Indigo' },
-  IMCE: { accent: '#6E8C63', border: '#6E8C63', wash: 'rgba(110, 140, 99, 0.12)', bg: 'rgba(110, 140, 99, 0.08)', label: 'Moss Green' },
-  DPCC: { accent: '#C2913A', border: '#C2913A', wash: 'rgba(194, 145, 58, 0.12)', bg: 'rgba(194, 145, 58, 0.08)', label: 'Clay Ochre' },
-  DGM:  { accent: '#D2543F', border: '#D2543F', wash: 'rgba(210, 84, 63, 0.12)', bg: 'rgba(210, 84, 63, 0.08)', label: 'Hanko Red' },
+  OMCR: { accent: 'var(--mizu)', border: 'var(--mizu)', wash: 'rgba(var(--mizu-rgb), 0.12)', bg: 'rgba(var(--mizu-rgb), 0.08)', label: 'Mizu Blue' },
+  BDM:  { accent: 'var(--plum)', border: 'var(--plum)', wash: 'rgba(138, 102, 144, 0.12)', bg: 'rgba(138, 102, 144, 0.08)', label: 'Plum Aubergine' },
+  B2B:  { accent: 'var(--indigo)', border: 'var(--indigo)', wash: 'rgba(var(--indigo-rgb), 0.12)', bg: 'rgba(var(--indigo-rgb), 0.08)', label: 'Deep Indigo' },
+  IMCE: { accent: 'var(--moss)', border: 'var(--moss)', wash: 'rgba(var(--moss-rgb), 0.12)', bg: 'rgba(var(--moss-rgb), 0.08)', label: 'Moss Green' },
+  DPCC: { accent: '#C2913A', border: '#C2913A', wash: 'rgba(var(--ochre-rgb), 0.12)', bg: 'rgba(var(--ochre-rgb), 0.08)', label: 'Clay Ochre' },
+  DGM:  { accent: '#D2543F', border: '#D2543F', wash: 'rgba(var(--hanko-rgb), 0.12)', bg: 'rgba(var(--hanko-rgb), 0.08)', label: 'Hanko Red' },
   CMN:  { accent: '#5A6B7C', border: '#5A6B7C', wash: 'rgba(90, 107, 124, 0.12)', bg: 'rgba(90, 107, 124, 0.08)', label: 'Slate Gray' },
   CSP:  { accent: '#2D8275', border: '#2D8275', wash: 'rgba(45, 130, 117, 0.12)', bg: 'rgba(45, 130, 117, 0.08)', label: 'Pine Teal' },
-  DEFAULT: { accent: '#4E6E9C', border: '#4E6E9C', wash: 'rgba(78, 110, 156, 0.10)', bg: 'rgba(78, 110, 156, 0.08)', label: 'Indigo' }
+  DEFAULT: { accent: 'var(--indigo)', border: 'var(--indigo)', wash: 'rgba(var(--indigo-rgb), 0.10)', bg: 'rgba(var(--indigo-rgb), 0.08)', label: 'Indigo' }
 };
 
 export function searchRoster(query) {

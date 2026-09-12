@@ -39,7 +39,7 @@ export default function BatchSearchModal({ isOpen, onClose }) {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(21, 24, 29, 0.65)',
+        backgroundColor: 'rgba(21, 21, 18, 0.65)',
         backdropFilter: 'blur(8px)',
         display: 'flex',
         alignItems: 'flex-start',
@@ -123,7 +123,7 @@ export default function BatchSearchModal({ isOpen, onClose }) {
                   padding: '10px 12px',
                   borderRadius: '10px',
                   backgroundColor: isSelected ? 'var(--wash-mizu)' : 'transparent',
-                  border: isSelected ? '1px solid rgba(0, 169, 184, 0.3)' : '1px solid transparent',
+                  border: isSelected ? '1px solid rgba(var(--mizu-rgb), 0.3)' : '1px solid transparent',
                   cursor: 'pointer',
                   transition: 'all 0.12s'
                 }}

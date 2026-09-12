@@ -73,12 +73,12 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
             height: '32px',
             borderRadius: '8px',
             background: 'var(--wash-ochre)',
-            border: '1px solid rgba(194, 145, 58, 0.3)',
+            border: '1px solid rgba(var(--ochre-rgb), 0.3)',
             color: 'var(--ochre)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(194, 145, 58, 0.15)'
+            boxShadow: '0 2px 8px rgba(var(--ochre-rgb), 0.15)'
           }}>
             <Palmtree size={16} />
           </div>

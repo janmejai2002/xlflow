@@ -94,7 +94,7 @@ export default function AttendanceLogModal({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(15, 23, 42, 0.65)',
+        backgroundColor: 'rgba(28, 26, 23, 0.65)',
         backdropFilter: 'blur(8px)',
         zIndex: 90,
         display: 'flex',
@@ -139,7 +139,7 @@ export default function AttendanceLogModal({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '1px solid rgba(22, 163, 74, 0.3)'
+              border: '1px solid rgba(var(--moss-rgb), 0.3)'
             }}>
               <ShieldCheck size={18} />
             </div>
@@ -155,7 +155,7 @@ export default function AttendanceLogModal({
                   color: 'var(--mizu)',
                   padding: '2px 7px',
                   borderRadius: '9999px',
-                  border: '1px solid rgba(2, 132, 199, 0.25)'
+                  border: '1px solid rgba(var(--mizu-rgb), 0.25)'
                 }}>
                   Student Sovereign
                 </span>
@@ -326,7 +326,7 @@ export default function AttendanceLogModal({
                   backgroundColor: 'var(--card)',
                   borderRadius: '12px',
                   padding: '12px 14px',
-                  border: '1px solid rgba(22, 163, 74, 0.25)'
+                  border: '1px solid rgba(var(--moss-rgb), 0.25)'
                 }}>
                   <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--moss)', textTransform: 'uppercase' }}>
                     Self-Tracked Reality
@@ -368,7 +368,7 @@ export default function AttendanceLogModal({
                   backgroundColor: 'var(--card)',
                   borderRadius: '12px',
                   padding: '12px 14px',
-                  border: courseStats.discrepancy.hasDiscrepancy ? '1px solid rgba(217, 119, 6, 0.35)' : '1px solid var(--border)'
+                  border: courseStats.discrepancy.hasDiscrepancy ? '1px solid rgba(var(--ochre-rgb), 0.35)' : '1px solid var(--border)'
                 }}>
                   <div style={{ fontSize: '10px', fontWeight: 700, color: courseStats.discrepancy.hasDiscrepancy ? 'var(--ochre)' : 'var(--moss)', textTransform: 'uppercase' }}>
                     {courseStats.discrepancy.hasDiscrepancy ? 'ERP Lag Discrepancy' : 'Perfect Sync'}

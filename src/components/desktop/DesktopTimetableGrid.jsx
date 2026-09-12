@@ -246,7 +246,7 @@ export default function DesktopTimetableGrid({
             All Courses
           </button>
           {uniqueCourses.map(code => {
-            const colors = COURSE_COLORS[code] || { accent: '#4E6E9C', bg: 'var(--card)' };
+            const colors = COURSE_COLORS[code] || { accent: 'var(--indigo)', bg: 'var(--card)' };
             const isActive = selectedCourseFilter === code;
             return (
               <button
@@ -342,7 +342,7 @@ export default function DesktopTimetableGrid({
                 padding: '10px 8px',
                 textAlign: 'center',
                 borderRight: '1px solid var(--border)',
-                backgroundColor: d.isToday ? 'rgba(0, 169, 184, 0.08)' : 'transparent',
+                backgroundColor: d.isToday ? 'rgba(var(--mizu-rgb), 0.08)' : 'transparent',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -447,7 +447,7 @@ export default function DesktopTimetableGrid({
                 style={{
                   position: 'relative',
                   borderRight: '1px solid var(--border)',
-                  backgroundColor: day.isToday ? 'rgba(0, 169, 184, 0.03)' : 'transparent',
+                  backgroundColor: day.isToday ? 'rgba(var(--mizu-rgb), 0.03)' : 'transparent',
                   height: '100%'
                 }}
               >
@@ -486,8 +486,8 @@ export default function DesktopTimetableGrid({
                   const heightPx = duration * HOUR_HEIGHT - 6;
 
                   const colors = COURSE_COLORS[session.courseCode] || {
-                    accent: '#4E6E9C',
-                    bg: 'rgba(78, 110, 156, 0.12)'
+                    accent: 'var(--indigo)',
+                    bg: 'rgba(var(--indigo-rgb), 0.12)'
                   };
 
                   const isSelected = selectedSessionId === session.sessionId;

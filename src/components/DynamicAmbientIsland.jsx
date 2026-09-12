@@ -184,7 +184,7 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
           border: `1px solid ${isOpen ? 'var(--mizu)' : 'var(--border)'}`,
           borderRadius: '9999px',
           cursor: 'pointer',
-          boxShadow: isOpen ? '0 0 0 2px rgba(0, 169, 184, 0.18), var(--shadow-sm)' : '0 1px 2px rgba(0,0,0,0.04)',
+          boxShadow: isOpen ? '0 0 0 2px rgba(var(--mizu-rgb), 0.18), var(--shadow-sm)' : '0 1px 2px rgba(0,0,0,0.04)',
           transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
           maxWidth: isCompact ? '190px' : '320px',
           userSelect: 'none'
@@ -406,7 +406,7 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
             justifyContent: 'space-between',
             padding: '10px 12px',
             backgroundColor: peaceOfMindScore >= 90 ? 'var(--wash-moss)' : 'var(--wash-ochre)',
-            border: `1px solid ${peaceOfMindScore >= 90 ? 'rgba(110, 140, 99, 0.3)' : 'rgba(194, 145, 58, 0.3)'}`,
+            border: `1px solid ${peaceOfMindScore >= 90 ? 'rgba(var(--moss-rgb), 0.3)' : 'rgba(var(--ochre-rgb), 0.3)'}`,
             borderRadius: '12px'
           }}>
             <div>
@@ -440,7 +440,7 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
           {discrepancies.length > 0 && (
             <div style={{
               backgroundColor: 'var(--paper)',
-              border: '1px solid rgba(217, 119, 6, 0.35)',
+              border: '1px solid rgba(var(--ochre-rgb), 0.35)',
               borderRadius: '10px',
               padding: '10px',
               display: 'flex',
@@ -463,7 +463,7 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
                   gap: '6px',
                   padding: '6px 10px',
                   backgroundColor: 'var(--wash-ochre)',
-                  border: '1px solid rgba(194, 145, 58, 0.4)',
+                  border: '1px solid rgba(var(--ochre-rgb), 0.4)',
                   borderRadius: '6px',
                   color: 'var(--ochre-text)',
                   fontSize: '11px',

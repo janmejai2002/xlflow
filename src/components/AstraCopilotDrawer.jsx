@@ -163,7 +163,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
                 height: '30px',
                 borderRadius: '8px',
                 background: 'var(--wash-mizu)',
-                border: '1px solid rgba(0, 169, 184, 0.3)',
+                border: '1px solid rgba(var(--mizu-rgb), 0.3)',
                 color: 'var(--mizu)',
                 display: 'flex',
                 alignItems: 'center',
@@ -296,7 +296,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
                         <div style={{
                           marginTop: '8px',
                           paddingTop: '6px',
-                          borderTop: '1px solid rgba(0, 169, 184, 0.2)',
+                          borderTop: '1px solid rgba(var(--mizu-rgb), 0.2)',
                           fontSize: '11px',
                           color: 'var(--mizu)',
                           fontWeight: 600,

@@ -42,7 +42,7 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
       position: 'fixed',
       inset: 0,
       zIndex: 100,
-      backgroundColor: 'rgba(21, 24, 29, 0.75)',
+      backgroundColor: 'rgba(21, 21, 18, 0.75)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -78,7 +78,7 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
               width: '38px',
               height: '38px',
               borderRadius: '12px',
-              backgroundColor: 'rgba(0, 169, 184, 0.12)',
+              backgroundColor: 'rgba(var(--mizu-rgb), 0.12)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -269,17 +269,17 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
-                <div style={{ padding: '12px', borderRadius: '12px', backgroundColor: 'var(--wash-moss)', border: '1px solid rgba(110, 140, 99, 0.3)' }}>
+                <div style={{ padding: '12px', borderRadius: '12px', backgroundColor: 'var(--wash-moss)', border: '1px solid rgba(var(--moss-rgb), 0.3)' }}>
                   <div style={{ fontWeight: 700, color: 'var(--moss)', fontSize: '13px' }}>🟢 Safe Tier (&ge; 85%)</div>
                   <div style={{ fontSize: '11.5px', color: 'var(--ink-muted)', marginTop: '4px' }}>Ample buffer. You can miss upcoming classes safely.</div>
                 </div>
 
-                <div style={{ padding: '12px', borderRadius: '12px', backgroundColor: 'var(--wash-ochre)', border: '1px solid rgba(194, 145, 58, 0.3)' }}>
+                <div style={{ padding: '12px', borderRadius: '12px', backgroundColor: 'var(--wash-ochre)', border: '1px solid rgba(var(--ochre-rgb), 0.3)' }}>
                   <div style={{ fontWeight: 700, color: 'var(--ochre)', fontSize: '13px' }}>🟡 Warning Tier (80–84%)</div>
                   <div style={{ fontSize: '11.5px', color: 'var(--ink-muted)', marginTop: '4px' }}>Low buffer. Missing even one more class risks debarment.</div>
                 </div>
 
-                <div style={{ padding: '12px', borderRadius: '12px', backgroundColor: 'var(--wash-hanko)', border: '1px solid rgba(210, 84, 63, 0.3)' }}>
+                <div style={{ padding: '12px', borderRadius: '12px', backgroundColor: 'var(--wash-hanko)', border: '1px solid rgba(var(--hanko-rgb), 0.3)' }}>
                   <div style={{ fontWeight: 700, color: 'var(--hanko)', fontSize: '13px' }}>🔴 Danger Tier (&lt; 80%)</div>
                   <div style={{ fontSize: '11.5px', color: 'var(--ink-muted)', marginTop: '4px' }}>Debarment risk! You must attend consecutive classes to recover.</div>
                 </div>

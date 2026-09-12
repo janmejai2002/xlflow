@@ -36,12 +36,12 @@ export default function SectorTimetable({
             height: '32px',
             borderRadius: '8px',
             background: 'var(--wash-mizu)',
-            border: '1px solid rgba(0, 169, 184, 0.3)',
+            border: '1px solid rgba(var(--mizu-rgb), 0.3)',
             color: 'var(--mizu)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)'
+            boxShadow: '0 2px 8px rgba(var(--mizu-rgb), 0.15)'
           }}>
             <Calendar size={16} />
           </div>

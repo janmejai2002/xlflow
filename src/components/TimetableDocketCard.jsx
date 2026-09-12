@@ -32,9 +32,9 @@ export default function TimetableDocketCard({
   // Retrieve course aesthetic tokens
   const courseCode = session.courseCode || 'CORE';
   const colors = COURSE_COLORS[courseCode] || {
-    accent: '#00A9B8',
-    border: 'rgba(0, 169, 184, 0.3)',
-    wash: 'rgba(0, 169, 184, 0.12)',
+    accent: 'var(--mizu)',
+    border: 'rgba(var(--mizu-rgb), 0.3)',
+    wash: 'rgba(var(--mizu-rgb), 0.12)',
     bg: '#00555E'
   };
 
@@ -152,7 +152,7 @@ export default function TimetableDocketCard({
                 fontWeight: 700,
                 color: 'var(--mizu-text)',
                 backgroundColor: 'var(--wash-mizu)',
-                border: '1px solid rgba(0, 169, 184, 0.3)',
+                border: '1px solid rgba(var(--mizu-rgb), 0.3)',
                 padding: '2px 7px',
                 borderRadius: '999px'
               }}
@@ -302,7 +302,7 @@ export default function TimetableDocketCard({
                 fontWeight: 700,
                 color: isSafe ? 'var(--moss-text)' : 'var(--hanko-text)',
                 backgroundColor: isSafe ? 'var(--wash-moss)' : 'var(--wash-hanko)',
-                border: `1px solid ${isSafe ? 'rgba(110, 140, 99, 0.3)' : 'rgba(210, 84, 63, 0.3)'}`,
+                border: `1px solid ${isSafe ? 'rgba(var(--moss-rgb), 0.3)' : 'rgba(var(--hanko-rgb), 0.3)'}`,
                 padding: '3px 8px',
                 borderRadius: '6px'
               }}
@@ -331,14 +331,14 @@ export default function TimetableDocketCard({
             padding: '5px 10px',
             borderRadius: '8px',
             backgroundColor: 'var(--wash-mizu)',
-            border: '1px solid rgba(0, 169, 184, 0.25)',
+            border: '1px solid rgba(var(--mizu-rgb), 0.25)',
             color: 'var(--mizu)',
             fontSize: '11px',
             fontWeight: 600,
             textDecoration: 'none',
             transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 169, 184, 0.2)'}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(var(--mizu-rgb), 0.2)'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--wash-mizu)'}
         >
           <Calendar size={12} />

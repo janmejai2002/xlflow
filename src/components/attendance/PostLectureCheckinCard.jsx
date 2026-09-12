@@ -66,7 +66,7 @@ export default function PostLectureCheckinCard({ schedule = [], courses = [], is
     return (
       <div style={{
         backgroundColor: 'var(--card)',
-        border: '1px solid rgba(0, 169, 184, 0.3)',
+        border: '1px solid rgba(var(--mizu-rgb), 0.3)',
         borderRadius: '10px',
         padding: '6px 12px',
         display: 'flex',
@@ -116,7 +116,7 @@ export default function PostLectureCheckinCard({ schedule = [], courses = [], is
               borderRadius: '6px',
               backgroundColor: 'var(--paper)',
               color: 'var(--hanko)',
-              border: '1px solid rgba(210, 84, 63, 0.3)',
+              border: '1px solid rgba(var(--hanko-rgb), 0.3)',
               fontSize: '11px',
               fontWeight: 700,
               cursor: 'pointer'
@@ -147,7 +147,7 @@ export default function PostLectureCheckinCard({ schedule = [], courses = [], is
   return (
     <div style={{
       backgroundColor: 'var(--card)',
-      border: '1px solid rgba(0, 169, 184, 0.35)',
+      border: '1px solid rgba(var(--mizu-rgb), 0.35)',
       borderRadius: '16px',
       padding: '14px 18px',
       boxShadow: 'var(--shadow-card)',
@@ -229,7 +229,7 @@ export default function PostLectureCheckinCard({ schedule = [], courses = [], is
             fontSize: '11px',
             fontWeight: 700,
             cursor: 'pointer',
-            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.25)',
+            boxShadow: '0 2px 6px rgba(var(--moss-rgb), 0.25)',
             transition: 'transform 0.1s'
           }}
           onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
@@ -251,13 +251,13 @@ export default function PostLectureCheckinCard({ schedule = [], courses = [], is
             borderRadius: '8px',
             backgroundColor: 'var(--wash-hanko)',
             color: 'var(--hanko)',
-            border: '1px solid rgba(220, 38, 38, 0.3)',
+            border: '1px solid rgba(var(--hanko-rgb), 0.3)',
             fontSize: '11px',
             fontWeight: 700,
             cursor: 'pointer',
             transition: 'background-color 0.15s'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.15)'}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(var(--hanko-rgb), 0.15)'}
           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--wash-hanko)'}
         >
           <X size={13} />

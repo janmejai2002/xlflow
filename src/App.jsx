@@ -297,7 +297,7 @@ export default function App() {
           {!isOnline && (
             <div style={{
               backgroundColor: 'var(--wash-ochre)',
-              borderBottom: '1px solid rgba(194, 145, 58, 0.3)',
+              borderBottom: '1px solid rgba(var(--ochre-rgb), 0.3)',
               padding: '6px 16px',
               fontSize: '12px',
               color: 'var(--ochre-text)',

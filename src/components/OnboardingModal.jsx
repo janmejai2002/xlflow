@@ -10,7 +10,7 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
       position: 'fixed',
       inset: 0,
       zIndex: 110,
-      backgroundColor: 'rgba(21, 24, 29, 0.85)',
+      backgroundColor: 'rgba(21, 21, 18, 0.85)',
       backdropFilter: 'blur(10px)',
       display: 'flex',
       alignItems: 'center',

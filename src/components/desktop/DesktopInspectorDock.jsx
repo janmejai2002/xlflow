@@ -192,8 +192,8 @@ export default function DesktopInspectorDock({
   const stats = recon ? recon.active : calculateBunkStats(courseMatch.attended, courseMatch.conducted, courseMatch.totalPlanned);
 
   const colors = COURSE_COLORS[activeSession.courseCode] || {
-    accent: '#4E6E9C',
-    bg: 'rgba(78, 110, 156, 0.12)'
+    accent: 'var(--indigo)',
+    bg: 'rgba(var(--indigo-rgb), 0.12)'
   };
 
   const handleCopyVenue = () => {
@@ -762,7 +762,7 @@ export default function DesktopInspectorDock({
                           <div style={{
                             marginTop: '8px',
                             paddingTop: '6px',
-                            borderTop: '1px solid rgba(0, 169, 184, 0.2)',
+                            borderTop: '1px solid rgba(var(--mizu-rgb), 0.2)',
                             fontSize: '11px',
                             color: 'var(--mizu)',
                             fontWeight: 600,

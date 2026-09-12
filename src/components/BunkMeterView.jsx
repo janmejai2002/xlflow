@@ -173,7 +173,7 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
           padding: '10px 14px',
           borderRadius: '12px',
           backgroundColor: 'var(--wash-ochre)',
-          border: '1px solid rgba(194, 145, 58, 0.35)',
+          border: '1px solid rgba(var(--ochre-rgb), 0.35)',
           gap: '10px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -222,7 +222,7 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
 
         <div style={{
           backgroundColor: 'var(--wash-moss)',
-          border: '1px solid rgba(110, 140, 99, 0.25)',
+          border: '1px solid rgba(var(--moss-rgb), 0.25)',
           borderRadius: '12px',
           padding: '12px',
           textAlign: 'center'
@@ -235,7 +235,7 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
 
         <div style={{
           backgroundColor: warningOrDanger > 0 ? 'var(--wash-hanko)' : 'var(--card)',
-          border: `1px solid ${warningOrDanger > 0 ? 'rgba(210, 84, 63, 0.25)' : 'var(--border)'}`,
+          border: `1px solid ${warningOrDanger > 0 ? 'rgba(var(--hanko-rgb), 0.25)' : 'var(--border)'}`,
           borderRadius: '12px',
           padding: '12px',
           textAlign: 'center'

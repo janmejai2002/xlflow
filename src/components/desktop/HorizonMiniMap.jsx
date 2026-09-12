@@ -69,7 +69,7 @@ export default function HorizonMiniMap({
               fontWeight: 700,
               cursor: 'pointer',
               flexShrink: 0,
-              boxShadow: '0 2px 6px rgba(2, 132, 199, 0.3)'
+              boxShadow: '0 2px 6px rgba(var(--mizu-rgb), 0.3)'
             }}
           >
             <Smartphone size={13} />

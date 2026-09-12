@@ -76,7 +76,7 @@ export default function TripPlannerView({ schedule = [], deadlines = [], courses
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{
             backgroundColor: 'var(--wash-moss)',
-            border: '1px solid rgba(110, 140, 99, 0.25)',
+            border: '1px solid rgba(var(--moss-rgb), 0.25)',
             borderRadius: '12px',
             padding: '12px 14px',
             display: 'flex',
@@ -129,7 +129,7 @@ export default function TripPlannerView({ schedule = [], deadlines = [], courses
                       borderRadius: '9999px',
                       backgroundColor: isZeroMiss ? 'var(--wash-moss)' : 'var(--wash-ochre)',
                       color: isZeroMiss ? 'var(--moss)' : 'var(--ochre)',
-                      border: `1px solid ${isZeroMiss ? 'rgba(110, 140, 99, 0.3)' : 'rgba(194, 145, 58, 0.3)'}`
+                      border: `1px solid ${isZeroMiss ? 'rgba(var(--moss-rgb), 0.3)' : 'rgba(var(--ochre-rgb), 0.3)'}`
                     }}>
                       {trip.rating}
                     </span>

@@ -141,7 +141,7 @@ export default function AiSettingsModal({ isOpen, onClose }) {
             alignItems: 'center',
             gap: '8px',
             backgroundColor: 'var(--wash-moss)',
-            border: '1px solid rgba(110,140,99,0.3)',
+            border: '1px solid rgba(var(--moss-rgb),0.3)',
             borderRadius: '10px',
             padding: '10px 14px',
             fontSize: '12px',
