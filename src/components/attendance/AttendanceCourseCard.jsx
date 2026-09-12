@@ -19,7 +19,8 @@ export default function AttendanceCourseCard({ course, recon, onOpenDetails, onM
   const active = recon.active;
   const threshold = STATUTORY_THRESHOLD * 100;
 
-  const noClassesYet = active.conducted === 0;
+  // Only truly unknown when neither side has recorded anything.
+  const noClassesYet = !recon.hasAnyData;
 
   // Nothing held yet is neither safe nor risky — it is simply unknown, and must
   // not be painted green.
@@ -54,13 +55,20 @@ export default function AttendanceCourseCard({ course, recon, onOpenDetails, onM
   const { attendedDiff, conductedDiff } = recon.discrepancy;
   let diffNote = null;
   if (recon.discrepancy.hasDiscrepancy) {
-    const parts = [];
-    if (conductedDiff > 0) parts.push(`${conductedDiff} class${conductedDiff === 1 ? '' : 'es'} the ERP has not recorded yet`);
-    else if (conductedDiff < 0) parts.push(`${-conductedDiff} class${conductedDiff === -1 ? '' : 'es'} you have not logged`);
-    if (attendedDiff !== 0) {
-      parts.push(`${Math.abs(attendedDiff)} attendance${Math.abs(attendedDiff) === 1 ? '' : 's'} ${attendedDiff > 0 ? 'missing from the ERP' : 'the ERP credits you that you did not log'}`);
+    const n = Math.abs(conductedDiff);
+    const cls = (k) => k + (k === 1 ? ' class' : ' classes');
+    if (conductedDiff > 0 && attendedDiff === conductedDiff) {
+      // The common case: the ERP simply has not caught up.
+      diffNote = 'The ERP has not recorded ' + cls(n) + ' you attended';
+    } else if (conductedDiff > 0) {
+      diffNote = 'The ERP has not recorded ' + cls(n) + ' you logged';
+    } else if (conductedDiff < 0) {
+      diffNote = 'You have not logged ' + cls(n) + ' the ERP has recorded';
+    } else if (attendedDiff > 0) {
+      diffNote = 'The ERP credits you ' + cls(Math.abs(attendedDiff)) + ' fewer than you logged';
+    } else {
+      diffNote = 'The ERP credits you ' + cls(Math.abs(attendedDiff)) + ' more than you logged';
     }
-    diffNote = parts.join(', ');
   }
 
   const Column = ({ label, stats, isDriving, dim }) => (

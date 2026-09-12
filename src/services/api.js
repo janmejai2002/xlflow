@@ -1,4 +1,5 @@
 import { SAMPLE_STUDENT, SAMPLE_COURSES, SAMPLE_SCHEDULE, SAMPLE_DEADLINES } from '../data/sampleData';
+import { filterCurrentDeadlines } from './academicTerm';
 
 const BASE_URL = 'https://xlerp.xlri.ac.in/api/v1';
 
@@ -123,13 +124,22 @@ export async function fetchLiveStudentData(token) {
         } catch (e) {}
       }
 
+      // The ERP's termName is free text and unreliable. The course-offer code
+      // carries the term as a suffix (OMCRBD25-5 is Term 5), and startDate /
+      // endDate give the real window, so keep all three.
+      const offerCode = c.courseOfferCode || '';
+      const termFromCode = /-(\d+)$/.exec(offerCode);
+
       normalizedCourses.push({
         id: cid,
-        code: cInfo.courseCode || c.courseOfferCode || 'N/A',
+        code: cInfo.courseCode || offerCode || 'N/A',
         name: cInfo.courseName || 'Course',
         credits: c.credit || cInfo.credits || 3.0,
         type: c.type || 'Elective',
         term: c.terms?.[0]?.termName?.includes('Term-5') ? 'Term-5' : (c.terms?.[0]?.termName || 'Term-5'),
+        termNumber: termFromCode ? Number(termFromCode[1]) : null,
+        startDate: c.startDate ? String(c.startDate).split('T')[0] : null,
+        endDate: c.endDate ? String(c.endDate).split('T')[0] : null,
         faculty: c.faculty?.[0]?.name || (c.faculty?.[0]?.firstName ? `${c.faculty[0].firstName} ${c.faculty[0].lastName || ''}`.trim() : 'Faculty'),
         attended,
         conducted,
@@ -168,14 +178,18 @@ export async function fetchLiveStudentData(token) {
       console.warn('Could not fetch class activities:', e);
     }
 
-    const normalizedDeadlines = rawActs.map(a => ({
-      id: a.id,
-      courseCode: a.courseCode || a.course?.courseCode || 'ACAD',
-      title: a.name || a.title || 'Assignment',
-      type: a.type || 'Activity',
-      dueDate: a.date || a.dueDate || new Date().toISOString(),
-      completed: false
-    }));
+    const normalizedDeadlines = filterCurrentDeadlines(
+      rawActs.map(a => ({
+        id: a.id,
+        courseCode: a.courseCode || a.course?.courseCode || a.courseOffer?.course?.courseCode || 'ACAD',
+        title: a.name || a.title || 'Assignment',
+        type: a.type || 'Activity',
+        dueDate: a.date || a.dueDate || new Date().toISOString(),
+        completed: false
+      })),
+      normalizedCourses,
+      normalizedSchedule
+    );
 
     const fullPayload = {
       student: {

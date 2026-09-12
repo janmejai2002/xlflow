@@ -98,10 +98,12 @@ class SelfAttendanceStore {
 
     this.notify();
 
-    // Asynchronously sync mark to Google Sheets in background
+    // Sync to the shared sheet in the background — but never from demo mode.
+    // The sheet is keyed on roll number only, so a demo session would write
+    // sample sessionIds ("s-01", "s-02") into a real student's row.
     const roll = this.getCurrentRoll();
     if (roll) {
-      saveCloudAttendance(roll, sessionId, status, metadata.userSection || '').catch(err => {
+      saveCloudAttendance(roll, sessionId, status, metadata.userSection || this.getCurrentSection()).catch(err => {
         console.warn('[SelfAttendance] Cloud sync error for session', sessionId, err);
       });
     }
@@ -109,8 +111,31 @@ class SelfAttendanceStore {
     return this.state.markedSessions[sessionId];
   }
 
+  /**
+   * True when the student has not authenticated against the ERP, i.e. they are
+   * looking at sample data. Nothing from a demo session may reach the shared
+   * sheet.
+   */
+  isDemoSession() {
+    if (typeof window === 'undefined') return true;
+    try {
+      return !localStorage.getItem('xlflow_token');
+    } catch (e) {
+      return true;
+    }
+  }
+
+  /**
+   * The signed-in student's roll number, or null when it cannot be established.
+   *
+   * This used to fall back to a hardcoded B25349, which meant every
+   * unidentified or demo session wrote its marks into that student's row in a
+   * sheet shared by the whole batch. There is no safe default here: if we
+   * cannot say who this is, we do not write.
+   */
   getCurrentRoll() {
-    if (typeof window === 'undefined') return 'B25349';
+    if (typeof window === 'undefined') return null;
+    if (this.isDemoSession()) return null;
     try {
       const explicitRoll = localStorage.getItem('xlflow_roll');
       if (explicitRoll && /^B25[0-9]{3}$/i.test(explicitRoll)) return explicitRoll.toUpperCase();
@@ -123,9 +148,23 @@ class SelfAttendanceStore {
           const prefix = parsed.student.email.split('@')[0].toUpperCase();
           if (/^B25[0-9]{3}$/.test(prefix)) return prefix;
         }
+        if (parsed?.student?.id && /^B25[0-9]{3}$/i.test(parsed.student.id)) {
+          return parsed.student.id.toUpperCase();
+        }
       }
     } catch (e) {}
-    return 'B25349';
+    return null;
+  }
+
+  /** Section, recorded alongside each mark. Column B has been blank until now. */
+  getCurrentSection() {
+    if (typeof window === 'undefined') return '';
+    try {
+      const parsed = JSON.parse(localStorage.getItem('xlflow_user_data') || '{}');
+      return parsed?.student?.section || '';
+    } catch (e) {
+      return '';
+    }
   }
 
   async syncWithCloud(forcedRoll = null) {
@@ -179,7 +218,7 @@ class SelfAttendanceStore {
 
       const roll = this.getCurrentRoll();
       if (roll) {
-        saveCloudAttendance(roll, sessionId, '', '').catch(() => {});
+        saveCloudAttendance(roll, sessionId, '', this.getCurrentSection()).catch(() => {});
       }
     }
   }
@@ -271,14 +310,24 @@ class SelfAttendanceStore {
     // There is deliberately no user-facing "data source" switch. The ERP is the
     // record that actually debars you, but it lags and can be wrong; your own log
     // is timelier but only covers sessions you remembered to mark. Rather than ask
-    // the student to reason about that, we always plan against whichever of the two
+    // the student to reason about that, we plan against whichever of the two
     // leaves the smaller margin. Being wrong in that direction costs a student one
     // attended class; being wrong the other way costs them the exam.
+    //
+    // A side with no classes recorded at all is absent, not optimistic, so it
+    // never wins the comparison — otherwise an ERP the admin has not touched all
+    // term would mask everything the student has logged.
     const hasSelfData = selfConducted > 0;
-    const active = (hasSelfData && selfStats.safeBunksRemaining < officialStats.safeBunksRemaining)
-      ? selfStats
-      : officialStats;
+    const hasOfficialData = officialConducted > 0;
+
+    let active = officialStats;
+    if (hasSelfData && !hasOfficialData) {
+      active = selfStats;
+    } else if (hasSelfData && hasOfficialData) {
+      active = selfStats.safeBunksRemaining < officialStats.safeBunksRemaining ? selfStats : officialStats;
+    }
     const activeSource = active === selfStats ? 'self' : 'erp';
+    const hasAnyData = hasSelfData || hasOfficialData;
 
     const attendedDiff = selfAttended - officialAttended;
     const conductedDiff = selfConducted - officialConducted;
@@ -298,6 +347,8 @@ class SelfAttendanceStore {
       active,
       activeSource,
       hasSelfData,
+      hasOfficialData,
+      hasAnyData,
       discrepancy,
       selfCounts: {
         present: selfPresent,
