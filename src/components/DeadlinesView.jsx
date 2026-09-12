@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { CheckSquare, Square, AlertCircle, Clock, Plus, Trash2, Calendar, Tag, Check } from 'lucide-react';
+import { filterCurrentDeadlines } from '../services/academicTerm';
 
 const DEADLINES_STORAGE_KEY = 'xlflow_user_deadlines';
 
-export default function DeadlinesView({ initialDeadlines = [], courses = [] }) {
+export default function DeadlinesView({ initialDeadlines = [], courses = [], schedule = [] }) {
   const [deadlines, setDeadlines] = useState(() => {
     const saved = localStorage.getItem(DEADLINES_STORAGE_KEY);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // This list was persisted before previous-term activities were filtered
+        // out, so a returning student still has last term's quizzes saved here.
+        // Tasks the student added themselves are theirs to keep, however old.
+        const own = parsed.filter((d) => String(d.id || '').startsWith('custom-'));
+        const fromErp = filterCurrentDeadlines(
+          parsed.filter((d) => !String(d.id || '').startsWith('custom-')),
+          courses,
+          schedule
+        );
+        return [...fromErp, ...own];
       } catch (e) {}
     }
     return initialDeadlines;

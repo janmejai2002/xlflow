@@ -4,6 +4,7 @@ import { selfAttendanceStore } from '../services/selfAttendanceStore';
 import AttendanceLogModal from './attendance/AttendanceLogModal';
 import AttendanceCourseCard from './attendance/AttendanceCourseCard';
 import QuickMarkStrip, { getUnmarkedSessions } from './attendance/QuickMarkStrip';
+import { resolveCurrentTerm, isCurrentTerm } from '../services/academicTerm';
 
 /**
  * Attendance.
@@ -25,14 +26,10 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
     return unsub;
   }, []);
 
-  // The ERP hands back every course the student has ever taken, tagged with
-  // strings like "PGDM-BMD (2025-2027) Term-6". Only the latest term can still
-  // be influenced, so that is what the page opens on.
-  const termOf = (c) => {
-    const m = /Term-(\d+)/i.exec(c.term || '');
-    return m ? Number(m[1]) : 0;
-  };
-  const currentTerm = useMemo(() => Math.max(0, ...courses.map(termOf)), [courses]);
+  // The ERP hands back every course the student has ever taken. Only the term
+  // actually running is worth opening on — see services/academicTerm.js for why
+  // that is not simply the highest term number.
+  const currentTerm = useMemo(() => resolveCurrentTerm(courses, schedule), [courses, schedule]);
 
   const allEvaluated = useMemo(
     () =>
@@ -45,8 +42,8 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
     [courses, schedule, storeVer]
   );
 
-  const earlierCount = allEvaluated.filter((e) => termOf(e.course) !== currentTerm).length;
-  const evaluated = showEarlier ? allEvaluated : allEvaluated.filter((e) => termOf(e.course) === currentTerm);
+  const otherTermCount = allEvaluated.filter((e) => !isCurrentTerm(e.course, currentTerm)).length;
+  const evaluated = showEarlier ? allEvaluated : allEvaluated.filter((e) => isCurrentTerm(e.course, currentTerm));
 
   const unmarked = useMemo(
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,6 +79,11 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
         <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '3px' }}>
           Your log against the ERP. You need 80% in every course.
         </p>
+        {currentTerm !== null && (
+          <p style={{ fontSize: '11.5px', color: 'var(--ink-faint)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
+            Showing Term {currentTerm}
+          </p>
+        )}
       </div>
 
       {/* Fast path: clear the backlog of unmarked classes */}
@@ -181,7 +183,7 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
         )}
       </div>
 
-      {earlierCount > 0 && !onlyAtRisk && (
+      {otherTermCount > 0 && !onlyAtRisk && (
         <button
           onClick={() => setShowEarlier((v) => !v)}
           style={{
@@ -195,7 +197,7 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
             cursor: 'pointer'
           }}
         >
-          {showEarlier ? 'Hide earlier terms' : `Show ${earlierCount} course${earlierCount === 1 ? '' : 's'} from earlier terms`}
+          {showEarlier ? 'Hide other terms' : `Show ${otherTermCount} course${otherTermCount === 1 ? '' : 's'} from other terms`}
         </button>
       )}
 

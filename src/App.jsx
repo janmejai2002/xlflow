@@ -8,6 +8,7 @@ import { calculateBunkStats } from './services/bunkCalculator';
 import { playChime } from './services/soundEngine';
 import { fireStreakConfetti } from './services/confetti';
 import { selfAttendanceStore } from './services/selfAttendanceStore';
+import { resolveCurrentTerm, isCurrentTerm, filterCurrentDeadlines } from './services/academicTerm';
 import { fetchCloudPrefs } from './services/cloudStorage';
 import { WifiOff } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
@@ -229,21 +230,25 @@ export default function App() {
   // numbers across every course the student has ever taken.
   const warningCount = useMemo(() => {
     const all = dataPayload.courses || [];
-    const termOf = (c) => {
-      const m = /Term-(\d+)/i.exec(c.term || '');
-      return m ? Number(m[1]) : 0;
-    };
-    const currentTerm = Math.max(0, ...all.map(termOf));
+    const sched = dataPayload.schedule || [];
+    const currentTerm = resolveCurrentTerm(all, sched);
     return all.filter((c) => {
-      if (termOf(c) !== currentTerm) return false;
-      const recon = selfAttendanceStore.getCourseStats(c, dataPayload.schedule || []);
+      if (!isCurrentTerm(c, currentTerm)) return false;
+      const recon = selfAttendanceStore.getCourseStats(c, sched);
       const stats = recon ? recon.active : calculateBunkStats(c.attended, c.conducted, c.totalPlanned);
       // A course with no classes held yet is unknown, not at risk.
       return stats.conducted > 0 && stats.tier !== 'safe';
     }).length;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataPayload.courses, dataPayload.schedule, attendanceVer]);
-  const pendingDeadlinesCount = (dataPayload.deadlines || []).filter(d => !d.completed).length;
+  // Cached payloads fetched before the term filter existed still carry last
+  // term's activities, so drop them on read as well as on fetch.
+  const deadlines = useMemo(
+    () => filterCurrentDeadlines(dataPayload.deadlines || [], dataPayload.courses || [], dataPayload.schedule || []),
+    [dataPayload.deadlines, dataPayload.courses, dataPayload.schedule]
+  );
+
+  const pendingDeadlinesCount = deadlines.filter(d => !d.completed).length;
 
   // Global Desktop Keyboard Shortcuts Bus (1-5, Cmd+K, ?, T, M, Cmd+\)
   useKeyboardShortcuts({
@@ -329,7 +334,7 @@ export default function App() {
             isDesktop={false}
             schedule={dataPayload.schedule}
             courses={dataPayload.courses}
-            deadlines={dataPayload.deadlines}
+            deadlines={deadlines}
             onSelectTab={setActiveTab}
           />
 
@@ -364,7 +369,7 @@ export default function App() {
               <RadarView
                 schedule={dataPayload.schedule}
                 courses={dataPayload.courses}
-                deadlines={dataPayload.deadlines}
+                deadlines={deadlines}
                 onSelectTab={setActiveTab}
                 onSelectDate={handleSelectDateFromHeatmap}
               />
@@ -389,15 +394,16 @@ export default function App() {
             {activeTab === 'trips' && (
               <TripPlannerView
                 schedule={dataPayload.schedule}
-                deadlines={dataPayload.deadlines}
+                deadlines={deadlines}
                 courses={dataPayload.courses}
               />
             )}
 
             {activeTab === 'deadlines' && (
               <DeadlinesView
-                initialDeadlines={dataPayload.deadlines}
+                initialDeadlines={deadlines}
                 courses={dataPayload.courses}
+                schedule={dataPayload.schedule}
               />
             )}
             </Suspense>
