@@ -44,7 +44,7 @@ function formatActionLabel(action) {
     case 'TRIGGER_CELEBRATION':
       return 'Attendance streak celebrated!';
     case 'TOGGLE_SOUNDSCAPE':
-      return '432Hz focus audio active';
+      return 'Focus mode active';
     default:
       return 'Action executed';
   }
@@ -108,8 +108,7 @@ export default function AstraCopilotDrawer({ isOpen, onClose, context, onExecute
     "Can I bunk OMCR?",
     "Where is my next class?",
     "Find natural getaways",
-    "Who is roll 349?",
-    "Play focus soundscape"
+    "Who is roll 349?"
   ];
 
   return (

@@ -1,76 +1,100 @@
-# CONTEXT HANDOFF: XLFlow — XLRI Student ERP Ecosystem
+# CONTEXT HANDOFF: XLFlow
 
-**Date**: September 11, 2026
+**Updated**: September 12, 2026
 **Repository**: `https://github.com/janmejai2002/xlflow.git`
 **Location**: `c:\Users\Janmejai\Documents\antigravity\xlflow`
-**Status**: Active — Antigravity MCP server running, Chrome extension built
 
 ---
 
-## 1. What This Project Is
+## 1. What this is
 
-XLFlow automates the XLRI student life ERP experience with:
-1. **Chrome Extension**: Displays your daily class schedule as an overlay on any page
-2. **Bunk Impact Simulator**: Interactive SPA to visualize how many classes you can bunk before crossing attendance thresholds
-3. **AI Natural Getaway Finder**: Given the schedule, finds optimal 2-3 day getaway windows without attendance risk
-4. **GAS Webapp**: Google Apps Script deployment for batch roster and attendance lookup
-5. **MCP Server**: Exposes all functionality to Antigravity so the agent can answer schedule/bunk queries naturally
+A React 18 + Vite PWA for XLRI Term-5 students. One core loop:
 
-## 2. Architecture
+**schedule → attendance safety → bunk simulation → trip planning**
 
-```
-xlflow/
-├── mcp-server/
-│   └── stdio.js                # Antigravity MCP server (6 tools)
-├── extension/                  # Chrome extension (manifest V3, service worker, popup)
-├── src/                        # Vite frontend SPA
-├── server/                     # Express/Hono backend
-├── api/                        # API route modules
-├── build_extension/            # Built Chrome extension (ready to load)
-├── dist/                       # Built SPA
-├── term4_gas_app/              # Google Apps Script
-│   ├── roster.js               # Batch roster management
-│   └── webapp.js               # Full GAS web app with doGet/doPost
-├── scripts/                    # Python utility scripts (moved from jolly-meitner root)
-│   ├── fetch_xlri_classes.py   # Main schedule scraper
-│   ├── login_assisted.py       # Playwright-based login helper
-│   ├── analyze_gas.py          # Analyzes webapp.js code structure
-│   ├── xlri_schedule.json      # Last scraped schedule data
-│   └── xlri_schedule.md        # Human-readable schedule
-└── scratch/                    # XLRI inspection scripts and login screenshots
-```
+Everything outside that loop was removed on 2026-09-12. See section 4.
 
-## 3. MCP Integration
+## 2. Subsystems
 
-This project is an **active Antigravity MCP server**. The server is registered in the global Antigravity MCP config under the key `xlflow`. The MCP server was running at PID 7256 (bun.exe process) before the workspace migration.
+| Subsystem | Tech | Location |
+| :--- | :--- | :--- |
+| Web SPA | Vite + React 18 | `src/` |
+| Chrome extension | Manifest V3 | `extension/`, built into `build_extension/` |
+| MCP server (stdio) | Bun + @modelcontextprotocol/sdk | `mcp-server/stdio.js` |
+| Cloud persistence | Google Apps Script + Sheets | `term4_gas_app/` |
+| Schedule scraper | Python 3.13 + Playwright | `scripts/fetch_xlri_classes.py` |
 
-**After migration**, if the MCP config still references the old path `jolly-meitner/xlflow/mcp-server/stdio.js`, update it to `antigravity/xlflow/mcp-server/stdio.js`.
+## 3. How attendance actually works
 
-Check Antigravity's MCP config: `C:\Users\Janmejai\.gemini\antigravity\mcp_config.json` or the equivalent in the Antigravity config directory.
+Three layers, reconciled in `src/services/selfAttendanceStore.js`:
 
-## 4. GAS Webapp
+1. **Official** — `attended` / `conducted` per course, pulled from the ERP.
+2. **Self-marked** — you mark each session present/absent/cancelled with a reason.
+   Written to `localStorage` immediately, then POSTed fire-and-forget to the Apps
+   Script endpoint in `src/services/cloudStorage.js`, which appends a row keyed by
+   `rollNo + sessionId` to a Google Sheet.
+3. **Course adjustments** — manual `±attended` / `±conducted` deltas for cases the
+   session log cannot express.
 
-- **Script ID**: `1JEDoa6442rwIWCmu2VwDSv_M4qBkHh999T0XiVCd8P88xonJ1GozEm5t`
-- **Deploy**: `npx clasp push` from `term4_gas_app/` directory
-- **Webapp URL**: Available via GAS deployment (check .clasp.json for details)
-- **Key doPost actions**: Roster lookup, attendance batch fetch
+`getCourseStats()` computes official, self, and active figures side by side, and
+`sourceMode` (`hybrid` | `self` | `erp`) decides which one drives the bunk math.
+Anything that disagrees surfaces via `getAllDiscrepancies()`, and
+`exportAuditCsv()` produces the dean-appeal trail.
 
-## 5. Schedule Data
+On boot, `syncWithCloud()` pulls the sheet and fills gaps in local state. The merge
+is additive only — cloud never overwrites a local mark.
 
-- `scripts/xlri_schedule.json`: Full scraped schedule from XLRI portal
-- `scripts/xlri_schedule.md`: Formatted markdown calendar view
-- Refresh by running: `C:\Python313\python.exe scripts/fetch_xlri_classes.py`
+**Known gaps (not yet fixed):**
+- The Apps Script endpoint is unauthenticated. Anyone who has the URL can read or
+  write any roll number's row.
+- `getCurrentRoll()` falls back to the hardcoded `B25349` when it cannot identify
+  the user, so an unidentified session writes into that student's row.
 
-## 6. Quick Start
+## 4. Removed on 2026-09-12
+
+Deleted, with reasons, in commit `refactor: cut social layer...`:
+- Entire social layer (campus beacons, study circles, friend profiles, synergy
+  matrix, deep-link invites). It targeted `http://localhost:3101` and disabled
+  itself on public HTTPS, so deployed users only ever saw seed fixtures.
+- `DesktopCommandDeck` / `DesktopTopBar` / `DesktopSidebar` — imported but never
+  rendered. `DesktopHorizonDeck` is the only desktop shell.
+- `ChronosOrb3D` and three.js.
+- The 432Hz ambient soundscape. Tactile click feedback in `soundEngine.js` stays.
+- Browser-side MCP WebSocket bridge and `api/mcp.js`. `mcp-server/stdio.js` is
+  untouched and is still the real integration.
+
+Do not reintroduce any of these without a real backend behind them.
+
+## 5. Design system
+
+Warm vintage palette, defined entirely in `src/index.css`:
+cream `#DCC9A9`, red `#B83A2D`, green `#4E6851`, on warm paper (light) or warm
+near-black (dark). Components use `var(--*)` tokens and `rgba(var(--*-rgb), a)`
+for washes. **Never hardcode a hex in a component.** The one deliberate exception
+is `ShareCardModal`, which draws to `<canvas>` and cannot resolve CSS variables —
+its literals are commented and must be kept in sync by hand.
+
+## 6. Performance
+
+Route views and modals are `lazy()` chunks behind `Suspense`; modals are also
+mount-gated on their open flag. React is pinned to its own chunk via
+`manualChunks` in `vite.config.js`. First paint is ~347 KB raw / ~106 KB gzip.
+Keep it that way — do not add a top-level import of a heavy library to `App.jsx`.
+
+## 7. Open items
+
+- No automated tests. Playwright and axe-core are installed but unused.
+- Apps Script endpoint needs auth (see section 3).
+- `term4_gas_app/webapp.js` is 4,964 lines and has never been reviewed.
+- Sample data shows blank faculty names for some courses.
+
+## 8. Quick start
 
 ```powershell
-# Start dev server
 cd c:\Users\Janmejai\Documents\antigravity\xlflow
-bun run dev
-
-# Run MCP server manually (for testing)
-bun mcp-server/stdio.js
-
-# Push GAS app
+bun install
+bun run dev          # http://localhost:5173
+bun run build
+bun run mcp          # MCP stdio server
 npx clasp push --rootDir .\term4_gas_app
 ```

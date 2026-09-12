@@ -511,7 +511,7 @@ export default function SectorRadar({
           </div>
         </div>
 
-        {/* Right Column: 3D Timeline & Heatmap Visualizer Deck */}
+        {/* Right Column: Schedule Heatmap */}
         <div style={{
           display: 'flex',
           flexDirection: 'column',

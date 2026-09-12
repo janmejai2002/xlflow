@@ -188,7 +188,7 @@ export default function HorizonMiniMap({
         className="minimap-hide-1120"
         style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--ink-soft)' }}
       >
-        <span>Switch: <kbd style={{ padding: '2px 5px', backgroundColor: 'var(--paper)', border: '1px solid var(--border)', borderRadius: '4px', fontFamily: 'var(--font-mono)' }}>1-6</kbd> or <kbd style={{ padding: '2px 5px', backgroundColor: 'var(--paper)', border: '1px solid var(--border)', borderRadius: '4px', fontFamily: 'var(--font-mono)' }}>← / →</kbd></span>
+        <span>Switch: <kbd style={{ padding: '2px 5px', backgroundColor: 'var(--paper)', border: '1px solid var(--border)', borderRadius: '4px', fontFamily: 'var(--font-mono)' }}>1-5</kbd> or <kbd style={{ padding: '2px 5px', backgroundColor: 'var(--paper)', border: '1px solid var(--border)', borderRadius: '4px', fontFamily: 'var(--font-mono)' }}>← / →</kbd></span>
       </div>
     </nav>
   );

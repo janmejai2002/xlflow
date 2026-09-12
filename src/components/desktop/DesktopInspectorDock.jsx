@@ -74,7 +74,7 @@ function formatActionLabel(action) {
     case 'TRIGGER_CELEBRATION':
       return 'Attendance streak celebrated!';
     case 'TOGGLE_SOUNDSCAPE':
-      return '432Hz focus audio active';
+      return 'Focus mode active';
     default:
       return 'Action executed';
   }
