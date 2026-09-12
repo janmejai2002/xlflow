@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Headphones, Bot, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
+import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Bot, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
 import { fireStreakConfetti } from '../services/confetti';
 import { toast } from 'sonner';
 import XlFlowLogo from './XlFlowLogo';
@@ -15,8 +15,6 @@ export default function Header({
   isSyncing,
   onOpenSearch,
   onOpenShareCard,
-  isAmbientOn,
-  onToggleAmbient,
   onOpenCopilot,
   onOpenBooklet,
   onToggleLayoutMode,
@@ -124,8 +122,6 @@ export default function Header({
           schedule={schedule}
           courses={courses}
           deadlines={deadlines}
-          isAmbientOn={isAmbientOn}
-          onToggleAmbient={onToggleAmbient}
           onInspectSession={onInspectSession}
           onSelectTab={onSelectTab}
           isCompact={true}
@@ -339,32 +335,6 @@ export default function Header({
               >
                 <Share2 size={15} style={{ color: 'var(--mizu)' }} />
                 <span>Share Academic Pass</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setIsMoreOpen(false);
-                  onToggleAmbient();
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '8px 10px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: 'transparent',
-                  color: isAmbientOn ? 'var(--mizu)' : 'var(--ink)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  textAlign: 'left'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--stone)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-              >
-                <Headphones size={15} style={{ color: isAmbientOn ? 'var(--mizu)' : 'var(--ink-soft)' }} />
-                <span>{isAmbientOn ? 'Pause 432Hz Sound' : 'Play 432Hz Sound'}</span>
               </button>
 
               <button

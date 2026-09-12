@@ -10,24 +10,17 @@ import LoginModal from './components/LoginModal';
 import BatchSearchModal from './components/BatchSearchModal';
 import ShareCardModal from './components/ShareCardModal';
 import AstraCopilotDrawer from './components/AstraCopilotDrawer';
-import McpHudIndicator from './components/McpHudIndicator';
 import InstructionBookletModal from './components/InstructionBookletModal';
 import OnboardingModal from './components/OnboardingModal';
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
-import DesktopCommandDeck from './components/desktop/DesktopCommandDeck';
 import DesktopHorizonDeck from './components/desktop/DesktopHorizonDeck';
-import GroupCollaborationModal from './components/desktop/GroupCollaborationModal';
 import AiSettingsModal from './components/AiSettingsModal';
-import InviteWelcomeModal from './components/social/InviteWelcomeModal';
 import QuickTourModal from './components/QuickTourModal';
-import SectorSynergy from './components/desktop/sectors/SectorSynergy';
-import { parseDeepLink } from './services/deepLinkHandler';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
-import { useMcpBridge } from './hooks/useMcpBridge';
 import { StorageKeys, fetchLiveStudentData, getSampleDataPayload } from './services/api';
 import { calculateBunkStats } from './services/bunkCalculator';
-import { toggleAmbientSoundscape, playChime } from './services/soundEngine';
+import { playChime } from './services/soundEngine';
 import { fireStreakConfetti } from './services/confetti';
 import { selfAttendanceStore } from './services/selfAttendanceStore';
 import { fetchCloudPrefs } from './services/cloudStorage';
@@ -43,28 +36,15 @@ export default function App() {
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
   const [isBookletOpen, setIsBookletOpen] = useState(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
-  const [isGroupSynergyOpen, setIsGroupSynergyOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
     return !localStorage.getItem('has_seen_onboarding_v1');
   });
   const [isQuickTourOpen, setIsQuickTourOpen] = useState(false);
-  const [isAmbientOn, setIsAmbientOn] = useState(false);
   const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const [timetableSelectedDate, setTimetableSelectedDate] = useState(null);
 
   const [isSyncing, setIsSyncing] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-
-  // Deep-Link Ingestion (?meet=ROLL, ?join=CODE, ?beacon=ZONE)
-  const [deepLinkData, setDeepLinkData] = useState(() => {
-    if (typeof window === 'undefined') return { hasLink: false };
-    return parseDeepLink();
-  });
-  const [isInviteModalOpen, setIsInviteModalOpen] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    const p = parseDeepLink();
-    return !!p.hasLink;
-  });
 
   // 1. Theme initialization
   const [theme, setTheme] = useState(() => {
@@ -191,39 +171,10 @@ export default function App() {
     setIsLoginModalOpen(true);
   };
 
-  // Handle viral invite onboarding selection (?meet=ROLL or ?join=CODE)
-  const handleIdentitySelected = (student, deepLink) => {
-    setDataPayload(prev => ({
-      ...prev,
-      student: {
-        id: student.roll,
-        name: student.name,
-        email: `${student.roll.toLowerCase()}@astra.xlri.ac.in`,
-        section: student.section
-      }
-    }));
-    if (deepLink?.type === 'meet') {
-      setActiveTab('synergy');
-    }
-  };
-
   // Jump from Horizon Heatmap to specific date on timetable
   const handleSelectDateFromHeatmap = (dStr) => {
     setTimetableSelectedDate(dStr);
     setActiveTab('timetable');
-  };
-
-  // Toggle 432Hz Ambient Focus Soundscape
-  const handleToggleAmbient = () => {
-    const next = toggleAmbientSoundscape();
-    setIsAmbientOn(next);
-    if (next) {
-      toast.success("432Hz Meditative Soundscape Active", {
-        description: "Warm binaural theta hum playing for deep focus"
-      });
-    } else {
-      toast("Soundscape Paused");
-    }
   };
 
   // Agentic Action Execution from Astra Neural Co-Pilot or External MCP
@@ -244,16 +195,8 @@ export default function App() {
       fireStreakConfetti();
       playChime();
       toast.success('🔥 Streak Celebration Triggered!');
-    } else if (action.type === 'TOGGLE_SOUNDSCAPE') {
-      handleToggleAmbient();
     }
   };
-
-  // Live Universal MCP Bridge (Pattern A: Web-to-Agent WebSocket connection)
-  const { isConnected: isMcpConnected, activeCommand: mcpActiveCommand } = useMcpBridge({
-    onExecuteAction: handleExecuteCopilotAction,
-    localData: dataPayload
-  });
 
   // 4. Calculate warning count for badges
   const coursesWithStats = (dataPayload.courses || []).map(c => ({
@@ -269,7 +212,6 @@ export default function App() {
     onSelectTab: setActiveTab,
     onOpenSearch: () => setIsSearchModalOpen(prev => !prev),
     onToggleTheme: toggleTheme,
-    onToggleAmbient: handleToggleAmbient,
     onOpenShortcuts: () => setIsShortcutsModalOpen(prev => !prev),
     onOpenCopilot: () => setIsCopilotOpen(prev => !prev),
     onToggleLayoutMode: () => {
@@ -303,8 +245,6 @@ export default function App() {
           onOpenShareCard={() => setIsShareCardModalOpen(true)}
           onOpenBooklet={() => setIsBookletOpen(true)}
           onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
-          isAmbientOn={isAmbientOn}
-          onToggleAmbient={handleToggleAmbient}
           onExecuteAction={handleExecuteCopilotAction}
           onSelectDateFromHeatmap={handleSelectDateFromHeatmap}
           onToggleLayoutMode={() => {
@@ -339,8 +279,6 @@ export default function App() {
             isSyncing={isSyncing}
             onOpenSearch={() => setIsSearchModalOpen(true)}
             onOpenShareCard={() => setIsShareCardModalOpen(true)}
-            isAmbientOn={isAmbientOn}
-            onToggleAmbient={handleToggleAmbient}
             onOpenCopilot={() => setIsCopilotOpen(true)}
             onOpenBooklet={() => setIsBookletOpen(true)}
             onOpenQuickTour={() => setIsQuickTourOpen(true)}
@@ -415,14 +353,6 @@ export default function App() {
               />
             )}
 
-            {activeTab === 'synergy' && (
-              <SectorSynergy
-                currentUser={dataPayload.student}
-                schedule={dataPayload.schedule}
-                isMobile={true}
-              />
-            )}
-
             {activeTab === 'deadlines' && (
               <DeadlinesView
                 initialDeadlines={dataPayload.deadlines}
@@ -488,14 +418,6 @@ export default function App() {
         onClose={() => setIsShortcutsModalOpen(false)}
       />
 
-      {/* Group Synergy & Collaboration Matrix Modal */}
-      <GroupCollaborationModal
-        isOpen={isGroupSynergyOpen}
-        onClose={() => setIsGroupSynergyOpen(false)}
-        currentUser={dataPayload.student}
-        schedule={dataPayload.schedule}
-      />
-
       {/* Astra Neural Co-Pilot Drawer (Mobile Drawer) */}
       <AstraCopilotDrawer
         isOpen={isCopilotOpen}
@@ -511,26 +433,12 @@ export default function App() {
         onClose={() => setIsAiSettingsOpen(false)}
       />
 
-      {/* Universal MCP Live Bridge HUD Indicator */}
-      <McpHudIndicator
-        isConnected={isMcpConnected}
-        activeCommand={mcpActiveCommand}
-      />
-
-      {/* Viral Invite & Deep-Link Landing Modal (?meet=ROLL or ?join=CODE) */}
-      <InviteWelcomeModal
-        isOpen={isInviteModalOpen}
-        onClose={() => setIsInviteModalOpen(false)}
-        deepLinkData={deepLinkData}
-        onIdentitySelected={handleIdentitySelected}
-      />
-
       {/* Interactive 30-Second Quick Tour */}
       <QuickTourModal
         isOpen={isQuickTourOpen}
         onClose={() => setIsQuickTourOpen(false)}
         onJumpToSector={(idx) => {
-          const tabs = ['radar', 'timetable', 'bunkmeter', 'trips', 'deadlines', 'synergy'];
+          const tabs = ['radar', 'timetable', 'bunkmeter', 'trips', 'deadlines'];
           setActiveTab(tabs[idx] || 'radar');
         }}
       />

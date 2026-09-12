@@ -1,12 +1,11 @@
 import React from 'react';
-import { Compass, ShieldCheck, Calendar, Users, Palmtree, CheckSquare } from 'lucide-react';
+import { Compass, ShieldCheck, Calendar, Palmtree, CheckSquare } from 'lucide-react';
 
 export default function Navigation({ activeTab, onSelectTab, warningCount, pendingDeadlinesCount }) {
   const tabs = [
     { id: 'radar', label: 'Today', icon: Compass },
     { id: 'bunkmeter', label: 'Attendance', icon: ShieldCheck, badge: warningCount > 0 ? warningCount : null, badgeColor: 'var(--hanko)' },
     { id: 'timetable', label: 'Classes', icon: Calendar },
-    { id: 'synergy', label: 'Social', icon: Users },
     { id: 'trips', label: 'Trips', icon: Palmtree },
     { id: 'deadlines', label: 'Deadlines', icon: CheckSquare, badge: pendingDeadlinesCount > 0 ? pendingDeadlinesCount : null, badgeColor: 'var(--ochre)' }
   ];

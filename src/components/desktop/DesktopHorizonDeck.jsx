@@ -6,10 +6,8 @@ import SectorTimetable from './sectors/SectorTimetable';
 import SectorBunkMeter from './sectors/SectorBunkMeter';
 import SectorTrips from './sectors/SectorTrips';
 import SectorDeadlines from './sectors/SectorDeadlines';
-import SectorSynergy from './sectors/SectorSynergy';
 import DesktopInspectorDock from './DesktopInspectorDock';
 import AiSettingsModal from '../AiSettingsModal';
-import StatusBeaconModal from '../social/StatusBeaconModal';
 import QuickTourModal from '../QuickTourModal';
 import { playTactileClick } from '../../services/soundEngine';
 
@@ -25,8 +23,6 @@ export default function DesktopHorizonDeck({
   onOpenShareCard,
   onOpenBooklet,
   onOpenShortcuts,
-  isAmbientOn,
-  onToggleAmbient,
   onExecuteAction,
   onSelectDateFromHeatmap,
   onToggleLayoutMode,
@@ -36,7 +32,6 @@ export default function DesktopHorizonDeck({
   const [selectedSession, setSelectedSession] = useState(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
-  const [isBeaconModalOpen, setIsBeaconModalOpen] = useState(false);
   const [isQuickTourOpen, setIsQuickTourOpen] = useState(() => {
     return !localStorage.getItem('has_seen_quick_tour_v1');
   });
@@ -108,14 +103,11 @@ export default function DesktopHorizonDeck({
         onOpenSearch={onOpenSearch}
         onOpenShortcuts={onOpenShortcuts}
         onOpenBooklet={onOpenBooklet}
-        isAmbientOn={isAmbientOn}
-        onToggleAmbient={onToggleAmbient}
         onOpenAiSettings={() => setIsAiSettingsOpen(true)}
         onToggleLayoutMode={onToggleLayoutMode}
         isDesktop={isDesktop}
         isInspectorOpen={isInspectorOpen}
         onToggleInspector={() => setIsInspectorOpen(prev => !prev)}
-        onOpenBeaconModal={() => setIsBeaconModalOpen(true)}
         onOpenQuickTour={() => setIsQuickTourOpen(true)}
         schedule={dataPayload.schedule}
         courses={dataPayload.courses}
@@ -236,24 +228,6 @@ export default function DesktopHorizonDeck({
             />
           </section>
 
-          {/* SECTOR 06: Batch Synergy & Free Window Matrix */}
-          <section
-            data-sector-index="5"
-            data-sector-id="synergy"
-            style={{
-              display: activeSectorIndex === 5 ? 'flex' : 'none',
-              flexDirection: 'column',
-              height: '100%',
-              minHeight: 0,
-              overflow: 'hidden',
-              animation: 'sectorFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          >
-            <SectorSynergy
-              currentUser={dataPayload.student}
-              schedule={dataPayload.schedule}
-            />
-          </section>
         </main>
 
         {/* 3. Slide-Over Context Inspector Dock (Toggles on Lecture Select) */}
@@ -296,14 +270,7 @@ export default function DesktopHorizonDeck({
         onClose={() => setIsAiSettingsOpen(false)}
       />
 
-      {/* 6. Campus Presence Beacon Modal */}
-      <StatusBeaconModal
-        isOpen={isBeaconModalOpen}
-        onClose={() => setIsBeaconModalOpen(false)}
-        currentUser={dataPayload.student}
-      />
-
-      {/* 7. Interactive 30-Second Quick Tour */}
+      {/* 6. Interactive 30-Second Quick Tour */}
       <QuickTourModal
         isOpen={isQuickTourOpen}
         onClose={() => {

@@ -3,7 +3,6 @@ import {
   Search,
   Command,
   Sparkles,
-  Headphones,
   RefreshCw,
   Sun,
   Moon,
@@ -12,13 +11,11 @@ import {
   BookOpen,
   Cpu,
   HelpCircle,
-  Radio,
   LogOut
 } from 'lucide-react';
 import XlFlowLogo from '../XlFlowLogo';
 import DynamicAmbientIsland from '../DynamicAmbientIsland';
 import { playTactileClick, playSoftClick } from '../../services/soundEngine';
-import { socialApi } from '../../services/socialApi';
 
 export default function HorizonTopBar({
   student,
@@ -31,14 +28,11 @@ export default function HorizonTopBar({
   onOpenSearch,
   onOpenShortcuts,
   onOpenBooklet,
-  isAmbientOn,
-  onToggleAmbient,
   onOpenAiSettings,
   onToggleLayoutMode,
   isDesktop,
   isInspectorOpen,
   onToggleInspector,
-  onOpenBeaconModal,
   onOpenQuickTour,
   schedule = [],
   courses = [],
@@ -47,18 +41,7 @@ export default function HorizonTopBar({
   onSelectTab
 }) {
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
-  const [myBeacon, setMyBeacon] = useState(() => socialApi.getMyStatus());
   const moreMenuRef = useRef(null);
-
-  // Subscribe to beacon updates
-  useEffect(() => {
-    const unsub = socialApi.subscribe((e) => {
-      if (e.type === 'STATUS_UPDATED' || e.type === 'STATUS_CLEARED') {
-        setMyBeacon(socialApi.getMyStatus());
-      }
-    });
-    return unsub;
-  }, []);
 
   // Close more menu on outside click
   useEffect(() => {
@@ -194,8 +177,6 @@ export default function HorizonTopBar({
           schedule={schedule}
           courses={courses}
           deadlines={deadlines}
-          isAmbientOn={isAmbientOn}
-          onToggleAmbient={onToggleAmbient}
           onInspectSession={onInspectSession}
           onSelectTab={onSelectTab}
           isCompact={false}
@@ -305,37 +286,6 @@ export default function HorizonTopBar({
           padding: '2px',
           gap: '1px'
         }}>
-          {/* 432Hz Focus Audio Toggle */}
-          <button
-            onClick={() => {
-              playTactileClick(600);
-              onToggleAmbient?.();
-            }}
-            title={isAmbientOn ? 'Pause 432Hz Focus Soundscape (M)' : 'Play 432Hz Meditative Soundscape (M)'}
-            aria-label="Toggle 432Hz Audio"
-            style={{
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: isAmbientOn ? 'var(--wash-moss)' : 'transparent',
-              border: 'none',
-              borderRadius: '6px',
-              color: isAmbientOn ? 'var(--moss-text)' : 'var(--ink-soft)',
-              cursor: 'pointer',
-              transition: 'all 0.15s'
-            }}
-            onMouseEnter={(e) => {
-              if (!isAmbientOn) e.currentTarget.style.backgroundColor = 'var(--card)';
-            }}
-            onMouseLeave={(e) => {
-              if (!isAmbientOn) e.currentTarget.style.backgroundColor = 'transparent';
-            }}
-          >
-            <Headphones size={13} color={isAmbientOn ? 'var(--moss)' : 'currentColor'} />
-          </button>
-
           {/* Theme Switcher */}
           <button
             onClick={() => {
@@ -618,42 +568,10 @@ export default function HorizonTopBar({
                   }}>?</kbd>
                 </button>
 
-                {/* 6. Broadcast Beacon */}
-                {onOpenBeaconModal && (
-                  <button
-                    onClick={() => {
-                      setIsMoreMenuOpen(false);
-                      playTactileClick(700);
-                      onOpenBeaconModal();
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '9px',
-                      padding: '7px 10px',
-                      borderRadius: '8px',
-                      fontSize: '11.5px',
-                      fontWeight: 600,
-                      color: 'var(--ink)',
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      width: '100%',
-                      transition: 'background-color 0.12s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--paper)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                  >
-                    <Radio size={13} color={myBeacon ? 'var(--moss)' : 'var(--ochre)'} />
-                    <span>{myBeacon ? `Beacon: ${myBeacon.zone}` : 'Broadcast Beacon'}</span>
-                  </button>
-                )}
-
                 {/* Divider */}
                 <div style={{ height: '1px', backgroundColor: 'var(--border)', margin: '3px 0' }} />
 
-                {/* 7. Logout */}
+                {/* 6. Logout */}
                 {onLogout && (
                   <button
                     onClick={() => {

@@ -4,7 +4,6 @@ export function useKeyboardShortcuts({
   onSelectTab,
   onOpenSearch,
   onToggleTheme,
-  onToggleAmbient,
   onOpenShortcuts,
   onOpenCopilot,
   onToggleLayoutMode
@@ -32,19 +31,13 @@ export function useKeyboardShortcuts({
           onSelectTab?.('timetable');
         } else if (e.key === '4') {
           e.preventDefault();
-          onSelectTab?.('synergy');
-        } else if (e.key === '5') {
-          e.preventDefault();
           onSelectTab?.('trips');
-        } else if (e.key === '6') {
+        } else if (e.key === '5') {
           e.preventDefault();
           onSelectTab?.('deadlines');
         } else if (e.key.toLowerCase() === 't') {
           e.preventDefault();
           onToggleTheme?.();
-        } else if (e.key.toLowerCase() === 'm') {
-          e.preventDefault();
-          onToggleAmbient?.();
         } else if (e.key.toLowerCase() === 'v') {
           e.preventDefault();
           onToggleLayoutMode?.();
@@ -69,5 +62,5 @@ export function useKeyboardShortcuts({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onSelectTab, onOpenSearch, onToggleTheme, onToggleAmbient, onOpenShortcuts, onOpenCopilot]);
+  }, [onSelectTab, onOpenSearch, onToggleTheme, onOpenShortcuts, onOpenCopilot]);
 }

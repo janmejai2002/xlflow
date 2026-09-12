@@ -5,7 +5,6 @@ import {
   ShieldCheck,
   Palmtree,
   CheckSquare,
-  Users,
   ChevronLeft,
   ChevronRight,
   Smartphone
@@ -17,8 +16,7 @@ export const SECTORS = [
   { id: 'timetable', index: 1, number: '02', name: 'Timetable', icon: Calendar, width: 1260 },
   { id: 'bunkmeter', index: 2, number: '03', name: 'Attendance', icon: ShieldCheck, width: 1200 },
   { id: 'trips', index: 3, number: '04', name: 'Trip Planner', icon: Palmtree, width: 1120 },
-  { id: 'deadlines', index: 4, number: '05', name: 'Deadlines', icon: CheckSquare, width: 1060 },
-  { id: 'synergy', index: 5, number: '06', name: 'Campus Social', icon: Users, width: 1150 }
+  { id: 'deadlines', index: 4, number: '05', name: 'Deadlines', icon: CheckSquare, width: 1060 }
 ];
 
 export default function HorizonMiniMap({
