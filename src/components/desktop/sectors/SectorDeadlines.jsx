@@ -74,12 +74,12 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
             height: '32px',
             borderRadius: '8px',
             background: 'var(--wash-mizu)',
-            border: '1px solid rgba(0, 169, 184, 0.3)',
+            border: '1px solid rgba(var(--mizu-rgb), 0.3)',
             color: 'var(--mizu)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)'
+            boxShadow: '0 2px 8px rgba(var(--mizu-rgb), 0.15)'
           }}>
             <CheckSquare size={16} />
           </div>
@@ -228,20 +228,20 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
                   DUE SOON (&lt; 48 HOURS)
                 </span>
                 {urgent.map(d => {
-                  const colors = COURSE_COLORS[d.courseCode] || { accent: '#4E6E9C' };
+                  const colors = COURSE_COLORS[d.courseCode] || { accent: 'var(--indigo)' };
                   return (
                     <div
                       key={d.id}
                       style={{
                         backgroundColor: 'var(--paper)',
-                        border: '1.5px solid rgba(210, 84, 63, 0.35)',
+                        border: '1.5px solid rgba(var(--hanko-rgb), 0.35)',
                         borderRadius: '10px',
                         padding: '12px 14px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         gap: '12px',
-                        boxShadow: '0 1px 3px rgba(210, 84, 63, 0.08)'
+                        boxShadow: '0 1px 3px rgba(var(--hanko-rgb), 0.08)'
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -304,7 +304,7 @@ export default function SectorDeadlines({ initialDeadlines = [], courses = [] })
                   </span>
                 )}
                 {upcoming.map(d => {
-                  const colors = COURSE_COLORS[d.courseCode] || { accent: '#4E6E9C' };
+                  const colors = COURSE_COLORS[d.courseCode] || { accent: 'var(--indigo)' };
                   return (
                     <div
                       key={d.id}

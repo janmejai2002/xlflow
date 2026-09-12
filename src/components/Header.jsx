@@ -71,7 +71,7 @@ export default function Header({
               <span>XL</span>
               <span style={{ color: 'var(--mizu)', opacity: 0.5, margin: '0 0.5px', fontWeight: 600 }}>-</span>
               <span style={{
-                background: 'linear-gradient(135deg, var(--mizu) 0%, #4E6E9C 100%)',
+                background: 'linear-gradient(135deg, var(--moss) 0%, var(--mizu) 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 fontWeight: 800
@@ -94,7 +94,7 @@ export default function Header({
                 borderRadius: '9999px',
                 backgroundColor: 'var(--wash-moss)',
                 color: 'var(--moss-text)',
-                border: '1px solid rgba(110, 140, 99, 0.3)',
+                border: '1px solid rgba(var(--moss-rgb), 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '3px',
@@ -169,7 +169,7 @@ export default function Header({
           aria-label="Open Astra AI Assistant"
           style={{
             background: 'var(--wash-mizu)',
-            border: '1px solid rgba(0, 169, 184, 0.35)',
+            border: '1px solid rgba(var(--mizu-rgb), 0.35)',
             borderRadius: '9px',
             padding: '0 10px',
             height: '44px',
@@ -182,16 +182,16 @@ export default function Header({
             cursor: 'pointer',
             fontSize: '11px',
             fontWeight: 700,
-            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)',
+            boxShadow: '0 2px 8px rgba(var(--mizu-rgb), 0.15)',
             transition: 'all 0.15s ease'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'scale(1.04)';
-            e.currentTarget.style.borderColor = 'rgba(0, 169, 184, 0.6)';
+            e.currentTarget.style.borderColor = 'rgba(var(--mizu-rgb), 0.6)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.borderColor = 'rgba(0, 169, 184, 0.35)';
+            e.currentTarget.style.borderColor = 'rgba(var(--mizu-rgb), 0.35)';
           }}
         >
           <Sparkles size={14} color="var(--mizu)" />
@@ -278,7 +278,7 @@ export default function Header({
                   cursor: 'pointer',
                   textAlign: 'left'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(194, 145, 58, 0.25)'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(var(--ochre-rgb), 0.25)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--wash-ochre)'}
               >
                 <Sparkles size={15} style={{ color: 'var(--ochre)' }} />

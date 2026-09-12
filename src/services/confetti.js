@@ -1,7 +1,7 @@
 import confetti from 'canvas-confetti';
 
 // wAIbi-sabi Earthy Palette: Water, Moss, Ochre, Hanko Red, Plum
-const WAIBI_COLORS = ['#00A9B8', '#6E8C63', '#C2913A', '#8A6690', '#D2543F'];
+const WAIBI_COLORS = ['var(--mizu)', 'var(--moss)', '#C2913A', 'var(--plum)', '#D2543F'];
 
 /**
  * Fires dual side cannons when clicking the attendance streak badge

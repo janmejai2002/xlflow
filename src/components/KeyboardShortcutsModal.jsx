@@ -34,7 +34,7 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
     <div style={{
       position: 'fixed',
       inset: 0,
-      backgroundColor: 'rgba(21, 24, 29, 0.7)',
+      backgroundColor: 'rgba(21, 21, 18, 0.7)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',

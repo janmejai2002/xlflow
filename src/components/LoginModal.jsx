@@ -36,7 +36,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
     <div style={{
       position: 'fixed',
       inset: 0,
-      backgroundColor: 'rgba(21, 24, 29, 0.65)',
+      backgroundColor: 'rgba(21, 21, 18, 0.65)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -109,7 +109,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
         {/* Instant 1-Click Demo Option */}
         <div style={{
           backgroundColor: 'var(--wash-mizu)',
-          border: '1px solid rgba(0, 169, 184, 0.3)',
+          border: '1px solid rgba(var(--mizu-rgb), 0.3)',
           borderRadius: '14px',
           padding: '16px',
           marginBottom: '20px',
@@ -134,7 +134,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              boxShadow: '0 2px 8px rgba(0, 169, 184, 0.25)'
+              boxShadow: '0 2px 8px rgba(var(--mizu-rgb), 0.25)'
             }}
           >
             <Sparkles size={16} />
@@ -163,7 +163,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
               padding: '10px 12px',
               borderRadius: '8px',
               backgroundColor: 'var(--wash-hanko)',
-              border: '1px solid rgba(210, 84, 63, 0.3)',
+              border: '1px solid rgba(var(--hanko-rgb), 0.3)',
               color: 'var(--hanko)',
               fontSize: '12px',
               display: 'flex',

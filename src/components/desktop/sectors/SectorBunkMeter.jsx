@@ -113,12 +113,12 @@ XLRI Jamshedpur / Delhi-NCR`;
             height: '32px',
             borderRadius: '8px',
             background: 'var(--wash-moss)',
-            border: '1px solid rgba(110, 140, 99, 0.3)',
+            border: '1px solid rgba(var(--moss-rgb), 0.3)',
             color: 'var(--moss)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(110, 140, 99, 0.15)'
+            boxShadow: '0 2px 8px rgba(var(--moss-rgb), 0.15)'
           }}>
             <ShieldCheck size={16} />
           </div>
@@ -213,7 +213,7 @@ XLRI Jamshedpur / Delhi-NCR`;
               gap: '6px',
               padding: '7px 12px',
               backgroundColor: discrepancies.length > 0 ? 'var(--wash-ochre)' : 'var(--wash-moss)',
-              border: `1px solid ${discrepancies.length > 0 ? 'rgba(217, 119, 6, 0.35)' : 'rgba(22, 163, 74, 0.35)'}`,
+              border: `1px solid ${discrepancies.length > 0 ? 'rgba(var(--ochre-rgb), 0.35)' : 'rgba(var(--moss-rgb), 0.35)'}`,
               borderRadius: '8px',
               color: discrepancies.length > 0 ? 'var(--ochre-text)' : 'var(--moss-text)',
               fontSize: '12px',
@@ -291,7 +291,7 @@ XLRI Jamshedpur / Delhi-NCR`;
           backgroundColor: peaceOfMindScore >= 90 ? 'var(--wash-moss)' : 'var(--wash-ochre)',
           padding: '12px 18px',
           borderRadius: '12px',
-          border: `1px solid ${peaceOfMindScore >= 90 ? 'rgba(110, 140, 99, 0.35)' : 'rgba(194, 145, 58, 0.35)'}`,
+          border: `1px solid ${peaceOfMindScore >= 90 ? 'rgba(var(--moss-rgb), 0.35)' : 'rgba(var(--ochre-rgb), 0.35)'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
@@ -360,7 +360,7 @@ XLRI Jamshedpur / Delhi-NCR`;
           backgroundColor: riskCount > 0 ? 'var(--wash-ochre)' : 'var(--card)',
           padding: '12px 18px',
           borderRadius: '12px',
-          border: riskCount > 0 ? '1px solid rgba(194, 145, 58, 0.3)' : '1px solid var(--border)',
+          border: riskCount > 0 ? '1px solid rgba(var(--ochre-rgb), 0.3)' : '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
@@ -379,7 +379,7 @@ XLRI Jamshedpur / Delhi-NCR`;
       {discrepancies.length > 0 && (
         <div style={{
           backgroundColor: 'var(--wash-ochre)',
-          border: '1px solid rgba(217, 119, 6, 0.35)',
+          border: '1px solid rgba(var(--ochre-rgb), 0.35)',
           borderRadius: '12px',
           padding: '10px 16px',
           display: 'flex',
@@ -408,7 +408,7 @@ XLRI Jamshedpur / Delhi-NCR`;
                 padding: '5px 12px',
                 borderRadius: '6px',
                 backgroundColor: 'var(--paper)',
-                border: '1px solid rgba(194, 145, 58, 0.4)',
+                border: '1px solid rgba(var(--ochre-rgb), 0.4)',
                 color: 'var(--ochre-text)',
                 fontWeight: 700,
                 fontSize: '11px',

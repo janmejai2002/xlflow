@@ -233,7 +233,7 @@ export default function TimetableView({ schedule = [], courses = [], selectedDat
         {/* Metric 2: Next Upcoming Class */}
         <div style={{
           backgroundColor: 'var(--wash-mizu)',
-          border: '1px solid rgba(0, 169, 184, 0.25)',
+          border: '1px solid rgba(var(--mizu-rgb), 0.25)',
           borderRadius: '12px',
           padding: '10px 12px',
           display: 'flex',
@@ -466,7 +466,7 @@ export default function TimetableView({ schedule = [], courses = [], selectedDat
                   {sessions.map((session, sIdx) => {
                     const course = courseMap[session.courseCode];
                     const isNextUp = session.sessionId === nextSession?.sessionId;
-                    const ccolor = COURSE_COLORS[session.courseCode] || { accent: '#00A9B8' };
+                    const ccolor = COURSE_COLORS[session.courseCode] || { accent: 'var(--mizu)' };
 
                     return (
                       <div key={session.sessionId || sIdx} style={{ position: 'relative' }}>

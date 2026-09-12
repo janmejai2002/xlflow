@@ -68,7 +68,7 @@ export default function SelfAttendanceMarkPill({
             transition: 'all 0.15s ease',
             backgroundColor: isPresent ? 'var(--wash-moss)' : isAbsent ? 'var(--wash-hanko)' : 'var(--stone)',
             color: isPresent ? 'var(--moss-text)' : isAbsent ? 'var(--hanko-text)' : 'var(--ink-soft)',
-            border: `1px solid ${isPresent ? 'rgba(22, 163, 74, 0.35)' : isAbsent ? 'rgba(220, 38, 38, 0.35)' : 'var(--border)'}`
+            border: `1px solid ${isPresent ? 'rgba(var(--moss-rgb), 0.35)' : isAbsent ? 'rgba(var(--hanko-rgb), 0.35)' : 'var(--border)'}`
           }}
         >
           {isPresent && <Check size={isSmall ? 11 : 13} color="var(--moss)" />}

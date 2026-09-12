@@ -23,13 +23,19 @@ export default function ShareCardModal({ isOpen, onClose, student, courses = [],
     canvas.height = H;
 
     const isDark = theme === 'dark';
-    const bgColor = isDark ? '#15181D' : '#F6F4EF';
-    const cardBg = isDark ? '#1C2129' : '#EDE9E0';
-    const inkColor = isDark ? '#E9E5DC' : '#1A2639';
-    const softInk = isDark ? '#9B9792' : '#6A6864';
-    const borderColor = isDark ? '#2E343D' : '#DCD4C7';
-    const mizuColor = '#00A9B8';
-    const mossColor = '#6E8C63';
+    // Canvas cannot resolve CSS custom properties, so the palette is literal here.
+    // Keep these in sync with the tokens in src/index.css.
+    const bgColor = isDark ? '#151512' : '#EFE7D8';
+    const cardBg = isDark ? '#1E1E19' : '#F8F2E6';
+    const inkColor = isDark ? '#DCC9A9' : '#1C1A17';
+    const softInk = isDark ? '#9C8F79' : '#574F41';
+    const borderColor = isDark ? '#322F27' : '#DCC9A9';
+    const mizuColor = isDark ? '#6FA8A2' : '#2F5D62';
+    const mossColor = isDark ? '#7E9C7F' : '#4E6851';
+    const ochreColor = isDark ? '#D4A254' : '#B07524';
+    const hankoColor = isDark ? '#D9614F' : '#B83A2D';
+    const plumColor = isDark ? '#C08E7A' : '#8A5B4C';
+    const indigoColor = isDark ? '#7E9CC0' : '#3D5570';
 
     // 1. Background Ground
     ctx.fillStyle = bgColor;
@@ -37,9 +43,9 @@ export default function ShareCardModal({ isOpen, onClose, student, courses = [],
 
     // 2. Subtle top accent gradient bar
     const grad = ctx.createLinearGradient(0, 0, W, 0);
-    grad.addColorStop(0, '#00A9B8');
-    grad.addColorStop(0.5, '#4E6E9C');
-    grad.addColorStop(1, '#8A6690');
+    grad.addColorStop(0, mizuColor);
+    grad.addColorStop(0.5, indigoColor);
+    grad.addColorStop(1, plumColor);
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, 8);
 
@@ -67,9 +73,9 @@ export default function ShareCardModal({ isOpen, onClose, student, courses = [],
     ctx.fillText(`Roll: ${student?.id || 'B25349'}  •  Program: ${student?.program || 'PGDM-BMD'}  •  Section EF`, 64, 200);
 
     // 6. Overall Status Pill
-    ctx.fillStyle = isDark ? 'rgba(110, 140, 99, 0.25)' : '#E4EADF';
+    ctx.fillStyle = isDark ? 'rgba(126, 156, 127, 0.25)' : 'rgba(78, 104, 81, 0.12)';
     ctx.fillRect(64, 230, 380, 44);
-    ctx.strokeStyle = 'rgba(110, 140, 99, 0.4)';
+    ctx.strokeStyle = isDark ? 'rgba(126, 156, 127, 0.4)' : 'rgba(78, 104, 81, 0.35)';
     ctx.lineWidth = 1.5;
     ctx.strokeRect(64, 230, 380, 44);
 
@@ -98,11 +104,11 @@ export default function ShareCardModal({ isOpen, onClose, student, courses = [],
       ctx.strokeRect(x, y, cardW, cardH);
 
       // Course Accent Left Stripe
-      ctx.fillStyle = idx === 0 ? '#00A9B8' : idx === 1 ? '#8A6690' : idx === 2 ? '#4E6E9C' : '#6E8C63';
+      ctx.fillStyle = idx === 0 ? mizuColor : idx === 1 ? plumColor : idx === 2 ? indigoColor : mossColor;
       ctx.fillRect(x, y, 6, cardH);
 
       // Course Code
-      ctx.fillStyle = idx === 0 ? '#00A9B8' : idx === 1 ? '#8A6690' : idx === 2 ? '#4E6E9C' : '#6E8C63';
+      ctx.fillStyle = idx === 0 ? mizuColor : idx === 1 ? plumColor : idx === 2 ? indigoColor : mossColor;
       ctx.font = '700 18px Inter, sans-serif';
       ctx.fillText(c.code, x + 20, y + 36);
 
@@ -155,7 +161,7 @@ export default function ShareCardModal({ isOpen, onClose, student, courses = [],
     <div style={{
       position: 'fixed',
       inset: 0,
-      backgroundColor: 'rgba(21, 24, 29, 0.75)',
+      backgroundColor: 'rgba(21, 21, 18, 0.75)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',

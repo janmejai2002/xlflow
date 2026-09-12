@@ -143,7 +143,7 @@ export default function HorizonHeatmap({ schedule = [], deadlines = [], onSelect
 
         <div style={{
           backgroundColor: 'var(--wash-ochre)',
-          border: '1px solid rgba(194, 145, 58, 0.25)',
+          border: '1px solid rgba(var(--ochre-rgb), 0.25)',
           borderRadius: '8px',
           padding: '8px',
           textAlign: 'center'
@@ -154,7 +154,7 @@ export default function HorizonHeatmap({ schedule = [], deadlines = [], onSelect
 
         <div style={{
           backgroundColor: 'var(--wash-moss)',
-          border: '1px solid rgba(110, 140, 99, 0.25)',
+          border: '1px solid rgba(var(--moss-rgb), 0.25)',
           borderRadius: '8px',
           padding: '8px',
           textAlign: 'center'
@@ -232,15 +232,15 @@ export default function HorizonHeatmap({ schedule = [], deadlines = [], onSelect
                   if (hasClasses) {
                     if (viewMode === 'load') {
                       if (cell.count === 1) {
-                        bg = 'rgba(0, 169, 184, 0.15)';
+                        bg = 'rgba(var(--mizu-rgb), 0.15)';
                         textColor = 'var(--ink)';
-                        borderColor = 'rgba(0, 169, 184, 0.3)';
+                        borderColor = 'rgba(var(--mizu-rgb), 0.3)';
                       } else if (cell.count === 2) {
-                        bg = 'rgba(0, 169, 184, 0.32)';
+                        bg = 'rgba(var(--mizu-rgb), 0.32)';
                         textColor = 'var(--ink)';
-                        borderColor = 'rgba(0, 169, 184, 0.5)';
+                        borderColor = 'rgba(var(--mizu-rgb), 0.5)';
                       } else {
-                        bg = 'rgba(0, 169, 184, 0.55)';
+                        bg = 'rgba(var(--mizu-rgb), 0.55)';
                         textColor = '#FFFFFF';
                         borderColor = 'var(--mizu)';
                       }
@@ -248,7 +248,7 @@ export default function HorizonHeatmap({ schedule = [], deadlines = [], onSelect
                       // Attendance mode
                       bg = 'var(--wash-moss)';
                       textColor = 'var(--moss)';
-                      borderColor = 'rgba(110, 140, 99, 0.4)';
+                      borderColor = 'rgba(var(--moss-rgb), 0.4)';
                     }
                   }
 

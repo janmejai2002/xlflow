@@ -28,16 +28,16 @@ export default function XlFlowLogo({
       <defs>
         {/* Mizu Cyan Flow Gradient */}
         <linearGradient id={grad1Id} x1="6" y1="30" x2="30" y2="6" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#00A9B8" />
+          <stop offset="0%" stopColor="var(--mizu)" />
           <stop offset="60%" stopColor="#22D3EE" />
-          <stop offset="100%" stopColor="#38E1F0" />
+          <stop offset="100%" stopColor="var(--mizu)" />
         </linearGradient>
 
         {/* Deep Indigo/Plum Counter Gradient */}
         <linearGradient id={grad2Id} x1="6" y1="6" x2="30" y2="30" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#7C5295" />
-          <stop offset="50%" stopColor="#4E6E9C" />
-          <stop offset="100%" stopColor="#00A9B8" />
+          <stop offset="50%" stopColor="var(--indigo)" />
+          <stop offset="100%" stopColor="var(--mizu)" />
         </linearGradient>
       </defs>
 
@@ -63,15 +63,15 @@ export default function XlFlowLogo({
       {/* Momentum Trailing Flairs */}
       <path
         d="M13 18 C15 14 17 11 21 10"
-        stroke="#38E1F0"
+        stroke="var(--mizu)"
         strokeWidth="1.5"
         strokeLinecap="round"
         opacity="0.6"
       />
 
       {/* Central Luminous Focus Node */}
-      <circle cx="18" cy="18" r="4.5" fill="rgba(0, 169, 184, 0.25)" />
-      <circle cx="18" cy="18" r="2.4" fill="#38E1F0" />
+      <circle cx="18" cy="18" r="4.5" fill="rgba(var(--mizu-rgb), 0.25)" />
+      <circle cx="18" cy="18" r="2.4" fill="var(--mizu)" />
     </svg>
   );
 
@@ -83,7 +83,7 @@ export default function XlFlowLogo({
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
-          filter: glow ? 'drop-shadow(0 0 6px rgba(0, 169, 184, 0.35))' : 'none',
+          filter: glow ? 'drop-shadow(0 0 6px rgba(var(--mizu-rgb), 0.35))' : 'none',
           ...style
         }}
       >
@@ -100,9 +100,9 @@ export default function XlFlowLogo({
         height: `${size}px`,
         borderRadius: `${Math.round(size * 0.26)}px`,
         backgroundColor: 'var(--card)',
-        background: 'linear-gradient(135deg, rgba(0, 169, 184, 0.15) 0%, rgba(78, 110, 156, 0.10) 100%)',
-        border: '1px solid rgba(0, 169, 184, 0.30)',
-        boxShadow: glow ? '0 2px 10px rgba(0, 169, 184, 0.16)' : 'none',
+        background: 'linear-gradient(135deg, rgba(var(--mizu-rgb), 0.15) 0%, rgba(var(--indigo-rgb), 0.10) 100%)',
+        border: '1px solid rgba(var(--mizu-rgb), 0.30)',
+        boxShadow: glow ? '0 2px 10px rgba(var(--mizu-rgb), 0.16)' : 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -166,7 +166,7 @@ export function XlFlowWordmark({
       )}
       <span
         style={{
-          background: 'linear-gradient(135deg, var(--mizu) 0%, #4E6E9C 100%)',
+          background: 'linear-gradient(135deg, var(--moss) 0%, var(--mizu) 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           fontWeight: 800

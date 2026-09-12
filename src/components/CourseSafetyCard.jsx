@@ -29,9 +29,9 @@ export default function CourseSafetyCard({
 
   // Retrieve course colors or fallback to institutional indigo
   const colors = COURSE_COLORS[course.code] || {
-    accent: '#4E6E9C',
-    border: 'rgba(78, 110, 156, 0.3)',
-    wash: 'rgba(78, 110, 156, 0.12)',
+    accent: 'var(--indigo)',
+    border: 'rgba(var(--indigo-rgb), 0.3)',
+    wash: 'rgba(var(--indigo-rgb), 0.12)',
     bg: '#2A4870'
   };
 
@@ -77,20 +77,20 @@ Janmejai Singh (B25349)`;
   let statusColor = 'var(--moss)';
   let statusTextColor = 'var(--moss-text)';
   let statusWash = 'var(--wash-moss)';
-  let statusBorder = 'rgba(110, 140, 99, 0.3)';
+  let statusBorder = 'rgba(var(--moss-rgb), 0.3)';
   let statusLabel = 'Safe Zone';
 
   if (isDanger) {
     statusColor = 'var(--hanko)';
     statusTextColor = 'var(--hanko-text)';
     statusWash = 'var(--wash-hanko)';
-    statusBorder = 'rgba(210, 84, 63, 0.35)';
+    statusBorder = 'rgba(var(--hanko-rgb), 0.35)';
     statusLabel = 'Debarment Risk';
   } else if (isWarning) {
     statusColor = 'var(--ochre)';
     statusTextColor = 'var(--ochre-text)';
     statusWash = 'var(--wash-ochre)';
-    statusBorder = 'rgba(194, 145, 58, 0.35)';
+    statusBorder = 'rgba(var(--ochre-rgb), 0.35)';
     statusLabel = 'Caution Margin';
   }
 
@@ -180,7 +180,7 @@ Janmejai Singh (B25349)`;
                   borderRadius: '4px',
                   backgroundColor: copiedDispute ? 'var(--wash-moss)' : 'var(--wash-ochre)',
                   color: copiedDispute ? 'var(--moss-text)' : 'var(--ochre-text)',
-                  border: `1px solid ${copiedDispute ? 'var(--moss)' : 'rgba(194, 145, 58, 0.35)'}`,
+                  border: `1px solid ${copiedDispute ? 'var(--moss)' : 'rgba(var(--ochre-rgb), 0.35)'}`,
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -353,7 +353,7 @@ Janmejai Singh (B25349)`;
               bottom: 0,
               left: 0,
               width: '80%',
-              backgroundColor: 'rgba(210, 84, 63, 0.08)'
+              backgroundColor: 'rgba(var(--hanko-rgb), 0.08)'
             }}
           />
 
@@ -552,7 +552,7 @@ Janmejai Singh (B25349)`;
         <div
           style={{
             backgroundColor: 'var(--wash-hanko)',
-            border: '1px solid rgba(210, 84, 63, 0.3)',
+            border: '1px solid rgba(var(--hanko-rgb), 0.3)',
             borderRadius: '9px',
             padding: '6px 10px',
             display: 'flex',

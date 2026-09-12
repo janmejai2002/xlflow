@@ -93,7 +93,7 @@ export default function HorizonTopBar({
             <span>XL</span>
             <span style={{ color: 'var(--mizu)', opacity: 0.6, margin: '0 0.5px', fontWeight: 600 }}>-</span>
             <span style={{
-              background: 'linear-gradient(135deg, var(--mizu) 0%, #4E6E9C 100%)',
+              background: 'linear-gradient(135deg, var(--moss) 0%, var(--mizu) 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               fontWeight: 800
@@ -106,7 +106,7 @@ export default function HorizonTopBar({
               height: '6px',
               borderRadius: '50%',
               backgroundColor: 'var(--moss)',
-              boxShadow: '0 0 6px rgba(110, 140, 99, 0.7)',
+              boxShadow: '0 0 6px rgba(var(--moss-rgb), 0.7)',
               marginLeft: '2px'
             }}
           />
@@ -141,7 +141,7 @@ export default function HorizonTopBar({
             alignItems: 'center',
             justifyContent: 'center',
             fontFamily: 'var(--font-brand)',
-            border: '1px solid rgba(0, 169, 184, 0.25)'
+            border: '1px solid rgba(var(--mizu-rgb), 0.25)'
           }}>
             {initials}
           </div>
@@ -246,7 +246,7 @@ export default function HorizonTopBar({
             height: '32px',
             padding: '0 11px',
             backgroundColor: isInspectorOpen ? 'var(--ink)' : 'var(--wash-mizu)',
-            border: isInspectorOpen ? '1px solid var(--ink)' : '1px solid rgba(0, 169, 184, 0.35)',
+            border: isInspectorOpen ? '1px solid var(--ink)' : '1px solid rgba(var(--mizu-rgb), 0.35)',
             borderRadius: '8px',
             color: isInspectorOpen ? 'var(--paper)' : 'var(--mizu)',
             cursor: 'pointer',
@@ -256,10 +256,10 @@ export default function HorizonTopBar({
             fontSize: '11px',
             fontWeight: 700,
             transition: 'all 0.15s ease',
-            boxShadow: isInspectorOpen ? '0 2px 8px rgba(0, 169, 184, 0.25)' : 'none'
+            boxShadow: isInspectorOpen ? '0 2px 8px rgba(var(--mizu-rgb), 0.25)' : 'none'
           }}
           onMouseEnter={(e) => {
-            if (!isInspectorOpen) e.currentTarget.style.backgroundColor = 'rgba(0, 169, 184, 0.2)';
+            if (!isInspectorOpen) e.currentTarget.style.backgroundColor = 'rgba(var(--mizu-rgb), 0.2)';
           }}
           onMouseLeave={(e) => {
             if (!isInspectorOpen) e.currentTarget.style.backgroundColor = 'var(--wash-mizu)';
@@ -420,7 +420,7 @@ export default function HorizonTopBar({
                     fontWeight: 600,
                     color: 'var(--ochre-text)',
                     backgroundColor: 'var(--wash-ochre)',
-                    border: '1px solid rgba(194, 145, 58, 0.25)',
+                    border: '1px solid rgba(var(--ochre-rgb), 0.25)',
                     cursor: 'pointer',
                     textAlign: 'left',
                     width: '100%',

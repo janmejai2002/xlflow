@@ -68,7 +68,7 @@ export default function SectorRadar({
 
   const courseStatsObj = selfAttendanceStore.getCourseStats(courseMatch, schedule);
   const stats = courseStatsObj?.active || calculateBunkStats(courseMatch.attended, courseMatch.conducted, courseMatch.totalPlanned);
-  const colors = COURSE_COLORS[nextSession.courseCode] || { accent: '#4E6E9C', bg: 'var(--card)' };
+  const colors = COURSE_COLORS[nextSession.courseCode] || { accent: 'var(--indigo)', bg: 'var(--card)' };
 
   const handleCopyVenue = (venue) => {
     navigator.clipboard.writeText(venue);
@@ -109,12 +109,12 @@ export default function SectorRadar({
             height: '32px',
             borderRadius: '8px',
             background: 'var(--wash-mizu)',
-            border: '1px solid rgba(0, 169, 184, 0.3)',
+            border: '1px solid rgba(var(--mizu-rgb), 0.3)',
             color: 'var(--mizu)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0, 169, 184, 0.15)'
+            boxShadow: '0 2px 8px rgba(var(--mizu-rgb), 0.15)'
           }}>
             <Compass size={16} />
           </div>
@@ -166,7 +166,7 @@ export default function SectorRadar({
             backgroundColor: 'var(--wash-moss)',
             padding: '5px 12px',
             borderRadius: '9999px',
-            border: '1px solid rgba(22, 163, 74, 0.25)',
+            border: '1px solid rgba(var(--moss-rgb), 0.25)',
             fontSize: '11px',
             fontWeight: 700,
             color: 'var(--moss)'
@@ -354,7 +354,7 @@ export default function SectorRadar({
                     padding: '5px 10px',
                     borderRadius: '8px',
                     backgroundColor: 'var(--wash-mizu)',
-                    border: '1px solid rgba(0, 169, 184, 0.25)',
+                    border: '1px solid rgba(var(--mizu-rgb), 0.25)',
                     color: 'var(--mizu)',
                     fontSize: '11px',
                     fontWeight: 600,
@@ -373,7 +373,7 @@ export default function SectorRadar({
               padding: '8px 12px',
               borderRadius: '10px',
               backgroundColor: stats.tier === 'danger' ? 'var(--wash-hanko)' : stats.tier === 'warning' ? 'var(--wash-ochre)' : 'var(--wash-moss)',
-              border: `1px solid ${stats.tier === 'danger' ? 'rgba(210, 84, 63, 0.35)' : stats.tier === 'warning' ? 'rgba(194, 145, 58, 0.35)' : 'rgba(110, 140, 99, 0.35)'}`,
+              border: `1px solid ${stats.tier === 'danger' ? 'rgba(var(--hanko-rgb), 0.35)' : stats.tier === 'warning' ? 'rgba(var(--ochre-rgb), 0.35)' : 'rgba(var(--moss-rgb), 0.35)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -441,7 +441,7 @@ export default function SectorRadar({
               paddingRight: '4px'
             }}>
               {schedule.slice(1, 10).map((s, idx) => {
-                const sColors = COURSE_COLORS[s.courseCode] || { accent: '#4E6E9C' };
+                const sColors = COURSE_COLORS[s.courseCode] || { accent: 'var(--indigo)' };
                 return (
                   <div
                     key={s.sessionId || idx}
