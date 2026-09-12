@@ -1,7 +1,7 @@
 /**
  * Generative Web Audio Synthesizer for XL-Flow
  * Zero external audio assets; 100% synthesized via Web Audio API.
- * Provides tactile haptic clicks and generative 432Hz ambient campus drone.
+ * Short tactile UI feedback tones. No ambient audio, no background loops.
  */
 
 let audioCtx = null;
@@ -106,7 +106,7 @@ export function playHapticSuccess() {
 }
 
 /**
- * Synthesizes a rich 432Hz singing bowl overtone chime for holistic peace of mind
+ * Synthesizes a soft overtone chime used to confirm a completed action
  */
 export function playHarmonicChime() {
   try {
@@ -162,7 +162,3 @@ export function playChime() {
     });
   } catch (e) {}
 }
-
-/**
- * Toggles the meditative 432Hz binaural campus focus drone
- */

@@ -1,94 +1,92 @@
-# XL-Flow (V1) | The Spatial Academic Continuum
-> **Next-Generation Academic Command Centre for XLRI Term-5 (Sections E, F, G)**  
-> *100% Free Forever • 100% Client-Side Privacy • PWA Mobile App • Zero Database Quotas*
+# XL-Flow
+
+> Class schedule, attendance safety, and trip planning for XLRI Term-5 (Sections E, F, G).
+> Free, client-side, installable as a PWA.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Deploy to GitHub Pages](https://github.com/janmejai2002/xlflow/actions/workflows/deploy.yml/badge.svg)](https://github.com/janmejai2002/xlflow/actions/workflows/deploy.yml)
-[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Model Context Protocol](https://img.shields.io/badge/MCP-1.30-blue?logo=anthropic)](https://modelcontextprotocol.io/)
+
+**Live app: [janmejai2002.github.io/xlflow](https://janmejai2002.github.io/xlflow)**
 
 ---
 
-## 🚀 Live Demo & Web App
+## What it does
 
-👉 **[https://janmejai2002.github.io/xlflow](https://janmejai2002.github.io/xlflow)**
+**Today's Schedule** — Next lecture with venue, faculty, countdown, and a one-tap
+`.ics` export to Google or Apple Calendar. A 28-day heatmap shows class density and
+upcoming quizzes across the term.
 
----
+**Attendance & Bunk-O-Meter** — Tracks every course against XLRI's 80% statutory
+threshold and tells you how many classes you can still miss. A simulator shows what
+each additional absence costs you.
 
-## ✨ Key Features
+**Self-marked attendance** — The ERP lags and sometimes gets it wrong. You mark each
+session present/absent/cancelled yourself, with a reason. XL-Flow reconciles your log
+against the official ERP numbers, flags discrepancies, and exports a CSV audit trail
+you can take to the dean. Marks sync to a Google Sheet keyed to your roll number, so
+clearing your browser doesn't lose them.
 
-1. **The Desktop Horizon Deck (100vh Zero-Vertical-Scroll Panorama)**:
-   - Ultra-wide 6-sector continuous horizontal track with snap-to-sector gliders, fluid glide controls, and zero vertical document scroll on desktop monitors.
-2. **Multi-Provider Free AI Engine & Key Vault**:
-   - Integrated Astra AI Co-Pilot dock running on **100% Free Tiers**:
-     * **Astra Instant Solver**: 0ms deterministic offline attendance math with zero API keys.
-     * **Google Gemini 2.0 Flash**: Free via Google AI Studio (15 RPM, 1,500 req/day).
-     * **Groq Cloud (LLaMA 3.3 70B)**: Free ultrafast inference (<300ms, 30 RPM).
-     * **OpenRouter Free Tier**: DeepSeek R1 & LLaMA 3.2 free endpoints.
-     * **Custom Local Endpoints**: Ollama & LM Studio support.
-     * In-app secure Key Vault with live connection latency probes and 1-click API key acquisition links.
-3. **80.0% Statutory Bunk-O-Meter**:
-   - Mathematically verified formula calculating safe bunks remaining under XLRI's strict attendance handbook rule with an interactive degradation simulator.
-4. **Architectural Weekly Matrix**:
-   - 6-day (Mon–Sat) time-grid visualization with live cursor needles, slot collision detection, and slide-over lecture inspector docks.
-5. **1-Click Google & Apple Calendar Sync**:
-   - Generates standardized RFC-5545 `.ics` calendar events with classroom codes and faculty names.
-6. **Instant 178-Student Batch Roster (`Ctrl+K`)**:
-   - Instant search indexing all batchmates across Sections E, F, and G by name, roll number, or section.
-7. **Universal Model Context Protocol (MCP) & Serverless Online Endpoint**:
-   - Built with `@modelcontextprotocol/sdk`. Exposes tools via local Stdio, SSE (`bun mcp-server/server.js`), and serverless JSON-RPC 2.0 at `/api/mcp` on Vercel/Cloudflare for remote web AI agents (Claude, ChatGPT Actions).
-8. **Mobile PWA & Soundscape**:
-   - Installs to iPhone (Safari) and Android (Chrome) with 1 tap; includes an ambient 432Hz binaural campus focus audio generator.
+**Trip Planner** — Scans the term for 3-to-5 day travel windows that cost you no
+exams and at most a class or two.
+
+**Batch Roster (`Ctrl+K`)** — Instant search across all 178 batchmates by name, roll,
+or section.
+
+**Astra assistant** — Answers schedule and attendance questions. Works offline with
+zero setup via a deterministic solver; optionally connects to a free Gemini, Groq,
+OpenRouter, or local Ollama key you supply.
+
+**MCP server** — `mcp-server/stdio.js` exposes the schedule, attendance math, bunk
+simulator, roster, and trip finder to Claude Desktop, Cursor, or any MCP host.
 
 ---
 
-## 📖 Student Documentation
+## Local development
 
-- [**Complete Student Instruction Booklet**](./INSTRUCTION_BOOKLET.md)
-- [**Zero-Cost Deployment Strategy**](./DEPLOYMENT_STRATEGY.md)
+Requires [Bun](https://bun.sh) 1.0+ or Node 18+.
 
----
-
-## 🛠️ Local Development
-
-### Prerequisites
-- [Bun](https://bun.sh) (v1.0+) or Node.js (v18+)
-
-### 1. Clone & Install
 ```bash
-git clone https://github.com/janmejai2002/xlflow.git
-cd xlflow
 bun install
-```
-
-### 2. Start Dev Server
-```bash
 bun run dev
 ```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 3. Start Universal MCP Server
+Then open http://localhost:5173.
+
 ```bash
-# SSE / WebSocket bridge (port 3100)
-bun mcp-server/server.js
-
-# Or Stdio transport (for Claude Desktop / Cursor)
-bun mcp-server/stdio.js
+bun run build     # production bundle into dist/
+bun run preview   # serve the production bundle
+bun run mcp       # MCP server over stdio
 ```
 
-### 4. Build for Production
-```bash
-bun run build
+To use the MCP server from Claude Desktop, add to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "xlflow": {
+      "command": "bun",
+      "args": ["<path-to-xlflow>/mcp-server/stdio.js"]
+    }
+  }
+}
 ```
 
 ---
 
-## 🔒 Privacy & Architecture
+## Privacy
 
-XL-Flow is **100% client-side**. All API requests go directly between the student's browser and `xlerp.xlri.ac.in`. No credentials, tokens, or attendance details are ever transmitted to or stored on any external server.
+ERP requests go directly from your browser to `xlerp.xlri.ac.in`; credentials and
+attendance data never pass through any server of ours. The one exception is
+self-marked attendance, which you can sync to a Google Sheet — see
+`src/services/cloudStorage.js` for exactly what is sent.
 
 ---
 
-## 📄 License
+## Docs
+
+- [Student instruction booklet](./INSTRUCTION_BOOKLET.md)
+- [Deployment strategy](./DEPLOYMENT_STRATEGY.md)
+
+## License
+
 MIT © 2026 XLRI Batch 2025–27

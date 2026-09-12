@@ -91,7 +91,7 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
           }}>
             <div style={{ color: 'var(--mizu)', fontWeight: 700 }}>📅</div>
             <div style={{ fontSize: '12.5px' }}>
-              <strong>Interactive 3D Timeline:</strong> Visual weekly schedule and course timeline.
+              <strong>28-Day Heatmap:</strong> See your class load and deadlines across the term at a glance.
             </div>
           </div>
 

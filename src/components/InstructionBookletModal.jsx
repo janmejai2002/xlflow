@@ -206,7 +206,7 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
                   <div>
                     <div style={{ fontWeight: 700, fontSize: '14px' }}>Check Today's Radar & Schedule</div>
                     <div style={{ color: 'var(--ink-muted)', fontSize: '12.5px', marginTop: '2px' }}>
-                      The <strong>Radar</strong> tab displays your next lecture, classroom venue (e.g. <code>CR-04</code>), countdown timer, and the interactive 3D timeline.
+                      The <strong>Radar</strong> tab displays your next lecture, classroom venue (e.g. <code>CR-04</code>), countdown timer, and a 28-day schedule heatmap.
                     </div>
                   </div>
                 </div>

@@ -28,9 +28,9 @@ Whenever ANY new conversation, chat, or agent turn is initiated in this workspac
 | Subsystem | Tech | Location |
 | :--- | :--- | :--- |
 | **Chrome Extension** | Vite + JS | `extension/` |
-| **Web SPA** | Vite + Vue/React | `src/` |
+| **Web SPA** | Vite + React 18 | `src/` |
 | **MCP Server** | Node.js (Bun) | `mcp-server/stdio.js` |
-| **Backend API** | Node.js (Express/Hono) | `server/` + `api/` |
+| **Cloud persistence** | Google Apps Script + Sheets | `term4_gas_app/` |
 | **GAS Webapp** | Google Apps Script | `term4_gas_app/` |
 | **Python Scrapers** | Python 3.13 | `scripts/` |
 
@@ -43,11 +43,8 @@ bun run dev
 # Production build
 bun run build
 
-# Build Chrome extension
-bun run build-ext
-
-# Start MCP server (stdio mode â€” used by Antigravity)
-bun mcp-server/stdio.js
+# Start MCP server (stdio mode - used by Antigravity / Claude Desktop)
+bun run mcp
 
 # Clasp: Push GAS app to Google
 npx clasp push  # from term4_gas_app/ directory
@@ -69,7 +66,6 @@ The XLFlow MCP server (registered in Antigravity's global config as `xlflow`) ex
 - `simulate_bunk_impact` â€” Simulates impact of bunking on attendance %
 - `search_batch_roster` â€” Searches the batch roster by name or roll
 - `find_natural_getaways` â€” AI-powered weekend trip finder that respects attendance
-- `trigger_browser_action` â€” Browser automation trigger
 
 ## 5. Key Files
 
@@ -78,8 +74,6 @@ xlflow/
 â”œâ”€â”€ mcp-server/stdio.js     # FastMCP stdio server (Antigravity integration)
 â”œâ”€â”€ extension/              # Chrome extension (schedule overlay)
 â”œâ”€â”€ src/                    # Vite SPA frontend
-â”œâ”€â”€ server/                 # Backend server
-â”œâ”€â”€ api/                    # API routes
 â”œâ”€â”€ term4_gas_app/          # Google Apps Script project
 â”‚   â”œâ”€â”€ .clasp.json         # scriptId: 1JEDoa6442rwIWCmu2VwDSv_M4qBkHh999T0XiVCd8P88xonJ1GozEm5t
 â”‚   â”œâ”€â”€ roster.js           # Roster management

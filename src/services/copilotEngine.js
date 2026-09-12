@@ -128,16 +128,6 @@ export function processCopilotMessage(input, context) {
     };
   }
 
-  // 6. Ambient Focus Sound Intent
-  if (query.includes('music') || query.includes('sound') || query.includes('audio') || query.includes('ambient') || query.includes('focus')) {
-    return {
-      reply: `Toggling the generative **432 Hz campus binaural study soundscape** to stimulate focus and calm.`,
-      action: {
-        type: 'TOGGLE_SOUNDSCAPE'
-      }
-    };
-  }
-
   // 7. Policy & Debarment Explanation
   if (query.includes('policy') || query.includes('debar') || query.includes('rule') || query.includes('threshold')) {
     return {
@@ -179,8 +169,7 @@ export function processCopilotMessage(input, context) {
 - *"Where is my next class?"*
 - *"Check my attendance discrepancies"*
 - *"Find long weekends for a trip"*
-- *"Search for roll 349"*
-- *"Play 432Hz focus ambient"*`,
+- *"Search for roll 349"*`,
     action: null
   };
 }

@@ -51,7 +51,7 @@ export default function DesktopHorizonDeck({
     jumpToSector(activeSectorIndex + 1);
   };
 
-  // Keyboard Navigation: Arrow keys & 1-6
+  // Keyboard Navigation: Arrow keys & 1-5
   useEffect(() => {
     const handleKeyDown = (e) => {
       const tag = e.target.tagName?.toLowerCase();
@@ -63,7 +63,7 @@ export default function DesktopHorizonDeck({
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         handlePrevSector();
-      } else if (e.key >= '1' && e.key <= '6' && !e.metaKey && !e.ctrlKey) {
+      } else if (e.key >= '1' && e.key <= '5' && !e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         jumpToSector(parseInt(e.key, 10) - 1);
       }
