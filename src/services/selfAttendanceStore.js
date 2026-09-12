@@ -37,8 +37,7 @@ class SelfAttendanceStore {
         const parsed = JSON.parse(raw);
         return {
           markedSessions: parsed.markedSessions || {},
-          courseAdjustments: parsed.courseAdjustments || {},
-          sourceMode: parsed.sourceMode || 'hybrid' // 'hybrid' | 'self' | 'erp'
+          courseAdjustments: parsed.courseAdjustments || {}
         };
       }
     } catch (e) {
@@ -47,8 +46,7 @@ class SelfAttendanceStore {
 
     return {
       markedSessions: {},
-      courseAdjustments: {},
-      sourceMode: 'hybrid'
+      courseAdjustments: {}
     };
   }
 
@@ -229,21 +227,6 @@ class SelfAttendanceStore {
   }
 
   // ==========================================
-  // SOURCE MODE PREFERENCE
-  // ==========================================
-
-  setSourceMode(mode) {
-    if (['hybrid', 'self', 'erp'].includes(mode)) {
-      this.state.sourceMode = mode;
-      this.notify();
-    }
-  }
-
-  getSourceMode() {
-    return this.state.sourceMode || 'hybrid';
-  }
-
-  // ==========================================
   // RECONCILIATION & STATS COMPUTATION
   // ==========================================
 
@@ -280,28 +263,31 @@ class SelfAttendanceStore {
     const selfConducted = selfPresent + selfAbsent + adjConducted;
     const selfAttended = selfPresent + adjAttended;
 
-    // 5. Determine active values based on source mode
-    let activeAttended = officialAttended;
-    let activeConducted = officialConducted;
-
-    if (this.state.sourceMode === 'self') {
-      activeAttended = selfAttended;
-      activeConducted = selfConducted;
-    } else if (this.state.sourceMode === 'hybrid') {
-      if (selfConducted > officialConducted || adjAttended !== 0 || adjConducted !== 0) {
-        activeAttended = Math.max(officialAttended + adjAttended, selfAttended);
-        activeConducted = Math.max(officialConducted + adjConducted, selfConducted);
-      }
-    }
-
     const officialStats = calculateBunkStats(officialAttended, officialConducted, totalPlanned);
     const selfStats = calculateBunkStats(selfAttended, selfConducted, totalPlanned);
-    const activeStats = calculateBunkStats(activeAttended, activeConducted, totalPlanned);
 
+    // 5. Which set of numbers drives the safety margin?
+    //
+    // There is deliberately no user-facing "data source" switch. The ERP is the
+    // record that actually debars you, but it lags and can be wrong; your own log
+    // is timelier but only covers sessions you remembered to mark. Rather than ask
+    // the student to reason about that, we always plan against whichever of the two
+    // leaves the smaller margin. Being wrong in that direction costs a student one
+    // attended class; being wrong the other way costs them the exam.
+    const hasSelfData = selfConducted > 0;
+    const active = (hasSelfData && selfStats.safeBunksRemaining < officialStats.safeBunksRemaining)
+      ? selfStats
+      : officialStats;
+    const activeSource = active === selfStats ? 'self' : 'erp';
+
+    const attendedDiff = selfAttended - officialAttended;
+    const conductedDiff = selfConducted - officialConducted;
     const discrepancy = {
-      hasDiscrepancy: officialConducted !== selfConducted || officialAttended !== selfAttended,
-      attendedDiff: selfAttended - officialAttended,
-      conductedDiff: selfConducted - officialConducted
+      // A course you have never marked is not "in disagreement" with the ERP,
+      // it is simply unlogged. Only claim a discrepancy once there is a log.
+      hasDiscrepancy: hasSelfData && (attendedDiff !== 0 || conductedDiff !== 0),
+      attendedDiff,
+      conductedDiff
     };
 
     return {
@@ -309,7 +295,9 @@ class SelfAttendanceStore {
       courseName: course.name,
       official: officialStats,
       self: selfStats,
-      active: activeStats,
+      active,
+      activeSource,
+      hasSelfData,
       discrepancy,
       selfCounts: {
         present: selfPresent,
@@ -317,8 +305,7 @@ class SelfAttendanceStore {
         cancelled: selfCancelled,
         adjAttended,
         adjConducted
-      },
-      sourceMode: this.state.sourceMode
+      }
     };
   }
 
@@ -401,8 +388,7 @@ class SelfAttendanceStore {
       if (parsed && typeof parsed === 'object') {
         this.state = {
           markedSessions: parsed.markedSessions || {},
-          courseAdjustments: parsed.courseAdjustments || {},
-          sourceMode: parsed.sourceMode || 'hybrid'
+          courseAdjustments: parsed.courseAdjustments || {}
         };
         this.notify();
         return { ok: true, count: Object.keys(this.state.markedSessions).length };
@@ -416,8 +402,7 @@ class SelfAttendanceStore {
   clearAll() {
     this.state = {
       markedSessions: {},
-      courseAdjustments: {},
-      sourceMode: 'hybrid'
+      courseAdjustments: {}
     };
     this.notify();
   }

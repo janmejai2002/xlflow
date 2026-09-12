@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
 import { useBreakpoint } from './hooks/useBreakpoint';
@@ -65,6 +65,9 @@ export default function App() {
   const [timetableSelectedDate, setTimetableSelectedDate] = useState(null);
 
   const [isSyncing, setIsSyncing] = useState(false);
+  // Marks mutate the attendance store in place, so the nav badge needs the
+  // store's own tick to stay in sync with the Attendance tab.
+  const [attendanceVer, setAttendanceVer] = useState(0);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // 1. Theme initialization
@@ -110,6 +113,8 @@ export default function App() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => selfAttendanceStore.subscribe(() => setAttendanceVer((v) => v + 1)), []);
 
   // Online / Offline listener
   useEffect(() => {
@@ -219,13 +224,25 @@ export default function App() {
     }
   };
 
-  // 4. Calculate warning count for badges
-  const coursesWithStats = (dataPayload.courses || []).map(c => ({
-    ...c,
-    stats: calculateBunkStats(c.attended, c.conducted, c.totalPlanned)
-  }));
-
-  const warningCount = coursesWithStats.filter(c => c.stats.tier === 'warning' || c.stats.tier === 'danger').length;
+  // 4. Nav badge. This must agree with what the Attendance tab shows, so it uses
+  // the same reconciliation and the same current-term scope rather than raw ERP
+  // numbers across every course the student has ever taken.
+  const warningCount = useMemo(() => {
+    const all = dataPayload.courses || [];
+    const termOf = (c) => {
+      const m = /Term-(\d+)/i.exec(c.term || '');
+      return m ? Number(m[1]) : 0;
+    };
+    const currentTerm = Math.max(0, ...all.map(termOf));
+    return all.filter((c) => {
+      if (termOf(c) !== currentTerm) return false;
+      const recon = selfAttendanceStore.getCourseStats(c, dataPayload.schedule || []);
+      const stats = recon ? recon.active : calculateBunkStats(c.attended, c.conducted, c.totalPlanned);
+      // A course with no classes held yet is unknown, not at risk.
+      return stats.conducted > 0 && stats.tier !== 'safe';
+    }).length;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataPayload.courses, dataPayload.schedule, attendanceVer]);
   const pendingDeadlinesCount = (dataPayload.deadlines || []).filter(d => !d.completed).length;
 
   // Global Desktop Keyboard Shortcuts Bus (1-5, Cmd+K, ?, T, M, Cmd+\)
