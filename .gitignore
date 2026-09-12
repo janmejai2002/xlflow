@@ -43,3 +43,12 @@ playwright/.cache/
 scratch/
 *.visual-check.*
 xlflow-craft-report.html
+
+# Stray personal docs dropped into the repo root
+/*.md
+!README.md
+!AGENTS.md
+!GEMINI.md
+!CONTEXT_HANDOFF.md
+!DEPLOYMENT_STRATEGY.md
+!INSTRUCTION_BOOKLET.md
