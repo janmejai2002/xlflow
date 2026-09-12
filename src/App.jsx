@@ -21,12 +21,10 @@ const DeadlinesView = lazy(() => import('./components/DeadlinesView'));
 const LoginModal = lazy(() => import('./components/LoginModal'));
 const BatchSearchModal = lazy(() => import('./components/BatchSearchModal'));
 const ShareCardModal = lazy(() => import('./components/ShareCardModal'));
-const AstraCopilotDrawer = lazy(() => import('./components/AstraCopilotDrawer'));
 const InstructionBookletModal = lazy(() => import('./components/InstructionBookletModal'));
 const OnboardingModal = lazy(() => import('./components/OnboardingModal'));
 const KeyboardShortcutsModal = lazy(() => import('./components/KeyboardShortcutsModal'));
 const DesktopHorizonDeck = lazy(() => import('./components/desktop/DesktopHorizonDeck'));
-const AiSettingsModal = lazy(() => import('./components/AiSettingsModal'));
 const QuickTourModal = lazy(() => import('./components/QuickTourModal'));
 
 function PaneFallback() {
@@ -55,14 +53,12 @@ export default function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isShareCardModalOpen, setIsShareCardModalOpen] = useState(false);
-  const [isCopilotOpen, setIsCopilotOpen] = useState(false);
   const [isBookletOpen, setIsBookletOpen] = useState(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
     return !localStorage.getItem('has_seen_onboarding_v1');
   });
   const [isQuickTourOpen, setIsQuickTourOpen] = useState(false);
-  const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const [timetableSelectedDate, setTimetableSelectedDate] = useState(null);
 
   const [isSyncing, setIsSyncing] = useState(false);
@@ -204,27 +200,6 @@ export default function App() {
     setActiveTab('timetable');
   };
 
-  // Agentic Action Execution from Astra Neural Co-Pilot or External MCP
-  const handleExecuteCopilotAction = (action) => {
-    if (!action) return;
-    if (action.type === 'NAVIGATE_TAB' && action.tab) {
-      setActiveTab(action.tab);
-      setIsCopilotOpen(false);
-      toast.success(`Navigated to ${action.tab.toUpperCase()}`);
-    } else if (action.type === 'NAVIGATE_AND_SIMULATE' || action.type === 'SIMULATE_BUNK') {
-      setActiveTab('bunkmeter');
-      setIsCopilotOpen(false);
-      toast.success(`Opened Bunk-O-Meter for ${action.courseCode || 'course'}`);
-    } else if (action.type === 'OPEN_ROSTER') {
-      setIsSearchModalOpen(true);
-      setIsCopilotOpen(false);
-    } else if (action.type === 'TRIGGER_CELEBRATION') {
-      fireStreakConfetti();
-      playChime();
-      toast.success('🔥 Streak Celebration Triggered!');
-    }
-  };
-
   // 4. Nav badge. This must agree with what the Attendance tab shows, so it uses
   // the same reconciliation and the same current-term scope rather than raw ERP
   // numbers across every course the student has ever taken.
@@ -256,7 +231,6 @@ export default function App() {
     onOpenSearch: () => setIsSearchModalOpen(prev => !prev),
     onToggleTheme: toggleTheme,
     onOpenShortcuts: () => setIsShortcutsModalOpen(prev => !prev),
-    onOpenCopilot: () => setIsCopilotOpen(prev => !prev),
     onToggleLayoutMode: () => {
       const next = toggleLayoutMode();
       toast(`Switched to ${next === 'desktop' ? 'Desktop Horizon Deck' : 'Mobile Shell'}`);
@@ -289,7 +263,6 @@ export default function App() {
           onOpenShareCard={() => setIsShareCardModalOpen(true)}
           onOpenBooklet={() => setIsBookletOpen(true)}
           onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
-          onExecuteAction={handleExecuteCopilotAction}
           onSelectDateFromHeatmap={handleSelectDateFromHeatmap}
           onToggleLayoutMode={() => {
             const next = toggleLayoutMode();
@@ -324,7 +297,6 @@ export default function App() {
             isSyncing={isSyncing}
             onOpenSearch={() => setIsSearchModalOpen(true)}
             onOpenShareCard={() => setIsShareCardModalOpen(true)}
-            onOpenCopilot={() => setIsCopilotOpen(true)}
             onOpenBooklet={() => setIsBookletOpen(true)}
             onOpenQuickTour={() => setIsQuickTourOpen(true)}
             onToggleLayoutMode={() => {
@@ -486,29 +458,6 @@ export default function App() {
         <KeyboardShortcutsModal
           isOpen={isShortcutsModalOpen}
           onClose={() => setIsShortcutsModalOpen(false)}
-        />
-        </Suspense>
-      )}
-
-      {/* Astra Neural Co-Pilot Drawer (Mobile Drawer) */}
-      {isCopilotOpen && (
-        <Suspense fallback={null}>
-        <AstraCopilotDrawer
-          isOpen={isCopilotOpen}
-          onClose={() => setIsCopilotOpen(false)}
-          context={dataPayload}
-          onExecuteAction={handleExecuteCopilotAction}
-          onOpenAiSettings={() => setIsAiSettingsOpen(true)}
-        />
-        </Suspense>
-      )}
-
-      {/* Free AI Engine & Key Vault Modal */}
-      {isAiSettingsOpen && (
-        <Suspense fallback={null}>
-        <AiSettingsModal
-          isOpen={isAiSettingsOpen}
-          onClose={() => setIsAiSettingsOpen(false)}
         />
         </Suspense>
       )}

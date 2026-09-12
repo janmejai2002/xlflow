@@ -28,9 +28,7 @@ import { calculateBunkStats, STATUTORY_THRESHOLD } from '../../services/bunkCalc
 import { selfAttendanceStore } from '../../services/selfAttendanceStore';
 import SelfAttendanceMarkPill from '../attendance/SelfAttendanceMarkPill';
 import { getGoogleCalendarUrl, downloadIcsFile } from '../../services/calendarExport';
-import { queryAstraAi, getStoredAiConfig, AI_PROVIDERS } from '../../services/aiProviderEngine';
 import { playTactileClick } from '../../services/soundEngine';
-import ProactiveActionDeck from '../copilot/ProactiveActionDeck';
 import { toast } from 'sonner';
 
 // Helper to safely render markdown in chat messages
@@ -89,10 +87,8 @@ export default function DesktopInspectorDock({
   onExecuteAction,
   student,
   onClose,
-  onOpenAiSettings
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [dockTab, setDockTab] = useState('lecture'); // 'lecture' | 'copilot'
   const [copiedVenue, setCopiedVenue] = useState(false);
   const [, setStoreVer] = useState(0);
 
@@ -101,63 +97,7 @@ export default function DesktopInspectorDock({
     return unsub;
   }, []);
 
-  // Copilot State
-  const [copilotMessages, setCopilotMessages] = useState([
-    {
-      role: 'assistant',
-      text: "Hello! I am **Astra**, your Term-5 AI Assistant. Click any lecture on the grid or ask me about bunks, schedules, or batchmates!"
-    }
-  ]);
-  const [inputValue, setInputValue] = useState('');
-  const [isAiLoading, setIsAiLoading] = useState(false);
   const messagesEndRef = useRef(null);
-
-  // Auto-scroll copilot messages
-  useEffect(() => {
-    if (dockTab === 'copilot') {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [copilotMessages, dockTab, isAiLoading]);
-
-  // Handle Copilot send with multi-provider free AI
-  const handleSendCopilot = async (textToSend) => {
-    const query = (textToSend || inputValue).trim();
-    if (!query || isAiLoading) return;
-
-    playTactileClick(700);
-
-    const userMsg = { role: 'user', text: query };
-    setCopilotMessages(prev => [...prev, userMsg]);
-    setInputValue('');
-    setIsAiLoading(true);
-
-    try {
-      const res = await queryAstraAi(query, {
-        courses,
-        schedule,
-        deadlines,
-        student
-      });
-
-      setCopilotMessages(prev => [...prev, {
-        role: 'assistant',
-        text: res.reply,
-        action: res.action,
-        providerName: res.providerName
-      }]);
-
-      if (res.action && onExecuteAction) {
-        onExecuteAction(res.action);
-      }
-    } catch (err) {
-      setCopilotMessages(prev => [...prev, {
-        role: 'assistant',
-        text: "I encountered an error connecting to the AI provider. Switching to offline solver."
-      }]);
-    } finally {
-      setIsAiLoading(false);
-    }
-  };
 
   // When a session is selected externally, switch dock tab to 'lecture'
   useEffect(() => {
@@ -319,65 +259,11 @@ export default function DesktopInspectorDock({
         </div>
 
         {/* Tab Switcher */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          backgroundColor: 'var(--paper)',
-          padding: '3px',
-          borderRadius: '10px',
-          border: '1px solid var(--border)'
-        }}>
-          <button
-            onClick={() => setDockTab('lecture')}
-            style={{
-              padding: '6px 10px',
-              fontSize: '11px',
-              fontWeight: 600,
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: dockTab === 'lecture' ? 'var(--card)' : 'transparent',
-              color: dockTab === 'lecture' ? 'var(--ink)' : 'var(--ink-soft)',
-              boxShadow: dockTab === 'lecture' ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px'
-            }}
-          >
-            <Calendar size={12} color={dockTab === 'lecture' ? 'var(--mizu)' : 'currentColor'} />
-            <span>Lecture Details</span>
-          </button>
-
-          <button
-            onClick={() => setDockTab('copilot')}
-            style={{
-              padding: '6px 10px',
-              fontSize: '11px',
-              fontWeight: 600,
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: dockTab === 'copilot' ? 'var(--card)' : 'transparent',
-              color: dockTab === 'copilot' ? 'var(--ink)' : 'var(--ink-soft)',
-              boxShadow: dockTab === 'copilot' ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px'
-            }}
-          >
-            <Bot size={12} color={dockTab === 'copilot' ? 'var(--ochre)' : 'currentColor'} />
-            <span>Astra AI Chat</span>
-          </button>
-        </div>
       </div>
 
       {/* 2. Body Area */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         
-        {dockTab === 'lecture' && (
-          <>
             {/* Main Lecture Card */}
             <div style={{
               backgroundColor: 'var(--paper)',
@@ -643,209 +529,6 @@ export default function DesktopInspectorDock({
                 <span>Download .ICS (Apple/Outlook)</span>
               </button>
             </div>
-          </>
-        )}
-
-        {dockTab === 'copilot' && (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '10px' }}>
-            {/* AI Engine Status & Key Vault Trigger */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '6px 10px',
-              backgroundColor: 'var(--paper)',
-              borderRadius: '8px',
-              border: '1px solid var(--border)',
-              fontSize: '11px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Bot size={13} style={{ color: 'var(--mizu)' }} />
-                <span style={{ fontWeight: 600, color: 'var(--ink)' }}>
-                  {getStoredAiConfig().provider === 'gemini-free' ? 'Gemini 2.0 Flash' :
-                   getStoredAiConfig().provider === 'groq-free' ? 'Groq LLaMA 3.3' :
-                   getStoredAiConfig().provider === 'openrouter-free' ? 'OpenRouter Free' : 'Astra Instant (0ms)'}
-                </span>
-              </div>
-              <button
-                onClick={() => onOpenAiSettings?.()}
-                title="Configure Free AI Providers & Keys"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--mizu)',
-                  cursor: 'pointer',
-                  fontSize: '10px',
-                  fontWeight: 600
-                }}
-              >
-                <Settings size={11} />
-                <span>AI Vault</span>
-              </button>
-            </div>
-
-            {/* 2026 Proactive Agentic Action Deck */}
-            <ProactiveActionDeck
-              context={{ courses, schedule, deadlines, student }}
-              onExecuteAction={onExecuteAction}
-              isCompact={true}
-            />
-
-            {/* Suggestions Chips */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              {[
-                "Can I bunk OMCR today?",
-                "Where is my next class?",
-                "Find 3-day getaways",
-                "Who is free at 3 PM?"
-              ].map((chip, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSendCopilot(chip)}
-                  style={{
-                    fontSize: '10px',
-                    padding: '4px 8px',
-                    borderRadius: '8px',
-                    backgroundColor: 'var(--paper)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--ink-soft)',
-                    cursor: 'pointer',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
-
-            {/* Message Stream */}
-            <div style={{
-              flex: 1,
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '10px',
-              paddingRight: '4px'
-            }}>
-              {copilotMessages.map((msg, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                    maxWidth: '100%'
-                  }}
-                >
-                  <div style={{
-                    padding: '10px 12px',
-                    borderRadius: msg.role === 'user' ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-                    backgroundColor: msg.role === 'user' ? 'var(--ink)' : 'var(--paper)',
-                    color: msg.role === 'user' ? 'var(--paper)' : 'var(--ink)',
-                    fontSize: '12px',
-                    lineHeight: 1.5,
-                    border: msg.role === 'user' ? 'none' : '1px solid var(--border)',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                    maxWidth: '92%'
-                  }}>
-                    {msg.role === 'user' ? (
-                      <div style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-                        {msg.text}
-                      </div>
-                    ) : (
-                      <div>
-                        {renderFormattedMarkdown(msg.text)}
-                        {msg.action && (
-                          <div style={{
-                            marginTop: '8px',
-                            paddingTop: '6px',
-                            borderTop: '1px solid rgba(var(--mizu-rgb), 0.2)',
-                            fontSize: '11px',
-                            color: 'var(--mizu)',
-                            fontWeight: 600,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px'
-                          }}>
-                            <Check size={12} />
-                            <span>{formatActionLabel(msg.action)}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-              {isAiLoading && (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 12px',
-                  borderRadius: '12px',
-                  backgroundColor: 'var(--paper)',
-                  border: '1px solid var(--border)',
-                  fontSize: '11px',
-                  color: 'var(--ink-soft)'
-                }}>
-                  <Sparkles size={13} style={{ color: 'var(--mizu)', animation: 'pulse 1.5s infinite' }} />
-                  <span>Astra is checking your schedule...</span>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input Box */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSendCopilot();
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                backgroundColor: 'var(--paper)',
-                padding: '6px 10px',
-                borderRadius: '10px',
-                border: '1px solid var(--border)'
-              }}
-            >
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Ask Astra about schedule or attendance..."
-                style={{
-                  flex: 1,
-                  background: 'none',
-                  border: 'none',
-                  outline: 'none',
-                  fontSize: '12px',
-                  color: 'var(--ink)'
-                }}
-              />
-              <button
-                type="submit"
-                disabled={!inputValue.trim()}
-                style={{
-                  background: 'var(--ink)',
-                  border: 'none',
-                  color: 'var(--paper)',
-                  borderRadius: '6px',
-                  padding: '5px 8px',
-                  cursor: inputValue.trim() ? 'pointer' : 'default',
-                  opacity: inputValue.trim() ? 1 : 0.4
-                }}
-              >
-                <Send size={12} />
-              </button>
-            </form>
-          </div>
-        )}
 
       </div>
     </aside>

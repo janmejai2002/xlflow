@@ -3,6 +3,7 @@ import {
   Search,
   Command,
   Sparkles,
+  PanelRight,
   RefreshCw,
   Sun,
   Moon,
@@ -28,7 +29,6 @@ export default function HorizonTopBar({
   onOpenSearch,
   onOpenShortcuts,
   onOpenBooklet,
-  onOpenAiSettings,
   onToggleLayoutMode,
   isDesktop,
   isInspectorOpen,
@@ -232,16 +232,16 @@ export default function HorizonTopBar({
         </button>
       </div>
 
-      {/* 3. Right: Astra Copilot + Consolidated Minimalist Glass Utility Cluster */}
+      {/* 3. Right: Lecture Inspector + Consolidated Utility Cluster */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-        {/* Primary AI Trigger: Astra Copilot */}
+        {/* Lecture Inspector toggle */}
         <button
           onClick={() => {
             playTactileClick(850);
             onToggleInspector?.();
           }}
-          title="Toggle Astra Copilot & Context Inspector"
-          aria-label="Toggle Astra Copilot"
+          title="Toggle the lecture inspector"
+          aria-label="Toggle the lecture inspector"
           style={{
             height: '32px',
             padding: '0 11px',
@@ -265,8 +265,8 @@ export default function HorizonTopBar({
             if (!isInspectorOpen) e.currentTarget.style.backgroundColor = 'var(--wash-mizu)';
           }}
         >
-          <Sparkles size={13} color={isInspectorOpen ? 'var(--mizu)' : 'currentColor'} />
-          <span>Astra Copilot</span>
+          <PanelRight size={13} color={isInspectorOpen ? 'var(--mizu)' : 'currentColor'} />
+          <span>Inspector</span>
           <span style={{
             width: '5px',
             height: '5px',
@@ -473,7 +473,6 @@ export default function HorizonTopBar({
                   onClick={() => {
                     setIsMoreMenuOpen(false);
                     playTactileClick(700);
-                    onOpenAiSettings?.();
                   }}
                   style={{
                     display: 'flex',

@@ -22,7 +22,6 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
     { key: '4', action: 'Jump to Trip Planner', category: 'Navigation' },
     { key: '5', action: 'Jump to Deadlines & Quizzes', category: 'Navigation' },
     { key: '⌘ + K', action: 'Search Batchmates & Roster', category: 'Search' },
-    { key: '⌘ + \\', action: 'Toggle Astra AI Assistant', category: 'AI Assistant' },
     { key: 'T', action: 'Toggle Light / Dark Theme', category: 'Appearance' },
     { key: 'V', action: 'Toggle Desktop / Mobile View', category: 'Layout' },
     { key: '?', action: 'Open Keyboard Shortcuts cheat sheet', category: 'Help' },

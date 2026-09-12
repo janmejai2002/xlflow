@@ -12,7 +12,7 @@ const SECTIONS = [
   { id: 'calendar', name: 'Calendar Sync', icon: Calendar },
   { id: 'roster', name: 'Roster & Pass', icon: Search },
   { id: 'privacy', name: 'Privacy Guarantee', icon: ShieldCheck },
-  { id: 'ai', name: 'AI & MCP Bridge', icon: Bot },
+  { id: 'ai', name: 'MCP Bridge', icon: Bot },
   { id: 'faq', name: 'FAQs', icon: HelpCircle }
 ];
 
@@ -465,25 +465,20 @@ export default function InstructionBookletModal({ isOpen, onClose }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                 <Bot size={20} style={{ color: 'var(--mizu)' }} />
                 <h3 style={{ fontSize: '16px', fontWeight: 700, margin: 0 }}>
-                  Astra Co-Pilot & Universal MCP Bridge
+                  Connect an AI assistant
                 </h3>
               </div>
               <p style={{ color: 'var(--ink-muted)', marginTop: 0 }}>
-                XL-Flow is the first student app equipped with an agentic Model Context Protocol (MCP) bridge.
+                XL-Flow ships a Model Context Protocol server, so an assistant you already use can read your
+                schedule and attendance directly.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '14px' }}>
                 <div style={{ padding: '14px', borderRadius: '14px', backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '13.5px' }}>1. In-App Astra AI Assistant:</div>
+                  <div style={{ fontWeight: 700, fontSize: '13.5px' }}>Claude Desktop / Cursor</div>
                   <div style={{ fontSize: '12.5px', color: 'var(--ink-muted)', marginTop: '4px' }}>
-                    Click the <strong>Astra</strong> button in the header. Ask questions like <em>"Can I bunk OMCR?"</em> or <em>"Find 4-day getaways"</em>. Astra executes real actions on the screen!
-                  </div>
-                </div>
-
-                <div style={{ padding: '14px', borderRadius: '14px', backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '13.5px' }}>2. Connect External AI (Claude Desktop / Cursor):</div>
-                  <div style={{ fontSize: '12.5px', color: 'var(--ink-muted)', marginTop: '4px' }}>
-                    To let Claude Desktop or Cursor inspect your schedule or control your browser tab, add this to your <code>claude_desktop_config.json</code>:
+                    Add this to your <code>claude_desktop_config.json</code>, then ask it about your schedule,
+                    attendance margins, or free weekends:
                   </div>
                   
                   <div style={{ position: 'relative', marginTop: '8px' }}>

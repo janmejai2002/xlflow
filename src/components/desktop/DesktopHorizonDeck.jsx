@@ -7,7 +7,6 @@ import SectorBunkMeter from './sectors/SectorBunkMeter';
 import SectorTrips from './sectors/SectorTrips';
 import SectorDeadlines from './sectors/SectorDeadlines';
 import DesktopInspectorDock from './DesktopInspectorDock';
-import AiSettingsModal from '../AiSettingsModal';
 import QuickTourModal from '../QuickTourModal';
 import { playTactileClick } from '../../services/soundEngine';
 
@@ -23,7 +22,6 @@ export default function DesktopHorizonDeck({
   onOpenShareCard,
   onOpenBooklet,
   onOpenShortcuts,
-  onExecuteAction,
   onSelectDateFromHeatmap,
   onToggleLayoutMode,
   isDesktop
@@ -31,7 +29,6 @@ export default function DesktopHorizonDeck({
   const [activeSectorIndex, setActiveSectorIndex] = useState(0);
   const [selectedSession, setSelectedSession] = useState(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
-  const [isAiSettingsOpen, setIsAiSettingsOpen] = useState(false);
   const [isQuickTourOpen, setIsQuickTourOpen] = useState(() => {
     return !localStorage.getItem('has_seen_quick_tour_v1');
   });
@@ -103,7 +100,6 @@ export default function DesktopHorizonDeck({
         onOpenSearch={onOpenSearch}
         onOpenShortcuts={onOpenShortcuts}
         onOpenBooklet={onOpenBooklet}
-        onOpenAiSettings={() => setIsAiSettingsOpen(true)}
         onToggleLayoutMode={onToggleLayoutMode}
         isDesktop={isDesktop}
         isInspectorOpen={isInspectorOpen}
@@ -246,10 +242,8 @@ export default function DesktopHorizonDeck({
               courses={dataPayload.courses}
               schedule={dataPayload.schedule}
               deadlines={dataPayload.deadlines}
-              onExecuteAction={onExecuteAction}
               student={dataPayload.student}
               onClose={() => setIsInspectorOpen(false)}
-              onOpenAiSettings={() => setIsAiSettingsOpen(true)}
             />
           </div>
         )}
@@ -264,13 +258,7 @@ export default function DesktopHorizonDeck({
         onToggleLayoutMode={onToggleLayoutMode}
       />
 
-      {/* 5. Free AI Key Vault & Provider Selection Modal */}
-      <AiSettingsModal
-        isOpen={isAiSettingsOpen}
-        onClose={() => setIsAiSettingsOpen(false)}
-      />
-
-      {/* 6. Interactive 30-Second Quick Tour */}
+      {/* 5. Interactive 30-Second Quick Tour */}
       <QuickTourModal
         isOpen={isQuickTourOpen}
         onClose={() => {

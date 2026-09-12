@@ -5,7 +5,6 @@ export function useKeyboardShortcuts({
   onOpenSearch,
   onToggleTheme,
   onOpenShortcuts,
-  onOpenCopilot,
   onToggleLayoutMode
 }) {
   useEffect(() => {
@@ -52,15 +51,9 @@ export function useKeyboardShortcuts({
         e.preventDefault();
         onOpenSearch?.();
       }
-
-      // Command + \ or Ctrl + \ (Toggle AI Copilot)
-      if ((e.ctrlKey || e.metaKey) && e.key === '\\') {
-        e.preventDefault();
-        onOpenCopilot?.();
-      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onSelectTab, onOpenSearch, onToggleTheme, onOpenShortcuts, onOpenCopilot]);
+  }, [onSelectTab, onOpenSearch, onToggleTheme, onOpenShortcuts]);
 }

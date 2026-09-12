@@ -41,12 +41,6 @@ export default function SectorBunkMeter({ courses = [], schedule = [], student =
   const dangerCourses = evaluatedCourses.filter(c => c.stats.tier === 'danger');
   const warningCourses = evaluatedCourses.filter(c => c.stats.tier === 'warning');
 
-  let peaceOfMindScore = 100;
-  if (dangerCourses.length > 0) peaceOfMindScore -= dangerCourses.length * 15;
-  if (warningCourses.length > 0) peaceOfMindScore -= warningCourses.length * 5;
-  if (discrepancies.length > 0) peaceOfMindScore -= discrepancies.length * 2;
-  peaceOfMindScore = Math.max(48, Math.min(100, peaceOfMindScore));
-
   const handleExportAuditPdf = () => {
     window.print();
     toast.success('Generated Dean Appeal Attendance Report');
@@ -217,42 +211,11 @@ XLRI Jamshedpur / Delhi-NCR`;
       {/* Summary KPI Ribbon (4-Tile 2026 Academic Wellness Grid) */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateColumns: 'repeat(3, 1fr)',
         gap: '12px',
         flexShrink: 0
       }}>
-        {/* Tile 1: Academic Peace of Mind Score */}
-        <div style={{
-          backgroundColor: peaceOfMindScore >= 90 ? 'var(--wash-moss)' : 'var(--wash-ochre)',
-          padding: '12px 18px',
-          borderRadius: '12px',
-          border: `1px solid ${peaceOfMindScore >= 90 ? 'rgba(var(--moss-rgb), 0.35)' : 'rgba(var(--ochre-rgb), 0.35)'}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}>
-          <div>
-            <div style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              color: peaceOfMindScore >= 90 ? 'var(--moss-text)' : 'var(--ochre-text)',
-              letterSpacing: '0.04em'
-            }}>
-              PEACE OF MIND INDEX
-            </div>
-            <div style={{
-              fontSize: '20px',
-              fontWeight: 800,
-              color: peaceOfMindScore >= 90 ? 'var(--moss-text)' : 'var(--ochre-text)',
-              marginTop: '2px'
-            }}>
-              {peaceOfMindScore}% Safe
-            </div>
-          </div>
-          <ShieldCheck size={22} color={peaceOfMindScore >= 90 ? 'var(--moss)' : 'var(--ochre)'} />
-        </div>
-
-        {/* Tile 2: Total Courses */}
+        {/* Tile 1: Total Courses */}
         <div style={{
           backgroundColor: 'var(--card)',
           padding: '12px 18px',
@@ -271,7 +234,7 @@ XLRI Jamshedpur / Delhi-NCR`;
           <span style={{ fontSize: '11px', color: 'var(--ink-soft)' }}>Term-5 / Core</span>
         </div>
 
-        {/* Tile 3: Safe Zone */}
+        {/* Tile 2: Safe Zone */}
         <div style={{
           backgroundColor: 'var(--card)',
           padding: '12px 18px',
@@ -290,7 +253,7 @@ XLRI Jamshedpur / Delhi-NCR`;
           <ShieldCheck size={20} color="var(--moss)" />
         </div>
 
-        {/* Tile 4: Attendance Watch */}
+        {/* Tile 3: Attendance Watch */}
         <div style={{
           backgroundColor: riskCount > 0 ? 'var(--wash-ochre)' : 'var(--card)',
           padding: '12px 18px',

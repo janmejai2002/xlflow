@@ -28,7 +28,6 @@ export default function DynamicAmbientIsland({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
-  const [activeCycle, setActiveCycle] = useState(0); // 0: Next Lecture, 1: Peace of Mind
   const popoverRef = useRef(null);
   const [, setStoreVer] = useState(0);
 
@@ -48,15 +47,6 @@ export default function DynamicAmbientIsland({
       document.addEventListener('pointerdown', handleClickOutside);
     }
     return () => document.removeEventListener('pointerdown', handleClickOutside);
-  }, [isOpen]);
-
-  // Subtle 8s carousel cycle when closed (unless audio is active)
-  useEffect(() => {
-    if (isOpen) return;
-    const interval = setInterval(() => {
-      setActiveCycle(prev => (prev + 1) % 3);
-    }, 7000);
-    return () => clearInterval(interval);
   }, [isOpen]);
 
   // Find next upcoming session
@@ -98,7 +88,7 @@ export default function DynamicAmbientIsland({
 
   const timeRemainingStr = getTimeRemaining(nextSession);
 
-  // Compute Academic Peace of Mind (0 - 100)
+  // Course standing, used by the expanded panel
   const evaluatedCourses = courses.map(course => {
     const recon = selfAttendanceStore.getCourseStats(course, schedule);
     return {
@@ -111,12 +101,6 @@ export default function DynamicAmbientIsland({
   const dangerCourses = evaluatedCourses.filter(c => c.stats.tier === 'danger');
   const warningCourses = evaluatedCourses.filter(c => c.stats.tier === 'warning');
   const discrepancies = evaluatedCourses.filter(c => c.discrepancy?.hasDiscrepancy);
-
-  let peaceOfMindScore = 98;
-  if (dangerCourses.length > 0) peaceOfMindScore -= dangerCourses.length * 16;
-  if (warningCourses.length > 0) peaceOfMindScore -= warningCourses.length * 6;
-  if (discrepancies.length > 0) peaceOfMindScore -= discrepancies.length * 3;
-  peaceOfMindScore = Math.max(45, Math.min(100, peaceOfMindScore));
 
   const copyRoomCode = (e) => {
     e?.stopPropagation();
@@ -172,8 +156,8 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
           playSoftClick(880);
           setIsOpen(prev => !prev);
         }}
-        title="Dynamic Ambient Island: Glanceable Lecture Countdown & Academic Peace of Mind"
-        aria-label="Dynamic Ambient Island"
+        title="Next lecture and attendance standing"
+        aria-label="Next lecture and attendance standing"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -224,12 +208,6 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
           overflow: 'hidden',
           textOverflow: 'ellipsis'
         }}>
-          {activeCycle === 1 ? (
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: peaceOfMindScore >= 90 ? 'var(--moss-text)' : 'var(--ochre-text)' }}>
-              <ShieldCheck size={12} color={peaceOfMindScore >= 90 ? 'var(--moss)' : 'var(--ochre)'} />
-              <span>{peaceOfMindScore}% Peace</span>
-            </span>
-          ) : (
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <span style={{
                 fontFamily: 'var(--font-mono)',
@@ -242,7 +220,6 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
               <span style={{ color: 'var(--ink-soft)', fontSize: '11px' }}>•</span>
               <span style={{ color: 'var(--ink-soft)', fontSize: '11px' }}>{timeRemainingStr}</span>
             </span>
-          )}
         </div>
 
         {/* Expand Indicator */}
@@ -399,41 +376,30 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
             </div>
           )}
 
-          {/* Academic Peace-of-Mind Gauge */}
+          {/* Courses below the 80% line */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '10px 12px',
-            backgroundColor: peaceOfMindScore >= 90 ? 'var(--wash-moss)' : 'var(--wash-ochre)',
-            border: `1px solid ${peaceOfMindScore >= 90 ? 'rgba(var(--moss-rgb), 0.3)' : 'rgba(var(--ochre-rgb), 0.3)'}`,
+            backgroundColor: dangerCourses.length === 0 ? 'var(--wash-moss)' : 'var(--wash-hanko)',
+            border: `1px solid ${dangerCourses.length === 0 ? 'rgba(var(--moss-rgb), 0.3)' : 'rgba(var(--hanko-rgb), 0.3)'}`,
             borderRadius: '12px'
           }}>
-            <div>
-              <div style={{
-                fontSize: '10px',
-                fontWeight: 700,
-                color: peaceOfMindScore >= 90 ? 'var(--moss-text)' : 'var(--ochre-text)',
-                letterSpacing: '0.04em'
-              }}>
-                ACADEMIC WELLNESS
-              </div>
-              <div style={{
-                fontSize: '14px',
-                fontWeight: 800,
-                color: peaceOfMindScore >= 90 ? 'var(--moss-text)' : 'var(--ochre-text)',
-                marginTop: '1px'
-              }}>
-                {peaceOfMindScore}% Peace of Mind
-              </div>
-            </div>
             <span style={{
-              fontSize: '11px',
-              fontWeight: 600,
-              color: peaceOfMindScore >= 90 ? 'var(--moss-text)' : 'var(--ochre-text)'
+              fontSize: '12.5px',
+              fontWeight: 700,
+              color: dangerCourses.length === 0 ? 'var(--moss-text)' : 'var(--hanko-text)'
             }}>
-              {dangerCourses.length === 0 ? 'All 80% Safe' : `${dangerCourses.length} Need Attention`}
+              {dangerCourses.length === 0
+                ? 'Every course above 80%'
+                : `${dangerCourses.length} course${dangerCourses.length === 1 ? '' : 's'} below 80%`}
             </span>
+            {warningCourses.length > 0 && (
+              <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--ochre-text)' }}>
+                {warningCourses.length} tight
+              </span>
+            )}
           </div>
 
           {/* ERP Discrepancy Dispute Dossier 1-Click Action */}

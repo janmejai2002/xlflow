@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, Bot, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
+import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
 import { fireStreakConfetti } from '../services/confetti';
 import { toast } from 'sonner';
 import XlFlowLogo from './XlFlowLogo';
@@ -15,7 +15,6 @@ export default function Header({
   isSyncing,
   onOpenSearch,
   onOpenShareCard,
-  onOpenCopilot,
   onOpenBooklet,
   onToggleLayoutMode,
   onOpenQuickTour,
@@ -160,42 +159,6 @@ export default function Header({
           }}>
             ⌘K
           </span>
-        </button>
-
-        {/* Astra AI Assistant Trigger */}
-        <button
-          onClick={onOpenCopilot}
-          title="Open Astra AI Assistant"
-          aria-label="Open Astra AI Assistant"
-          style={{
-            background: 'var(--wash-mizu)',
-            border: '1px solid rgba(var(--mizu-rgb), 0.35)',
-            borderRadius: '9px',
-            padding: '0 10px',
-            height: '44px',
-            minWidth: '44px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '5px',
-            color: 'var(--mizu)',
-            cursor: 'pointer',
-            fontSize: '11px',
-            fontWeight: 700,
-            boxShadow: '0 2px 8px rgba(var(--mizu-rgb), 0.15)',
-            transition: 'all 0.15s ease'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.04)';
-            e.currentTarget.style.borderColor = 'rgba(var(--mizu-rgb), 0.6)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.borderColor = 'rgba(var(--mizu-rgb), 0.35)';
-          }}
-        >
-          <Sparkles size={14} color="var(--mizu)" />
-          <span className="hide-below-380" style={{ color: 'var(--mizu)', fontWeight: 700 }}>Astra</span>
         </button>
 
         {/* Toggle Theme */}
