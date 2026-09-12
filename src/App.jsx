@@ -1,21 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import Navigation from './components/Navigation';
-import RadarView from './components/RadarView';
-import BunkMeterView from './components/BunkMeterView';
-import TimetableView from './components/TimetableView';
-import TripPlannerView from './components/TripPlannerView';
-import DeadlinesView from './components/DeadlinesView';
-import LoginModal from './components/LoginModal';
-import BatchSearchModal from './components/BatchSearchModal';
-import ShareCardModal from './components/ShareCardModal';
-import AstraCopilotDrawer from './components/AstraCopilotDrawer';
-import InstructionBookletModal from './components/InstructionBookletModal';
-import OnboardingModal from './components/OnboardingModal';
-import KeyboardShortcutsModal from './components/KeyboardShortcutsModal';
-import DesktopHorizonDeck from './components/desktop/DesktopHorizonDeck';
-import AiSettingsModal from './components/AiSettingsModal';
-import QuickTourModal from './components/QuickTourModal';
 import { useBreakpoint } from './hooks/useBreakpoint';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { StorageKeys, fetchLiveStudentData, getSampleDataPayload } from './services/api';
@@ -26,6 +11,42 @@ import { selfAttendanceStore } from './services/selfAttendanceStore';
 import { fetchCloudPrefs } from './services/cloudStorage';
 import { WifiOff } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
+
+const RadarView = lazy(() => import('./components/RadarView'));
+const BunkMeterView = lazy(() => import('./components/BunkMeterView'));
+const TimetableView = lazy(() => import('./components/TimetableView'));
+const TripPlannerView = lazy(() => import('./components/TripPlannerView'));
+const DeadlinesView = lazy(() => import('./components/DeadlinesView'));
+const LoginModal = lazy(() => import('./components/LoginModal'));
+const BatchSearchModal = lazy(() => import('./components/BatchSearchModal'));
+const ShareCardModal = lazy(() => import('./components/ShareCardModal'));
+const AstraCopilotDrawer = lazy(() => import('./components/AstraCopilotDrawer'));
+const InstructionBookletModal = lazy(() => import('./components/InstructionBookletModal'));
+const OnboardingModal = lazy(() => import('./components/OnboardingModal'));
+const KeyboardShortcutsModal = lazy(() => import('./components/KeyboardShortcutsModal'));
+const DesktopHorizonDeck = lazy(() => import('./components/desktop/DesktopHorizonDeck'));
+const AiSettingsModal = lazy(() => import('./components/AiSettingsModal'));
+const QuickTourModal = lazy(() => import('./components/QuickTourModal'));
+
+function PaneFallback() {
+  return (
+    <div
+      aria-busy="true"
+      style={{
+        flex: 1,
+        minHeight: '160px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'var(--ink-faint)',
+        fontSize: '12px',
+        fontFamily: 'var(--font-mono)'
+      }}
+    >
+      Loading...
+    </div>
+  );
+}
 
 export default function App() {
   const { isDesktop, layoutPreference, toggleLayoutMode } = useBreakpoint();
@@ -233,6 +254,7 @@ export default function App() {
       
       {isDesktop ? (
         /* The Horizon Deck: Avant-Garde Horizontal Panoramic Spatial Dashboard */
+        <Suspense fallback={<PaneFallback />}>
         <DesktopHorizonDeck
           dataPayload={dataPayload}
           isDemo={isDemo}
@@ -253,6 +275,7 @@ export default function App() {
           }}
           isDesktop={true}
         />
+        </Suspense>
       ) : (
         /* Centered Mobile-App Shell container */
         <div style={{
@@ -319,6 +342,7 @@ export default function App() {
             overflowY: 'auto',
             WebkitOverflowScrolling: 'touch'
           }}>
+            <Suspense fallback={<PaneFallback />}>
             {activeTab === 'radar' && (
               <RadarView
                 schedule={dataPayload.schedule}
@@ -359,6 +383,7 @@ export default function App() {
                 courses={dataPayload.courses}
               />
             )}
+            </Suspense>
           </main>
 
           {/* Bottom Navigation with 5 Tabs */}
@@ -372,76 +397,112 @@ export default function App() {
       )}
 
       {/* Login & Demo Modal */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
-        onStartDemo={handleStartDemo}
-      />
+      {isLoginModalOpen && (
+        <Suspense fallback={null}>
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onLoginSuccess={handleLoginSuccess}
+          onStartDemo={handleStartDemo}
+        />
+        </Suspense>
+      )}
 
       {/* Batch Roster Search Modal (Ctrl+K) */}
-      <BatchSearchModal
-        isOpen={isSearchModalOpen}
-        onClose={() => setIsSearchModalOpen(false)}
-      />
+      {isSearchModalOpen && (
+        <Suspense fallback={null}>
+        <BatchSearchModal
+          isOpen={isSearchModalOpen}
+          onClose={() => setIsSearchModalOpen(false)}
+        />
+        </Suspense>
+      )}
 
       {/* Social Academic Pass Modal */}
-      <ShareCardModal
-        isOpen={isShareCardModalOpen}
-        onClose={() => setIsShareCardModalOpen(false)}
-        student={dataPayload.student}
-        courses={dataPayload.courses}
-        theme={theme}
-      />
+      {isShareCardModalOpen && (
+        <Suspense fallback={null}>
+        <ShareCardModal
+          isOpen={isShareCardModalOpen}
+          onClose={() => setIsShareCardModalOpen(false)}
+          student={dataPayload.student}
+          courses={dataPayload.courses}
+          theme={theme}
+        />
+        </Suspense>
+      )}
 
       {/* Instruction Booklet & Student Guide Modal */}
-      <InstructionBookletModal
-        isOpen={isBookletOpen}
-        onClose={() => setIsBookletOpen(false)}
-      />
+      {isBookletOpen && (
+        <Suspense fallback={null}>
+        <InstructionBookletModal
+          isOpen={isBookletOpen}
+          onClose={() => setIsBookletOpen(false)}
+        />
+        </Suspense>
+      )}
 
       {/* First-Time Student Onboarding Modal */}
-      <OnboardingModal
-        isOpen={isOnboardingOpen}
-        onClose={() => {
-          localStorage.setItem('has_seen_onboarding_v1', 'true');
-          setIsOnboardingOpen(false);
-        }}
-        onConnectErp={() => setIsLoginModalOpen(true)}
-        onTryDemo={handleStartDemo}
-        student={dataPayload.student}
-      />
+      {isOnboardingOpen && (
+        <Suspense fallback={null}>
+        <OnboardingModal
+          isOpen={isOnboardingOpen}
+          onClose={() => {
+            localStorage.setItem('has_seen_onboarding_v1', 'true');
+            setIsOnboardingOpen(false);
+          }}
+          onConnectErp={() => setIsLoginModalOpen(true)}
+          onTryDemo={handleStartDemo}
+          student={dataPayload.student}
+        />
+        </Suspense>
+      )}
 
       {/* Keyboard Shortcuts Cheat Sheet Modal (?) */}
-      <KeyboardShortcutsModal
-        isOpen={isShortcutsModalOpen}
-        onClose={() => setIsShortcutsModalOpen(false)}
-      />
+      {isShortcutsModalOpen && (
+        <Suspense fallback={null}>
+        <KeyboardShortcutsModal
+          isOpen={isShortcutsModalOpen}
+          onClose={() => setIsShortcutsModalOpen(false)}
+        />
+        </Suspense>
+      )}
 
       {/* Astra Neural Co-Pilot Drawer (Mobile Drawer) */}
-      <AstraCopilotDrawer
-        isOpen={isCopilotOpen}
-        onClose={() => setIsCopilotOpen(false)}
-        context={dataPayload}
-        onExecuteAction={handleExecuteCopilotAction}
-        onOpenAiSettings={() => setIsAiSettingsOpen(true)}
-      />
+      {isCopilotOpen && (
+        <Suspense fallback={null}>
+        <AstraCopilotDrawer
+          isOpen={isCopilotOpen}
+          onClose={() => setIsCopilotOpen(false)}
+          context={dataPayload}
+          onExecuteAction={handleExecuteCopilotAction}
+          onOpenAiSettings={() => setIsAiSettingsOpen(true)}
+        />
+        </Suspense>
+      )}
 
       {/* Free AI Engine & Key Vault Modal */}
-      <AiSettingsModal
-        isOpen={isAiSettingsOpen}
-        onClose={() => setIsAiSettingsOpen(false)}
-      />
+      {isAiSettingsOpen && (
+        <Suspense fallback={null}>
+        <AiSettingsModal
+          isOpen={isAiSettingsOpen}
+          onClose={() => setIsAiSettingsOpen(false)}
+        />
+        </Suspense>
+      )}
 
       {/* Interactive 30-Second Quick Tour */}
-      <QuickTourModal
-        isOpen={isQuickTourOpen}
-        onClose={() => setIsQuickTourOpen(false)}
-        onJumpToSector={(idx) => {
-          const tabs = ['radar', 'timetable', 'bunkmeter', 'trips', 'deadlines'];
-          setActiveTab(tabs[idx] || 'radar');
-        }}
-      />
+      {isQuickTourOpen && (
+        <Suspense fallback={null}>
+        <QuickTourModal
+          isOpen={isQuickTourOpen}
+          onClose={() => setIsQuickTourOpen(false)}
+          onJumpToSector={(idx) => {
+            const tabs = ['radar', 'timetable', 'bunkmeter', 'trips', 'deadlines'];
+            setActiveTab(tabs[idx] || 'radar');
+          }}
+        />
+        </Suspense>
+      )}
 
       {/* Tactile Toaster Notifications */}
       <Toaster
