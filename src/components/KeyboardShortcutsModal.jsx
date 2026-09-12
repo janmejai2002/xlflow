@@ -26,7 +26,6 @@ export default function KeyboardShortcutsModal({ isOpen, onClose }) {
     { key: '⌘ + \\', action: 'Toggle Astra AI Assistant', category: 'AI Assistant' },
     { key: 'T', action: 'Toggle Light / Dark Theme', category: 'Appearance' },
     { key: 'V', action: 'Toggle Desktop / Mobile View', category: 'Layout' },
-    { key: 'M', action: 'Toggle Focus Ambient Audio', category: 'Audio' },
     { key: '?', action: 'Open Keyboard Shortcuts cheat sheet', category: 'Help' },
     { key: 'Esc', action: 'Close open modal, drawer, or search', category: 'System' },
   ];

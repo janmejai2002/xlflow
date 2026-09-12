@@ -3,14 +3,12 @@ import {
   Clock,
   MapPin,
   ShieldCheck,
-  Headphones,
   Copy,
   Check,
   ChevronDown,
   Sparkles,
   AlertTriangle,
   FileText,
-  Volume2,
   Calendar,
   Layers,
   ArrowRight
@@ -24,15 +22,13 @@ export default function DynamicAmbientIsland({
   schedule = [],
   courses = [],
   deadlines = [],
-  isAmbientOn = false,
-  onToggleAmbient,
   onInspectSession,
   onSelectTab,
   isCompact = false
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
-  const [activeCycle, setActiveCycle] = useState(0); // 0: Next Lecture, 1: Peace of Mind, 2: 432Hz / Status
+  const [activeCycle, setActiveCycle] = useState(0); // 0: Next Lecture, 1: Peace of Mind
   const popoverRef = useRef(null);
   const [, setStoreVer] = useState(0);
 
@@ -206,14 +202,7 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
           }
         }}
       >
-        {/* Pulsing Status Dot / Equalizer Wave */}
-        {isAmbientOn ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2px', height: '12px', flexShrink: 0 }}>
-            <span className="equalizer-bar-1" style={{ width: '2px', backgroundColor: 'var(--moss)', borderRadius: '1px' }} />
-            <span className="equalizer-bar-2" style={{ width: '2px', backgroundColor: 'var(--moss)', borderRadius: '1px' }} />
-            <span className="equalizer-bar-3" style={{ width: '2px', backgroundColor: 'var(--moss)', borderRadius: '1px' }} />
-          </div>
-        ) : (
+        {/* Pulsing Status Dot */}
           <span style={{
             width: '6px',
             height: '6px',
@@ -222,7 +211,6 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
             boxShadow: `0 0 6px ${statusColor}`,
             flexShrink: 0
           }} />
-        )}
 
         {/* Dynamic Display Text based on Cycle & State */}
         <div style={{
@@ -236,12 +224,7 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
           overflow: 'hidden',
           textOverflow: 'ellipsis'
         }}>
-          {isAmbientOn ? (
-            <span style={{ color: 'var(--moss-text)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span>432Hz Flow</span>
-              {!isCompact && <span style={{ fontSize: '10px', color: 'var(--ink-soft)' }}>• {nextSession?.venue || 'Campus'}</span>}
-            </span>
-          ) : activeCycle === 1 ? (
+          {activeCycle === 1 ? (
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: peaceOfMindScore >= 90 ? 'var(--moss-text)' : 'var(--ochre-text)' }}>
               <ShieldCheck size={12} color={peaceOfMindScore >= 90 ? 'var(--moss)' : 'var(--ochre)'} />
               <span>{peaceOfMindScore}% Peace</span>
@@ -496,31 +479,7 @@ BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
           )}
 
           {/* Bottom Quick Controls */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', paddingTop: '4px' }}>
-            <button
-              onClick={() => {
-                playHarmonicChime();
-                onToggleAmbient?.();
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '5px',
-                padding: '7px',
-                borderRadius: '8px',
-                backgroundColor: isAmbientOn ? 'var(--wash-moss)' : 'var(--paper)',
-                border: isAmbientOn ? '1px solid var(--moss)' : '1px solid var(--border)',
-                color: isAmbientOn ? 'var(--moss-text)' : 'var(--ink)',
-                fontSize: '11px',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              <Headphones size={12} color={isAmbientOn ? 'var(--moss)' : 'currentColor'} />
-              <span>{isAmbientOn ? 'Pause 432Hz' : '432Hz Flow'}</span>
-            </button>
-
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '8px', paddingTop: '4px' }}>
             <button
               onClick={() => {
                 playSoftClick(750);

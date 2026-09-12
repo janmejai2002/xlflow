@@ -3,7 +3,6 @@ import {
   Compass,
   ShieldCheck,
   Palmtree,
-  Users,
   ArrowRight,
   ArrowLeft,
   Check,
@@ -60,22 +59,6 @@ const TOUR_SLIDES = [
       '🏖️ Pre-calculated 4-5 day travel windows',
       '📊 Cost-per-trip: see exact attendance impact',
       '🎯 Zero-exam conflict verification'
-    ]
-  },
-  {
-    id: 'social',
-    sectorNum: '06',
-    title: 'Campus Social & Free Slot Finder',
-    tagline: 'Zero Clash Coordination with Squads.',
-    icon: Users,
-    iconColor: 'var(--plum)',
-    iconBg: 'var(--wash-plum)',
-    description:
-      "End the endless WhatsApp polling for group meetings. Form study squads with a 6-character code to instantly overlay timetables and uncover mutual free slots for case prep and committee meetings.",
-    highlights: [
-      '🤝 Automated clash-free meeting slot heatmap',
-      '📍 Temporary opt-in campus presence beacons',
-      '📲 1-Tap WhatsApp meeting invites'
     ]
   }
 ];

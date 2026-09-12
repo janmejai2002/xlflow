@@ -12,7 +12,6 @@ import {
   Flame,
   ArrowRight,
   Compass,
-  Globe,
   CalendarDays
 } from 'lucide-react';
 import { COURSE_COLORS } from '../../../data/rosterData';
@@ -22,7 +21,6 @@ import { selfAttendanceStore } from '../../../services/selfAttendanceStore';
 import SelfAttendanceMarkPill from '../../attendance/SelfAttendanceMarkPill';
 import PostLectureCheckinCard from '../../attendance/PostLectureCheckinCard';
 import HorizonHeatmap from '../../HorizonHeatmap';
-import ChronosOrb3D from '../../ChronosOrb3D';
 import { playTactileClick } from '../../../services/soundEngine';
 import { toast } from 'sonner';
 
@@ -35,7 +33,6 @@ export default function SectorRadar({
 }) {
   const [copiedVenue, setCopiedVenue] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [spatialMode, setSpatialMode] = useState('3d'); // '3d' | 'heatmap'
   const [, setStoreVer] = useState(0);
 
   useEffect(() => {
@@ -535,81 +532,29 @@ export default function SectorRadar({
             minHeight: 0,
             overflow: 'hidden'
           }}>
-            {/* View Switcher Header */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              gap: '6px',
               borderBottom: '1px solid var(--border-soft)',
               paddingBottom: '8px',
-              flexShrink: 0
+              flexShrink: 0,
+              color: 'var(--ink-soft)',
+              fontSize: '11px',
+              fontWeight: 700
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  onClick={() => { playTactileClick(); setSpatialMode('3d'); }}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    padding: '4px 10px',
-                    borderRadius: '8px',
-                    backgroundColor: spatialMode === '3d' ? 'var(--wash-mizu)' : 'transparent',
-                    border: spatialMode === '3d' ? '1px solid rgba(0, 169, 184, 0.3)' : '1px solid transparent',
-                    color: spatialMode === '3d' ? 'var(--mizu)' : 'var(--ink-soft)',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s'
-                  }}
-                >
-                  <Globe size={12} />
-                  <span>3D Timeline</span>
-                </button>
-
-                <button
-                  onClick={() => { playTactileClick(); setSpatialMode('heatmap'); }}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    padding: '4px 10px',
-                    borderRadius: '8px',
-                    backgroundColor: spatialMode === 'heatmap' ? 'var(--wash-mizu)' : 'transparent',
-                    border: spatialMode === 'heatmap' ? '1px solid rgba(0, 169, 184, 0.3)' : '1px solid transparent',
-                    color: spatialMode === 'heatmap' ? 'var(--mizu)' : 'var(--ink-soft)',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s'
-                  }}
-                >
-                  <CalendarDays size={12} />
-                  <span>Schedule Heatmap</span>
-                </button>
-              </div>
-
-              <span style={{ fontSize: '10px', color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)' }}>
-                {spatialMode === '3d' ? '3D View' : '28-Day Heatmap'}
-              </span>
+              <CalendarDays size={12} />
+              <span>28-Day Schedule Heatmap</span>
             </div>
 
-            {/* View Canvas Body - Flex Fill 100% */}
             <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-              {spatialMode === '3d' ? (
-                <ChronosOrb3D
-                  schedule={schedule}
-                  courses={courses}
-                  onSelectSession={onSelectSession}
-                />
-              ) : (
-                <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+              <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
                   <HorizonHeatmap
                     schedule={schedule}
                     deadlines={deadlines}
                     onSelectDate={onSelectDate}
                   />
                 </div>
-              )}
             </div>
           </div>
         </div>

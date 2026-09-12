@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "verify:screens": "python scripts/verify_screens.py",
-    "mcp": "bun mcp-server/server.js"
+    "mcp": "bun mcp-server/stdio.js"
   },
   "dependencies": {
     "@capacitor/core": "^8.5.1",
@@ -20,9 +19,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sonner": "^2.0.8",
-    "three": "^0.186.0",
-    "vaul": "^1.1.2",
-    "ws": "^8.21.3"
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
@@ -30,7 +27,6 @@
     "@capacitor/cli": "^8.5.1",
     "@capacitor/ios": "^8.5.1",
     "@playwright/test": "^1.63.0",
-    "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^4.3.4",
     "vite": "^6.0.7"
   }
