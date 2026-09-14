@@ -117,13 +117,28 @@ Do not reintroduce any of these without a real backend behind them.
 - **Desktop Horizon Deck Integration (`src/components/desktop/HorizonTopBar.jsx`)**:
   - Desktop widescreen preserves the centered pill capsule (`mode="pill"`) positioned at `left: 50%, transform: translateX(-50%)`, ensuring zero regressions across viewport form factors.
 
-## 10. Open items
+## 10. Planned Initiative: Pinterest-Inspired Alternate UI ("PinDeck / Academic Moodboard")
+
+- **Vision**: Provide students with an alternate, highly visual "PinDeck" UI mode that transforms the analytical ERP dashboard into an inspiring, magazine-grade academic moodboard.
+- **Key Architectural Tenets**:
+  1. **Visual Masonry Canvas**: Staggered 2-to-3 column masonry layout with fluid card heights, subtle rounded elevations (`border-radius: 16px`), and smooth spring transitions.
+  2. **Categorized Academic Pins**:
+     - *Lecture / Schedule Pins*: Visual architectural gradients or editorial course imagery, live status pills (`ONGOING`, `NEXT UP`), venue badges, and 1-tap attend/bunk micro-reactions.
+     - *Attendance & Bunk Safety Pins*: Radial visual indicators, statutory safety badges (`+4 Safe Bunks`), and quick margin calculators.
+     - *Weekend Getaway & Natural Escape Pins*: High-aesthetic destination mood cards (McLeod Ganj, Rishikesh, Tirthan) paired with real-time bunk clearance indicators.
+     - *Deadlines & Exam Countdown Pins*: Editorial sticky-note memo cards with high-contrast typography and urgency tags.
+     - *Batch Peer Directory Pins*: Visual cards for 178 batchmates with section badges and quick contact tags.
+  3. **Seamless Viewport & Shell Integration**:
+     - Accessible via a dedicated layout/theme switcher in the Header More menu (`Layout Mode: Mobile | Horizon Deck | PinDeck`).
+     - Preserves all underlying stores (`selfAttendanceStore`, local cache, cloud sync) with zero logic duplication.
+
+## 11. Open items
 
 - Apps Script endpoint needs auth (see section 3).
 - `term4_gas_app/webapp.js` is 4,964 lines and has never been reviewed.
 - Sample data shows blank faculty names for some courses.
 
-## 11. Quick start
+## 12. Quick start
 
 ```powershell
 cd c:\Users\Janmejai\Documents\antigravity\xlflow
