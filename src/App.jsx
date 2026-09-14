@@ -286,7 +286,7 @@ export default function App() {
       alignItems: 'center',
       position: 'relative'
     }}>
-      {/* Read-Only Family & Friends Timetable Pass Top Ribbon */}
+      {/* Read-Only Academic Timetable Pass Top Ribbon */}
       {isReadOnlyShare && (
         <div
           style={{
@@ -307,7 +307,7 @@ export default function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
             <span style={{ fontSize: '15px' }}>🗓️</span>
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              <strong>Family & Friends Timetable Pass:</strong> Viewing {dataPayload.student?.name || 'XLRI Student'}'s Term-5 schedule in read-only mode.
+              <strong>Academic Timetable Pass:</strong> Viewing {dataPayload.student?.name || 'XLRI Student'}'s Term-5 schedule in read-only view.
             </span>
           </div>
           <button
@@ -325,7 +325,7 @@ export default function App() {
               whiteSpace: 'nowrap'
             }}
           >
-            Download Pass
+            Export Schedule Pass
           </button>
         </div>
       )}

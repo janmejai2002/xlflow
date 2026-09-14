@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 /**
  * ShareCardModal
  * Dual-Mode Visual Pass Generator:
- * 1. 'timetable' - Family & Friends Weekly Timetable Pass with Calling Windows & Room Codes
+ * 1. 'timetable' - Official Weekly Timetable & Academic Routine Pass
  * 2. 'academic'  - Official Attendance & Bunk-O-Meter Statutory Clearance Pass
  */
 export default function ShareCardModal({
@@ -39,23 +39,23 @@ export default function ShareCardModal({
     const ctx = canvas.getContext('2d');
 
     const isDark = theme === 'dark';
-    // Canvas cannot resolve CSS custom properties, literal color tokens:
-    const bgColor = isDark ? '#151512' : '#EFE7D8';
-    const cardBg = isDark ? '#1E1E19' : '#F8F2E6';
-    const subCardBg = isDark ? '#262520' : '#FFFFFF';
-    const inkColor = isDark ? '#DCC9A9' : '#1C1A17';
-    const softInk = isDark ? '#9C8F79' : '#574F41';
-    const borderColor = isDark ? '#322F27' : '#DCC9A9';
-    const mizuColor = isDark ? '#6FA8A2' : '#2F5D62';
-    const mossColor = isDark ? '#7E9C7F' : '#4E6851';
-    const ochreColor = isDark ? '#D4A254' : '#B07524';
-    const hankoColor = isDark ? '#D9614F' : '#B83A2D';
-    const plumColor = isDark ? '#C08E7A' : '#8A5B4C';
-    const indigoColor = isDark ? '#7E9CC0' : '#3D5570';
+    // Canvas colors matching Crisp Modern Alabaster & Dark Mode:
+    const bgColor = isDark ? '#0F172A' : '#F8F9FA';
+    const cardBg = isDark ? '#1E293B' : '#FFFFFF';
+    const subCardBg = isDark ? '#0F172A' : '#F8FAFC';
+    const inkColor = isDark ? '#F8FAFC' : '#0F172A';
+    const softInk = isDark ? '#94A3B8' : '#475569';
+    const borderColor = isDark ? '#334155' : '#E2E8F0';
+    const mizuColor = isDark ? '#38BDF8' : '#0284C7';
+    const mossColor = isDark ? '#4ADE80' : '#16A34A';
+    const ochreColor = isDark ? '#FBBF24' : '#D97706';
+    const hankoColor = isDark ? '#F87171' : '#DC2626';
+    const plumColor = isDark ? '#A78BFA' : '#8B5CF6';
+    const indigoColor = isDark ? '#818CF8' : '#4F46E5';
 
     if (activeTab === 'timetable') {
       // ==========================================
-      // TAB 1: WEEKLY ROUTINE (FAMILY & FRIENDS)
+      // TAB 1: WEEKLY ACADEMIC ROUTINE
       // ==========================================
       const W = 1200;
       const H = 780;
@@ -66,7 +66,7 @@ export default function ShareCardModal({
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, W, H);
 
-      // 2. Multi-tone Japanese Top Accent Bar
+      // 2. Multi-tone Top Accent Bar
       const grad = ctx.createLinearGradient(0, 0, W, 0);
       grad.addColorStop(0, mizuColor);
       grad.addColorStop(0.35, indigoColor);
@@ -83,7 +83,7 @@ export default function ShareCardModal({
       // 4. Header Badges
       ctx.fillStyle = inkColor;
       ctx.font = '700 22px Newsreader, Georgia, serif';
-      ctx.fillText('XL-FLOW  •  WEEKLY CLASS ROUTINE & CALLING PASS', 60, 78);
+      ctx.fillText('XL-FLOW  •  WEEKLY CLASS ROUTINE & SCHEDULE', 60, 78);
 
       ctx.fillStyle = mizuColor;
       ctx.font = '700 15px Inter, -apple-system, sans-serif';
@@ -102,28 +102,28 @@ export default function ShareCardModal({
         166
       );
 
-      // 6. Calling Windows Guide Ribbon (Crucial for Parents & Family)
+      // 6. Academic Schedule Overview Ribbon
       const ribbonY = 190;
       const ribbonH = 68;
-      ctx.fillStyle = isDark ? 'rgba(212, 162, 84, 0.14)' : 'rgba(176, 117, 36, 0.10)';
+      ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.10)' : 'rgba(2, 132, 199, 0.08)';
       ctx.fillRect(60, ribbonY, W - 120, ribbonH);
-      ctx.strokeStyle = isDark ? 'rgba(212, 162, 84, 0.45)' : 'rgba(176, 117, 36, 0.35)';
+      ctx.strokeStyle = isDark ? 'rgba(56, 189, 248, 0.30)' : 'rgba(2, 132, 199, 0.25)';
       ctx.lineWidth = 1.5;
       ctx.strokeRect(60, ribbonY, W - 120, ribbonH);
 
       // Ribbon Accent Bar
-      ctx.fillStyle = ochreColor;
+      ctx.fillStyle = mizuColor;
       ctx.fillRect(60, ribbonY, 6, ribbonH);
 
       // Ribbon Content
-      ctx.fillStyle = ochreColor;
+      ctx.fillStyle = mizuColor;
       ctx.font = '700 14px Inter, sans-serif';
-      ctx.fillText('📞  RECOMMENDED CALLING AVAILABILITY FOR PARENTS & FRIENDS', 80, ribbonY + 26);
+      ctx.fillText('TERM-5 ACADEMIC TIMETABLE & SECTION SCHEDULE', 80, ribbonY + 26);
 
       ctx.fillStyle = inkColor;
       ctx.font = '500 15px Inter, sans-serif';
       ctx.fillText(
-        '• Lunch Window: 12:00 PM – 2:30 PM   • Evenings: After 4:30 PM   • Full Free Days: Wednesdays & Sundays',
+        '• Verified Course Timings & Section Registrations   • Lecture Venues (MCR / CR)   • Non-Teaching Days: Wednesdays & Sundays',
         80,
         ribbonY + 52
       );
@@ -204,13 +204,13 @@ export default function ShareCardModal({
 
           ctx.fillStyle = mossColor;
           ctx.font = '700 14px Newsreader, serif';
-          ctx.fillText('✓ Open / Free Day', colX + 20, colY + 90);
+          ctx.fillText('✓ Non-Teaching Day', colX + 20, colY + 90);
 
           ctx.fillStyle = softInk;
           ctx.font = '500 12px Inter, sans-serif';
           ctx.fillText('No scheduled lectures.', colX + 20, colY + 118);
-          ctx.fillText('Ideal for family calls,', colX + 20, colY + 138);
-          ctx.fillText('study & recreation.', colX + 20, colY + 156);
+          ctx.fillText('Self-study, group work &', colX + 20, colY + 138);
+          ctx.fillText('academic preparation.', colX + 20, colY + 156);
         } else {
           // Render each session slot (up to 3 per day fit comfortably)
           let currentSlotY = colY + 52;
@@ -279,7 +279,7 @@ export default function ShareCardModal({
       ctx.fillStyle = softInk;
       ctx.font = '500 13px Inter, sans-serif';
       ctx.fillText(
-        'Generated with XL-Flow  •  Read-Only Family & Friends Schedule Pass  •  xlflow.campus',
+        'Generated with XL-Flow  •  Verified Academic Schedule & Routine  •  xlflow.campus',
         60,
         H - 44
       );
@@ -447,8 +447,8 @@ export default function ShareCardModal({
     const url = getShareUrl();
     const studentName = student?.name || 'XLRI Student';
     const message = activeTab === 'timetable'
-      ? `Hi! Here is my XLRI Term-5 weekly class timetable & availability schedule for ${studentName}:\n\n🔗 ${url}\n\n📞 Best calling windows:\n• Lunch: 12:00 PM – 2:30 PM\n• Evenings: After 4:30 PM\n• Free Days: Wednesdays & Sundays`
-      : `Check out my Term-5 XLRI Academic & Attendance Pass on XL-Flow:\n\n🔗 ${url}`;
+      ? `XLRI Term-5 Academic Timetable & Schedule for ${studentName}:\n\n🔗 ${url}`
+      : `XLRI Term-5 Attendance & Academic Clearance Pass for ${studentName}:\n\n🔗 ${url}`;
 
     const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank', 'noopener,noreferrer');
@@ -557,7 +557,7 @@ export default function ShareCardModal({
             }}
           >
             <Calendar size={14} color={activeTab === 'timetable' ? 'var(--mizu)' : 'currentColor'} />
-            <span>Family & Friends Routine</span>
+            <span>Weekly Class Routine</span>
           </button>
 
           <button
@@ -587,29 +587,6 @@ export default function ShareCardModal({
             <span>Attendance & Policy Pass</span>
           </button>
         </div>
-
-        {/* Calling Guide Context Banner if in Timetable Mode */}
-        {activeTab === 'timetable' && (
-          <div
-            style={{
-              backgroundColor: 'var(--wash-ochre)',
-              border: '1px solid rgba(var(--ochre-rgb), 0.3)',
-              borderRadius: '8px',
-              padding: '8px 12px',
-              fontSize: '12px',
-              color: 'var(--ink)',
-              marginBottom: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}
-          >
-            <span style={{ fontSize: '15px' }}>📞</span>
-            <div style={{ flex: 1, lineHeight: 1.4 }}>
-              <strong>Family Calling Window:</strong> Highlights lunch break (12:00–2:30 PM), evening free slots, and lecture-free Wednesdays & Sundays.
-            </div>
-          </div>
-        )}
 
         {/* High-Resolution Canvas Preview Box */}
         <div

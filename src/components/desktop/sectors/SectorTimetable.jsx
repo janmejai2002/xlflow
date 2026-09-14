@@ -86,7 +86,7 @@ export default function SectorTimetable({
               cursor: 'pointer',
               boxShadow: 'var(--shadow-card)'
             }}
-            title="Generate sharable timetable pass for parents & friends"
+            title="Generate sharable academic timetable pass"
           >
             <IconSharePass size={14} strokeWidth={1.6} />
             <span>Share Timetable</span>
@@ -115,47 +115,6 @@ export default function SectorTimetable({
         </div>
       </div>
 
-      {/* Calling Windows Ribbon for Family & Friends Mode */}
-      {isReadOnly && (
-        <div
-          style={{
-            backgroundColor: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '10px',
-            padding: '12px 18px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px',
-            boxShadow: 'var(--shadow-sm)'
-          }}
-        >
-          <div
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '8px',
-              backgroundColor: 'var(--wash-ochre)',
-              border: '1px solid rgba(var(--ochre-rgb), 0.3)',
-              color: 'var(--ochre)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              fontSize: '18px'
-            }}
-          >
-            📞
-          </div>
-          <div style={{ flex: 1, fontSize: '12.5px', color: 'var(--ink)' }}>
-            <div style={{ fontWeight: 700, fontFamily: 'var(--font-brand)', color: 'var(--ink)', marginBottom: '2px' }}>
-              Family & Friends Calling Guide:
-            </div>
-            <div style={{ color: 'var(--ink-soft)', lineHeight: 1.4 }}>
-              Best times to call or connect: Daily lunch break <strong>12:00 PM – 2:30 PM</strong>, weekday evenings after classes (after 4:30 PM), and completely open lecture-free days on <strong>Wednesdays & Sundays</strong>.
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Grid Container */}
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
