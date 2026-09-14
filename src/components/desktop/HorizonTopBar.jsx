@@ -174,6 +174,7 @@ export default function HorizonTopBar({
           onInspectSession={onInspectSession}
           onSelectTab={onSelectTab}
           isCompact={false}
+          mode="pill"
         />
 
         {/* Compact Search Trigger */}

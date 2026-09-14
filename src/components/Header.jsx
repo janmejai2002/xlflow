@@ -44,135 +44,136 @@ export default function Header({
       zIndex: 40,
       backgroundColor: 'var(--paper-subtle)',
       borderBottom: '1px solid var(--border)',
-      backdropFilter: 'blur(10px)',
-      padding: 'max(10px, env(safe-area-inset-top, 10px)) 12px 10px 12px',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: '8px'
+      flexDirection: 'column',
+      width: '100%',
+      boxSizing: 'border-box'
     }}>
-      {/* Left: Brand & Student Meta */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '9px', minWidth: 0 }}>
-        <XlFlowLogo size={32} />
-        <div style={{ minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
-            <span style={{
-              fontFamily: 'var(--font-brand)',
-              fontSize: '17px',
-              fontWeight: 800,
-              letterSpacing: '-0.035em',
-              color: 'var(--ink)',
-              whiteSpace: 'nowrap',
-              display: 'inline-flex',
-              alignItems: 'baseline'
-            }}>
-              <span>XL</span>
-              <span style={{ color: 'var(--ink-faint)', margin: '0 1.5px', fontWeight: 600 }}>·</span>
-              <span style={{ color: 'var(--mizu)', fontWeight: 800 }}>Flow</span>
-            </span>
-            <span
-              className="hanko-stamp hide-below-520"
-              style={{ color: 'var(--moss)', borderColor: 'rgba(var(--moss-rgb), 0.45)' }}
-            >
-              {student?.term || 'TERM-V'}
-            </span>
+      {/* Tier 1: Main Brand & Navigation Row */}
+      <div style={{
+        padding: 'max(9px, env(safe-area-inset-top, 9px)) 14px 8px 14px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '10px',
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
+        {/* Left: Brand & Student Meta (Now with full breathing room) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
+          <XlFlowLogo size={32} />
+          <div style={{ minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+              <span style={{
+                fontFamily: 'var(--font-brand)',
+                fontSize: '17px',
+                fontWeight: 800,
+                letterSpacing: '-0.035em',
+                color: 'var(--ink)',
+                whiteSpace: 'nowrap',
+                display: 'inline-flex',
+                alignItems: 'baseline'
+              }}>
+                <span>XL</span>
+                <span style={{ color: 'var(--ink-faint)', margin: '0 1.5px', fontWeight: 600 }}>·</span>
+                <span style={{ color: 'var(--mizu)', fontWeight: 800 }}>Flow</span>
+              </span>
+              <span
+                className="hanko-stamp"
+                style={{ color: 'var(--moss)', borderColor: 'rgba(var(--moss-rgb), 0.45)', flexShrink: 0 }}
+              >
+                {student?.term || 'TERM-V'}
+              </span>
+            </div>
+            <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {student?.name ? `${student.name} • ` : ''}{student?.term || 'Term-5'} • {student?.campus || 'XLRI Delhi-NCR'}
+            </p>
           </div>
-          <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {student?.term || 'Term-5'} • {student?.campus || 'XLRI Delhi-NCR'}
-          </p>
         </div>
-      </div>
 
-      {/* Right: Quick Actions + Dynamic Ambient Island */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0 }}>
-        {/* Dynamic Ambient Island (Glanceable pill) */}
-        <DynamicAmbientIsland
-          schedule={schedule}
-          courses={courses}
-          deadlines={deadlines}
-          student={student}
-          onInspectSession={onInspectSession}
-          onSelectTab={onSelectTab}
-          isCompact={true}
-        />
-
-        {/* Quick Batch Roster Search */}
-        <button
-          onClick={onOpenSearch}
-          title="Search 178 batchmates (Ctrl+K)"
-          aria-label="Search batch roster"
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '9px',
-            padding: '0 8px',
-            height: '44px',
-            minWidth: '44px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '4px',
-            color: 'var(--ink)',
-            cursor: 'pointer',
-            fontSize: '11px',
-            fontWeight: 600
-          }}
-        >
-          <Search size={15} style={{ color: 'var(--ink-soft)' }} />
-          <span className="hide-below-480" style={{
-            fontSize: '10px',
-            color: 'var(--ink-soft)',
-            backgroundColor: 'var(--paper)',
-            padding: '1px 4px',
-            borderRadius: '4px',
-            border: '1px solid var(--border)'
-          }}>
-            ⌘K
-          </span>
-        </button>
-
-        {/* Toggle Theme */}
-        <button
-          onClick={onToggleTheme}
-          title="Toggle Theme"
-          aria-label="Toggle light and dark theme mode"
-          style={{
-            background: 'var(--card)',
-            border: '1px solid var(--border)',
-            borderRadius: '9px',
-            width: '44px',
-            height: '44px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--ink)',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
-        >
-          {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
-        </button>
-
-        {/* Mobile "More" Menu Toggle (Always accessible) */}
-        <div style={{ position: 'relative' }} ref={menuRef}>
+        {/* Right: Quick Action Triggers */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+          {/* Quick Batch Roster Search */}
           <button
-            onClick={() => setIsMoreOpen(prev => !prev)}
-            aria-label="More actions"
+            onClick={onOpenSearch}
+            title="Search 178 batchmates (Ctrl+K)"
+            aria-label="Search batch roster"
             style={{
-              background: isMoreOpen ? 'var(--card-hover)' : 'var(--card)',
+              background: 'var(--card)',
               border: '1px solid var(--border)',
               borderRadius: '9px',
-              width: '44px',
-              height: '44px',
+              padding: '0 9px',
+              height: '38px',
+              minWidth: '38px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+              color: 'var(--ink)',
+              cursor: 'pointer',
+              fontSize: '11px',
+              fontWeight: 600,
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Search size={15} style={{ color: 'var(--ink-soft)' }} />
+            <span className="hide-below-480" style={{
+              fontSize: '10px',
+              color: 'var(--ink-soft)',
+              backgroundColor: 'var(--paper)',
+              padding: '1px 4px',
+              borderRadius: '4px',
+              border: '1px solid var(--border)'
+            }}>
+              ⌘K
+            </span>
+          </button>
+
+          {/* Toggle Theme */}
+          <button
+            onClick={onToggleTheme}
+            title="Toggle Theme"
+            aria-label="Toggle light and dark theme mode"
+            style={{
+              background: 'var(--card)',
+              border: '1px solid var(--border)',
+              borderRadius: '9px',
+              width: '38px',
+              height: '38px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'var(--ink)',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              transition: 'all 0.2s'
             }}
           >
-            <MoreHorizontal size={18} />
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
+
+          {/* Mobile "More" Menu Toggle */}
+          <div style={{ position: 'relative' }} ref={menuRef}>
+            <button
+              onClick={() => setIsMoreOpen(prev => !prev)}
+              aria-label="More actions"
+              style={{
+                background: isMoreOpen ? 'var(--card-hover)' : 'var(--card)',
+                border: '1px solid var(--border)',
+                borderRadius: '9px',
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--ink)',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <MoreHorizontal size={18} />
+            </button>
 
           {/* Floating Dropdown for secondary mobile actions */}
           {isMoreOpen && (
@@ -354,6 +355,18 @@ export default function Header({
           )}
         </div>
       </div>
+    </div>
+
+      {/* Tier 2: Dedicated Sub-Header Ambient Ribbon */}
+      <DynamicAmbientIsland
+        schedule={schedule}
+        courses={courses}
+        deadlines={deadlines}
+        student={student}
+        onInspectSession={onInspectSession}
+        onSelectTab={onSelectTab}
+        mode="subbar"
+      />
     </header>
   );
 }

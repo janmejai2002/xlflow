@@ -106,13 +106,24 @@ Do not reintroduce any of these without a real backend behind them.
   - **Month Switcher**: Full Term (Sep & Oct), September 2026, and October 2026 tabs.
   - **Interactive Day Inspector**: Selecting any day reveals detailed class timelines with time range, instructor, room code, and a direct "View in Timetable" jump button.
 
-## 9. Open items
+## 9. Two-Tier Header & Sub-Header Ambient Ribbon (September 14, 2026)
+
+- **Ergonomic Problem Solved**:
+  - In mobile viewports (360px–412px), placing the live session indicator (`DynamicAmbientIsland`) in the same horizontal row as brand elements and quick action buttons caused catastrophic width contention, squashing `XL·Flow`, truncating title text to "Y...", and visually colliding with the logo.
+- **Two-Tier Architectural Decoupling (`src/components/Header.jsx`)**:
+  - **Tier 1 (Brand & Global Actions)**: Full breathing room for `<XlFlowLogo size={32} />`, brand typography (`XL·Flow`), student term badge (`TERM-V`), and student metadata on the left; clean 38px touch targets for Search (`⌘K`), Theme toggle, and More menu on the right. Zero overlap or horizontal squeeze.
+  - **Tier 2 (Sub-Header Ambient Ribbon)**: Dedicated 32px full-width status ribbon directly below Tier 1 (`mode="subbar"`). Displays real-time pulsing dot, semantic status badge (`ONGOING LIVE`, `NEXT UP`, `TODAY`, `ALL CLEAR`), course code, course title, venue chip with 1-tap clipboard copy (`copyRoomCode`), countdown timer, and rotating chevron.
+  - **1-Tap Flight Deck Popover**: Tapping the sub-bar smoothly expands the flight deck containing hero session details, statutory attendance margin (safe bunks / tight alerts), 1-click Dean Appeal dispute memo generator, and direct timetable jump.
+- **Desktop Horizon Deck Integration (`src/components/desktop/HorizonTopBar.jsx`)**:
+  - Desktop widescreen preserves the centered pill capsule (`mode="pill"`) positioned at `left: 50%, transform: translateX(-50%)`, ensuring zero regressions across viewport form factors.
+
+## 10. Open items
 
 - Apps Script endpoint needs auth (see section 3).
 - `term4_gas_app/webapp.js` is 4,964 lines and has never been reviewed.
 - Sample data shows blank faculty names for some courses.
 
-## 9. Quick start
+## 11. Quick start
 
 ```powershell
 cd c:\Users\Janmejai\Documents\antigravity\xlflow
