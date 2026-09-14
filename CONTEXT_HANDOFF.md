@@ -92,7 +92,21 @@ Do not reintroduce any of these without a real backend behind them.
   - **Academic & Attendance Pass**: 1080×608 canvas for statutory attendance policy clearance.
   - 1-click sharing to WhatsApp, URL clipboard copying, and high-res PNG download.
 
-## 8. Open items
+## 8. Theme Overhaul & Term-5 Horizon Map Suite (September 14, 2026)
+
+- **Crisp Modern Alabaster Theme (`src/index.css`)**:
+  - Replaced vintage Japanese parchment / sepia yellow tint (`#EFE7D8`, `#F8F2E6`, `#DCC9A9`) with pure modern neutral surfaces: `--paper: #F8F9FA`, `--card: #FFFFFF`, `--border: #E2E8F0`, `--ink: #0F172A`.
+  - Recalibrated all semantic status colors (`--mizu`, `--moss`, `--ochre`, `--hanko`, `--plum`, `--indigo`) for WCAG AA compliance against pure white grounds.
+  - Replaced brownish drop shadows with subtle, clean slate elevations.
+- **Horizon Heatmap Visual Overhaul (`src/components/HorizonHeatmap.jsx`)**:
+  - **Top KPI Cards**: 4 key indicators (Class Days, 8:30 AM Starts, Clean Streak, Free Windows) with themed vector icons.
+  - **Weekly Workload Intensity Curve**: Dynamic 8-week sparkline histogram showing hours/week with peak indicators.
+  - **1-Tap Category Filters**: `All Days`, `⚡ Heavy (3+ classes)`, `🌅 8:30 AM Starts`, `📝 Quizzes & Due`, and `🌿 Free Days` with live count pills and intelligent cell dimming/highlighting.
+  - **Multi-Course Visual Cell Stacks**: 48px day cells rendering stacked horizontal micro-bars colored by course (`COURSE_COLORS`), top alert dots for 8:30 AM starts and quizzes, and a green `FREE` pill for open days.
+  - **Month Switcher**: Full Term (Sep & Oct), September 2026, and October 2026 tabs.
+  - **Interactive Day Inspector**: Selecting any day reveals detailed class timelines with time range, instructor, room code, and a direct "View in Timetable" jump button.
+
+## 9. Open items
 
 - Apps Script endpoint needs auth (see section 3).
 - `term4_gas_app/webapp.js` is 4,964 lines and has never been reviewed.
