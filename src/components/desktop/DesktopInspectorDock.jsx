@@ -23,7 +23,7 @@ import {
   X,
   Settings
 } from 'lucide-react';
-import { COURSE_COLORS } from '../../data/rosterData';
+import { COURSE_COLORS } from '../../data/courseColors';
 import { calculateBunkStats, STATUTORY_THRESHOLD } from '../../services/bunkCalculator';
 import { selfAttendanceStore } from '../../services/selfAttendanceStore';
 import SelfAttendanceMarkPill from '../attendance/SelfAttendanceMarkPill';

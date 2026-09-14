@@ -1,5 +1,6 @@
 import React from 'react';
-import { Calendar, Download, Sparkles, Layers } from 'lucide-react';
+import { Download } from 'lucide-react';
+import { IconTimetable } from '../../icons';
 import DesktopTimetableGrid from '../DesktopTimetableGrid';
 import { downloadIcsFile } from '../../../services/calendarExport';
 import { toast } from 'sonner';
@@ -43,7 +44,7 @@ export default function SectorTimetable({
             justifyContent: 'center',
             boxShadow: '0 2px 8px rgba(var(--mizu-rgb), 0.15)'
           }}>
-            <Calendar size={16} />
+            <IconTimetable size={16} strokeWidth={1.6} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

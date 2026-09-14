@@ -8,7 +8,7 @@ import {
   Calendar,
   Sparkles
 } from 'lucide-react';
-import { COURSE_COLORS } from '../../../data/rosterData';
+import { COURSE_COLORS } from '../../../data/courseColors';
 import { fireStreakConfetti } from '../../../services/confetti';
 import { toast } from 'sonner';
 

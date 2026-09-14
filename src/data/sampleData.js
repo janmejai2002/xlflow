@@ -4,9 +4,9 @@
  */
 
 export const SAMPLE_STUDENT = {
-  id: "B25349",
-  name: "Janmejai Singh",
-  email: "b25349@astra.xlri.ac.in",
+  id: "DEMO-BMD",
+  name: "Demo Candidate",
+  email: "demo@astra.xlri.ac.in",
   program: "PGDM-BMD",
   batch: "2025-2027",
   term: "Term-5",

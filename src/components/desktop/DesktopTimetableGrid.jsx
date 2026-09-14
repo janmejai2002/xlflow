@@ -14,7 +14,7 @@ import {
   Layers,
   Sparkles
 } from 'lucide-react';
-import { COURSE_COLORS } from '../../data/rosterData';
+import { COURSE_COLORS } from '../../data/courseColors';
 import { downloadIcsFile, getGoogleCalendarUrl } from '../../services/calendarExport';
 import { toast } from 'sonner';
 

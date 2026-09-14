@@ -156,7 +156,7 @@ export default function OnboardingModal({ isOpen, onClose, onConnectErp, onTryDe
               cursor: 'pointer'
             }}
           >
-            Open Student Dashboard (Janmejai Singh • Term-5)
+            Open Demo Dashboard (Term-5 Sample)
           </button>
         </div>
 

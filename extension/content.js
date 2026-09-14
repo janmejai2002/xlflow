@@ -317,7 +317,7 @@
     const inviteBtn = document.getElementById('xlflow-invite-btn');
     if (inviteBtn) {
       inviteBtn.onclick = () => {
-        const inviteText = "Hey! Check out XL-Flow to see live campus hotspots and compare our free slots: https://janmejai2002.github.io/xlflow/?meet=B25349";
+        const inviteText = "Hey! Check out XL-Flow to see live timetable and attendance tracking: https://janmejai2002.github.io/xlflow/";
         navigator.clipboard.writeText(inviteText);
         inviteBtn.textContent = 'Copied Link!';
         setTimeout(() => { inviteBtn.textContent = 'Invite Friends'; }, 2000);

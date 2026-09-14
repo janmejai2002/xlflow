@@ -1,17 +1,22 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { ChevronDown, AlertTriangle } from 'lucide-react';
 import { selfAttendanceStore } from '../services/selfAttendanceStore';
-import AttendanceLogModal from './attendance/AttendanceLogModal';
+const AttendanceLogModal = lazy(() => import('./attendance/AttendanceLogModal'));
 import AttendanceCourseCard from './attendance/AttendanceCourseCard';
 import QuickMarkStrip, { getUnmarkedSessions } from './attendance/QuickMarkStrip';
 import { resolveCurrentTerm, isCurrentTerm } from '../services/academicTerm';
+import { playTactileClick } from '../services/soundEngine';
 
 /**
- * Attendance.
+ * BunkMeterView - Editorial Academic Attendance Ledger
  *
- * Two numbers per course — what you logged and what the ERP says — and one
- * sentence telling you how much room that leaves. Anything that needed a
- * paragraph of explanation was either removed or moved into the details modal.
+ * Sovereign Self-Attendance reconciled against Institutional ERP records.
+ * Built strictly according to 2026 wAIbi-sabi academic editorial principles:
+ * - Zero bubbly AI slop or nested card-in-card containers
+ * - Hairline architectural grid & ledger dividers
+ * - Hanko stamp statutory state indicators
+ * - Newsreader serif editorial prose
+ * - Tactile mechanical button interactions
  */
 export default function BunkMeterView({ courses = [], schedule = [], student = {} }) {
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
@@ -26,9 +31,7 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
     return unsub;
   }, []);
 
-  // The ERP hands back every course the student has ever taken. Only the term
-  // actually running is worth opening on — see services/academicTerm.js for why
-  // that is not simply the highest term number.
+  // The ERP returns every course ever taken. Resolve the active term.
   const currentTerm = useMemo(() => resolveCurrentTerm(courses, schedule), [courses, schedule]);
 
   const allEvaluated = useMemo(
@@ -36,14 +39,20 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
       courses
         .map((course) => ({ course, recon: selfAttendanceStore.getCourseStats(course, schedule) }))
         .filter((e) => e.recon),
-    // storeVer is the subscription tick: marks mutate the store in place, so it
-    // is the only signal that the derived stats need recomputing.
+    // storeVer triggers recomputation on local storage mutation
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [courses, schedule, storeVer]
   );
 
-  const otherTermCount = allEvaluated.filter((e) => !isCurrentTerm(e.course, currentTerm)).length;
-  const evaluated = showEarlier ? allEvaluated : allEvaluated.filter((e) => isCurrentTerm(e.course, currentTerm));
+  const otherTermCount = useMemo(
+    () => allEvaluated.filter((e) => !isCurrentTerm(e.course, currentTerm)).length,
+    [allEvaluated, currentTerm]
+  );
+
+  const evaluated = useMemo(
+    () => (showEarlier ? allEvaluated : allEvaluated.filter((e) => isCurrentTerm(e.course, currentTerm))),
+    [showEarlier, allEvaluated, currentTerm]
+  );
 
   const unmarked = useMemo(
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,110 +60,238 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
     [schedule, storeVer]
   );
 
-  const atRisk = evaluated.filter((e) => e.recon.active.tier !== 'safe');
-  const mismatched = evaluated.filter((e) => e.recon.discrepancy.hasDiscrepancy);
-  const visible = onlyAtRisk ? atRisk : evaluated;
+  const atRisk = useMemo(() => evaluated.filter((e) => e.recon.active.tier !== 'safe'), [evaluated]);
+  const mismatched = useMemo(() => evaluated.filter((e) => e.recon.discrepancy.hasDiscrepancy), [evaluated]);
+  const visible = useMemo(() => (onlyAtRisk ? atRisk : evaluated), [onlyAtRisk, atRisk, evaluated]);
 
   const openDetails = (code) => {
     setSelectedCourseForModal(code);
     setIsLogModalOpen(true);
   };
 
+  const handleFilterToggle = () => {
+    playTactileClick(500);
+    setOnlyAtRisk((v) => !v);
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingBottom: '28px' }}>
-      {/* Header */}
-      <div>
-        <h2
-          style={{
-            fontFamily: 'var(--font-brand)',
-            fontSize: '23px',
-            fontWeight: 800,
-            letterSpacing: '-0.025em',
-            color: 'var(--ink)',
-            margin: 0
-          }}
-        >
-          Attendance
-        </h2>
-        <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '3px' }}>
-          Your log against the ERP. You need 80% in every course.
-        </p>
-        {currentTerm !== null && (
-          <p style={{ fontSize: '11.5px', color: 'var(--ink-faint)', marginTop: '2px', fontFamily: 'var(--font-mono)' }}>
-            Showing Term {currentTerm}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingBottom: '32px' }}>
+      {/* Header: Editorial Academic Title & Term Hanko Badge */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: '12px',
+          flexWrap: 'wrap'
+        }}
+      >
+        <div>
+          <h2
+            style={{
+              fontFamily: 'var(--font-brand)',
+              fontSize: '24px',
+              fontWeight: 800,
+              letterSpacing: '-0.03em',
+              color: 'var(--ink)',
+              margin: 0
+            }}
+          >
+            Attendance Ledger
+          </h2>
+          <p style={{ fontSize: '13px', color: 'var(--ink-soft)', marginTop: '4px', margin: 0 }}>
+            Sovereign student log reconciled against official ERP records.
           </p>
+        </div>
+
+        {currentTerm !== null && (
+          <span
+            className="hanko-stamp"
+            style={{
+              color: 'var(--indigo)',
+              borderColor: 'rgba(var(--indigo-rgb), 0.45)',
+              backgroundColor: 'var(--wash-indigo)',
+              alignSelf: 'flex-start',
+              marginTop: '2px'
+            }}
+          >
+            TERM {currentTerm}
+          </span>
         )}
       </div>
 
-      {/* Fast path: clear the backlog of unmarked classes */}
+      {/* Fast path: Sovereign Audit for unrecorded sessions */}
       <QuickMarkStrip sessions={unmarked} />
 
-      {/* Status line — doubles as the at-risk filter */}
-      <button
-        onClick={() => atRisk.length > 0 && setOnlyAtRisk((v) => !v)}
-        aria-pressed={onlyAtRisk}
-        disabled={atRisk.length === 0}
+      {/* Summary Status Ledger & Filter Strip */}
+      <div
+        className="editorial-slate"
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '10px',
-          width: '100%',
-          minHeight: '44px',
-          padding: '0 14px',
-          borderRadius: '12px',
-          backgroundColor: onlyAtRisk ? 'var(--ink)' : 'var(--card)',
-          border: `1px solid ${onlyAtRisk ? 'var(--ink)' : 'var(--border)'}`,
-          color: onlyAtRisk ? 'var(--paper)' : 'var(--ink)',
-          fontSize: '13px',
-          fontWeight: 600,
-          cursor: atRisk.length > 0 ? 'pointer' : 'default',
-          textAlign: 'left'
+          backgroundColor: 'var(--card)',
+          border: '1px solid var(--border)',
+          borderRadius: '4px',
+          overflow: 'hidden',
+          boxShadow: 'var(--shadow-sm)'
         }}
       >
-        <span>
-          <strong style={{ fontFamily: 'var(--font-mono)' }}>{evaluated.length}</strong> courses ·{' '}
-          <strong style={{ fontFamily: 'var(--font-mono)', color: onlyAtRisk ? 'var(--paper)' : 'var(--moss-text)' }}>
-            {evaluated.length - atRisk.length}
-          </strong>{' '}
-          safe ·{' '}
-          <strong style={{ fontFamily: 'var(--font-mono)', color: onlyAtRisk ? 'var(--paper)' : 'var(--hanko-text)' }}>
-            {atRisk.length}
-          </strong>{' '}
-          at risk
-        </span>
-        {atRisk.length > 0 && (
-          <span style={{ fontSize: '11.5px', fontWeight: 700, opacity: 0.85, whiteSpace: 'nowrap' }}>
-            {onlyAtRisk ? 'Show all' : 'Show at risk'}
-          </span>
-        )}
-      </button>
-
-      {/* Only surfaced when the ERP and your log actually disagree somewhere */}
-      {mismatched.length > 0 && !onlyAtRisk && (
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '9px',
-            padding: '10px 13px',
-            borderRadius: '12px',
-            backgroundColor: 'var(--wash-ochre)',
-            border: '1px solid rgba(var(--ochre-rgb), 0.3)',
-            fontSize: '12.5px',
-            color: 'var(--ochre-text)',
-            lineHeight: 1.4
+            justifyContent: 'space-between',
+            padding: '10px 16px',
+            gap: '12px',
+            flexWrap: 'wrap'
           }}
         >
-          <AlertTriangle size={15} style={{ flexShrink: 0 }} />
-          <span>
-            {mismatched.length} course{mismatched.length === 1 ? "'s" : "s'"} ERP numbers don't match your log. Margins
-            below use whichever side is worse.
-          </span>
+          {/* Ledger Tally Breakdown */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '14px',
+              fontFamily: 'var(--font-mono)',
+              fontFeatureSettings: '"tnum"',
+              fontVariantNumeric: 'tabular-nums',
+              fontSize: '12px'
+            }}
+          >
+            <div>
+              <span style={{ fontWeight: 700, color: 'var(--ink)', fontSize: '13px' }}>{evaluated.length}</span>
+              <span
+                style={{
+                  color: 'var(--ink-faint)',
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  marginLeft: '4px',
+                  letterSpacing: '0.06em'
+                }}
+              >
+                ENROLLED
+              </span>
+            </div>
+            <span style={{ color: 'var(--border-soft)' }}>|</span>
+            <div>
+              <span style={{ fontWeight: 700, color: 'var(--moss-text)', fontSize: '13px' }}>
+                {evaluated.length - atRisk.length}
+              </span>
+              <span
+                style={{
+                  color: 'var(--ink-faint)',
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  marginLeft: '4px',
+                  letterSpacing: '0.06em'
+                }}
+              >
+                SAFE
+              </span>
+            </div>
+            <span style={{ color: 'var(--border-soft)' }}>|</span>
+            <div>
+              <span
+                style={{
+                  fontWeight: 700,
+                  color: atRisk.length > 0 ? 'var(--hanko-text)' : 'var(--ink-faint)',
+                  fontSize: '13px'
+                }}
+              >
+                {atRisk.length}
+              </span>
+              <span
+                style={{
+                  color: 'var(--ink-faint)',
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  marginLeft: '4px',
+                  letterSpacing: '0.06em'
+                }}
+              >
+                AT RISK
+              </span>
+            </div>
+          </div>
+
+          {/* Filter Action Button */}
+          {atRisk.length > 0 ? (
+            <button
+              className="btn-tactile"
+              onClick={handleFilterToggle}
+              aria-pressed={onlyAtRisk}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                minHeight: '32px',
+                padding: '0 12px',
+                borderRadius: '4px',
+                backgroundColor: onlyAtRisk ? 'var(--ink)' : 'var(--paper)',
+                border: `1px solid ${onlyAtRisk ? 'var(--ink)' : 'var(--border-strong)'}`,
+                color: onlyAtRisk ? 'var(--paper)' : 'var(--ink)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.05em',
+                cursor: 'pointer'
+              }}
+            >
+              <span>{onlyAtRisk ? 'SHOW ALL ENROLLED' : `FILTER ${atRisk.length} AT RISK`}</span>
+            </button>
+          ) : (
+            <span
+              className="hanko-stamp"
+              style={{
+                color: 'var(--moss)',
+                borderColor: 'rgba(var(--moss-rgb), 0.45)',
+                backgroundColor: 'var(--wash-moss)'
+              }}
+            >
+              ALL STANDARDS MET
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Discrepancy Reconciliation Notice */}
+      {mismatched.length > 0 && !onlyAtRisk && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px',
+            padding: '10px 14px',
+            borderRadius: '4px',
+            backgroundColor: 'var(--wash-ochre)',
+            border: '1px solid rgba(var(--ochre-rgb), 0.35)',
+            borderLeft: '3px solid var(--ochre)',
+            fontSize: '12.5px',
+            color: 'var(--ochre-text)',
+            lineHeight: 1.45
+          }}
+        >
+          <AlertTriangle size={15} color="var(--ochre)" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10.5px',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                marginRight: '6px'
+              }}
+            >
+              Reconciliation Advisory:
+            </span>
+            <span>
+              {mismatched.length} course{mismatched.length === 1 ? '' : 's'} contain variance between self-recorded
+              sessions and ERP snapshots. The safety margin conservative engine enforces whichever is lower.
+            </span>
+          </div>
         </div>
       )}
 
-      {/* Courses */}
+      {/* Course Ledger Entries */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {visible.map(({ course, recon }) => (
           <AttendanceCourseCard
@@ -169,109 +306,197 @@ export default function BunkMeterView({ courses = [], schedule = [], student = {
         {visible.length === 0 && (
           <div
             style={{
-              padding: '28px 16px',
+              padding: '36px 20px',
               textAlign: 'center',
-              color: 'var(--ink-faint)',
-              fontSize: '13px',
               backgroundColor: 'var(--card)',
               border: '1px dashed var(--border)',
-              borderRadius: '14px'
+              borderRadius: '4px'
             }}
           >
-            No courses to show.
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontSize: '15px',
+                color: 'var(--ink-soft)',
+                margin: 0
+              }}
+            >
+              No courses matching active ledger criteria.
+            </p>
+            {onlyAtRisk && (
+              <button
+                className="btn-tactile"
+                onClick={() => {
+                  playTactileClick();
+                  setOnlyAtRisk(false);
+                }}
+                style={{
+                  marginTop: '12px',
+                  padding: '6px 14px',
+                  borderRadius: '4px',
+                  border: '1px solid var(--border-strong)',
+                  backgroundColor: 'var(--paper)',
+                  color: 'var(--ink)',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  cursor: 'pointer'
+                }}
+              >
+                RESET FILTER
+              </button>
+            )}
           </div>
         )}
       </div>
 
+      {/* Other Terms Expansion Button */}
       {otherTermCount > 0 && !onlyAtRisk && (
         <button
-          onClick={() => setShowEarlier((v) => !v)}
+          className="btn-tactile"
+          onClick={() => {
+            playTactileClick();
+            setShowEarlier((v) => !v)}
+          }
           style={{
-            minHeight: '44px',
-            borderRadius: '12px',
+            minHeight: '40px',
+            borderRadius: '4px',
             border: '1px dashed var(--border-strong)',
             backgroundColor: 'transparent',
             color: 'var(--ink-soft)',
-            fontSize: '12.5px',
+            fontSize: '12px',
+            fontFamily: 'var(--font-mono)',
+            letterSpacing: '0.04em',
             fontWeight: 600,
             cursor: 'pointer'
           }}
         >
-          {showEarlier ? 'Hide other terms' : `Show ${otherTermCount} course${otherTermCount === 1 ? '' : 's'} from other terms`}
+          {showEarlier
+            ? 'HIDE OTHER TERMS'
+            : `SHOW ${otherTermCount} COURSE${otherTermCount === 1 ? '' : 'S'} FROM OTHER TERMS`}
         </button>
       )}
 
-      {/* The rule, folded away until asked for */}
+      {/* Statutory Code Accordion: 80% Rule */}
       <div
+        className="editorial-slate"
         style={{
           backgroundColor: 'var(--card)',
           border: '1px solid var(--border)',
-          borderRadius: '12px',
-          overflow: 'hidden'
+          borderRadius: '4px',
+          overflow: 'hidden',
+          boxShadow: 'var(--shadow-sm)'
         }}
       >
         <button
-          onClick={() => setIsRuleOpen((v) => !v)}
+          className="btn-tactile"
+          onClick={() => {
+            playTactileClick();
+            setIsRuleOpen((v) => !v);
+          }}
           aria-expanded={isRuleOpen}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             width: '100%',
-            minHeight: '44px',
-            padding: '0 14px',
+            minHeight: '42px',
+            padding: '0 16px',
             background: 'transparent',
             border: 'none',
-            color: 'var(--ink-soft)',
+            color: 'var(--ink)',
             fontSize: '12.5px',
-            fontWeight: 600,
             cursor: 'pointer',
             textAlign: 'left'
           }}
         >
-          <span>How the 80% rule works</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '10.5px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'var(--ink-faint)'
+              }}
+            >
+              Statutory Code
+            </span>
+            <span style={{ color: 'var(--border)' }}>·</span>
+            <span style={{ fontFamily: 'var(--font-brand)', fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>
+              Statutory 80.0% Minimum Attendance Policy
+            </span>
+          </div>
           <ChevronDown
             size={16}
-            style={{ transform: isRuleOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
+            style={{
+              transform: isRuleOpen ? 'rotate(180deg)' : 'none',
+              transition: 'transform 0.2s',
+              color: 'var(--ink-soft)'
+            }}
           />
         </button>
         {isRuleOpen && (
           <div
             style={{
-              padding: '0 14px 14px',
-              fontSize: '12.5px',
-              color: 'var(--ink-soft)',
-              lineHeight: 1.55,
+              padding: '14px 16px',
+              borderTop: '1px solid var(--border-soft)',
+              backgroundColor: 'var(--paper-subtle)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '8px'
+              gap: '10px'
             }}
           >
-            <p style={{ margin: 0 }}>
-              You must attend at least <strong style={{ color: 'var(--ink)' }}>80% of the classes held</strong> in a
-              course to sit its end-term exam. Below that, without approved leave, the course is open to grade reduction
-              or debarment.
+            <p
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontSize: '14.5px',
+                color: 'var(--ink)',
+                lineHeight: 1.55,
+                margin: 0
+              }}
+            >
+              Students are required to attend a minimum of 80.0% of scheduled academic sessions in each registered course
+              to be eligible for end-term assessment. Failure to satisfy this threshold without formally approved
+              administrative leave may result in grade deduction or statutory debarment.
             </p>
-            <p style={{ margin: 0 }}>
-              "Can miss N more" counts the absences still available to you across the rest of the term before you cross
-              that line. At zero, every remaining class is compulsory.
+            <p
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontFeatureSettings: '"tnum"',
+                fontVariantNumeric: 'tabular-nums',
+                fontSize: '11.5px',
+                color: 'var(--ink-muted)',
+                lineHeight: 1.5,
+                margin: 0
+              }}
+            >
+              The permissible absence margin computes the exact count of sessions a student may miss before breaching the
+              80.0% threshold. When the margin drops to zero, every remaining scheduled class is strictly mandatory.
             </p>
           </div>
         )}
       </div>
 
+      {/* Sovereign Attendance Audit Modal */}
       {isLogModalOpen && (
-        <AttendanceLogModal
-          isOpen={isLogModalOpen}
-          onClose={() => {
-            setIsLogModalOpen(false);
-            setSelectedCourseForModal(null);
-          }}
-          courses={courses}
-          schedule={schedule}
-          student={student}
-          initialCourseCode={selectedCourseForModal}
-        />
+        <Suspense fallback={null}>
+          <AttendanceLogModal
+            isOpen={isLogModalOpen}
+            onClose={() => {
+              setIsLogModalOpen(false);
+              setSelectedCourseForModal(null);
+            }}
+            courses={courses}
+            schedule={schedule}
+            student={student}
+            initialCourseCode={selectedCourseForModal}
+          />
+        </Suspense>
       )}
     </div>
   );

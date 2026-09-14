@@ -1,12 +1,19 @@
-import confetti from 'canvas-confetti';
-
 // wAIbi-sabi Earthy Palette: Water, Moss, Ochre, Hanko Red, Plum
 const WAIBI_COLORS = ['var(--mizu)', 'var(--moss)', '#C2913A', 'var(--plum)', '#D2543F'];
+
+let confettiPromise = null;
+async function getConfetti() {
+  if (!confettiPromise) {
+    confettiPromise = import('canvas-confetti').then((m) => m.default || m);
+  }
+  return confettiPromise;
+}
 
 /**
  * Fires dual side cannons when clicking the attendance streak badge
  */
-export function fireStreakConfetti() {
+export async function fireStreakConfetti() {
+  const confetti = await getConfetti();
   const count = 200;
   const defaults = {
     origin: { y: 0.7 },
@@ -49,7 +56,8 @@ export function fireStreakConfetti() {
 /**
  * Fires center radial burst when generating or downloading the Academic Pass
  */
-export function firePassConfetti() {
+export async function firePassConfetti() {
+  const confetti = await getConfetti();
   confetti({
     particleCount: 100,
     spread: 70,

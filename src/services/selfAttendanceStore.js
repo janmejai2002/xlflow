@@ -23,6 +23,8 @@ class SelfAttendanceStore {
     this.state = this.loadFromStorage();
     this.listeners = new Set();
     this.isSyncingWithCloud = false;
+    this.version = 0;
+    this._statsCache = new Map();
 
     // Trigger non-blocking cloud reconciliation on startup
     if (typeof window !== 'undefined') {
@@ -64,6 +66,8 @@ class SelfAttendanceStore {
   }
 
   notify() {
+    this.version++;
+    this._statsCache.clear();
     this.saveToStorage();
     for (const listener of this.listeners) {
       try {
@@ -169,8 +173,9 @@ class SelfAttendanceStore {
 
   async syncWithCloud(forcedRoll = null) {
     if (this.isSyncingWithCloud) return;
+    if (this.isDemoSession()) return;
     const roll = forcedRoll || this.getCurrentRoll();
-    if (!roll) return;
+    if (!roll || !/^B25[0-9]{3}$/i.test(roll) || roll.toUpperCase().startsWith('DEMO')) return;
 
     this.isSyncingWithCloud = true;
     try {
@@ -217,7 +222,7 @@ class SelfAttendanceStore {
       this.notify();
 
       const roll = this.getCurrentRoll();
-      if (roll) {
+      if (roll && !this.isDemoSession()) {
         saveCloudAttendance(roll, sessionId, '', this.getCurrentSection()).catch(() => {});
       }
     }
@@ -273,25 +278,33 @@ class SelfAttendanceStore {
     if (!course) return null;
     const courseCode = course.code;
 
-    // 1. Official ERP numbers
+    // 1. Check calculation cache
+    const cacheKey = `${courseCode}_${course.attended}_${course.conducted}_${course.totalPlanned}_${schedule.length}`;
+    if (this._statsCache.has(cacheKey)) {
+      return this._statsCache.get(cacheKey);
+    }
+
+    // 2. Official ERP numbers
     const officialAttended = Number(course.attended) || 0;
     const officialConducted = Number(course.conducted) || 0;
     const totalPlanned = Number(course.totalPlanned) || 20;
 
-    // 2. Self-marked sessions from schedule
+    // 3. Self-marked sessions from schedule (single-pass loop, zero temporary array allocations)
     let selfPresent = 0;
     let selfAbsent = 0;
     let selfCancelled = 0;
 
-    const courseSessions = schedule.filter(s => s.courseCode === courseCode);
-    courseSessions.forEach(s => {
-      const mark = this.state.markedSessions[s.sessionId];
-      if (mark) {
-        if (mark.status === 'present') selfPresent++;
-        else if (mark.status === 'absent') selfAbsent++;
-        else if (mark.status === 'cancelled') selfCancelled++;
+    for (let i = 0; i < schedule.length; i++) {
+      const s = schedule[i];
+      if (s.courseCode === courseCode) {
+        const mark = this.state.markedSessions[s.sessionId];
+        if (mark) {
+          if (mark.status === 'present') selfPresent++;
+          else if (mark.status === 'absent') selfAbsent++;
+          else if (mark.status === 'cancelled') selfCancelled++;
+        }
       }
-    });
+    }
 
     // 3. Manual course adjustments
     const adj = this.state.courseAdjustments[courseCode] || { deltaAttended: 0, deltaConducted: 0 };
@@ -339,7 +352,7 @@ class SelfAttendanceStore {
       conductedDiff
     };
 
-    return {
+    const result = {
       courseCode,
       courseName: course.name,
       official: officialStats,
@@ -358,6 +371,8 @@ class SelfAttendanceStore {
         adjConducted
       }
     };
+    this._statsCache.set(cacheKey, result);
+    return result;
   }
 
   // ==========================================

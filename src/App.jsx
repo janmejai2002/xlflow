@@ -5,11 +5,9 @@ import { useBreakpoint } from './hooks/useBreakpoint';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { StorageKeys, fetchLiveStudentData, getSampleDataPayload } from './services/api';
 import { calculateBunkStats } from './services/bunkCalculator';
-import { playChime } from './services/soundEngine';
-import { fireStreakConfetti } from './services/confetti';
 import { selfAttendanceStore } from './services/selfAttendanceStore';
 import { resolveCurrentTerm, isCurrentTerm, filterCurrentDeadlines } from './services/academicTerm';
-import { fetchCloudPrefs } from './services/cloudStorage';
+import { fetchCloudPrefs, isValidRollNumber } from './services/cloudStorage';
 import { WifiOff } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 
@@ -127,8 +125,10 @@ export default function App() {
 
   // Universal Cloud Persistence Sync (Google Sheets)
   useEffect(() => {
-    const roll = dataPayload.student?.id || selfAttendanceStore.getCurrentRoll();
-    if (roll) {
+    // HARD PRIVACY GATE: Never attempt cloud sync if session is demo or unauthenticated
+    if (isDemo) return;
+    const roll = selfAttendanceStore.getCurrentRoll() || (isValidRollNumber(dataPayload.student?.id) ? dataPayload.student.id : null);
+    if (roll && isValidRollNumber(roll)) {
       selfAttendanceStore.syncWithCloud(roll);
       fetchCloudPrefs(roll).then(prefs => {
         if (prefs && prefs.section && prefs.section !== dataPayload.student?.section) {
@@ -142,7 +142,7 @@ export default function App() {
         }
       }).catch(err => console.warn('[App] Cloud prefs sync failed:', err));
     }
-  }, [dataPayload.student?.id]);
+  }, [isDemo, dataPayload.student?.id]);
 
   // 3. Sync / Refresh handler
   const handleRefresh = async () => {
@@ -223,7 +223,10 @@ export default function App() {
     [dataPayload.deadlines, dataPayload.courses, dataPayload.schedule]
   );
 
-  const pendingDeadlinesCount = deadlines.filter(d => !d.completed).length;
+  const pendingDeadlinesCount = useMemo(
+    () => deadlines.filter(d => !d.completed).length,
+    [deadlines]
+  );
 
   // Global Desktop Keyboard Shortcuts Bus (1-5, Cmd+K, ?, T, M, Cmd+\)
   useKeyboardShortcuts({

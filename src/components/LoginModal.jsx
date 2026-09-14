@@ -138,7 +138,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
             }}
           >
             <Sparkles size={16} />
-            <span>Continue as Janmejai Singh (B25349)</span>
+            <span>Explore Instant Demo Mode</span>
           </button>
           <p style={{ fontSize: '11px', color: 'var(--ink-soft)', marginTop: '6px', marginBottom: 0 }}>
             Active Term-5 elective timetable, venues, and 80.0% attendance tracking.
@@ -185,7 +185,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess, onStartDem
                 id="xlri-login-email"
                 type="email"
                 autoComplete="email"
-                placeholder="b25349@astra.xlri.ac.in"
+                placeholder="b25xxx@astra.xlri.ac.in"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{

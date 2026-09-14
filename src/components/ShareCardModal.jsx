@@ -66,11 +66,11 @@ export default function ShareCardModal({ isOpen, onClose, student, courses = [],
     // 5. Student Name & Details
     ctx.fillStyle = inkColor;
     ctx.font = '700 48px Newsreader, serif';
-    ctx.fillText(student?.name || 'Janmejai Singh', 64, 160);
+    ctx.fillText(student?.name || 'XLRI Student', 64, 160);
 
     ctx.fillStyle = softInk;
     ctx.font = '500 20px Inter, sans-serif';
-    ctx.fillText(`Roll: ${student?.id || 'B25349'}  •  Program: ${student?.program || 'PGDM-BMD'}  •  Section EF`, 64, 200);
+    ctx.fillText(`Roll: ${student?.id || 'STUDENT'}  •  Program: ${student?.program || 'PGDM'}  •  Section ${student?.section || 'EF'}`, 64, 200);
 
     // 6. Overall Status Pill
     ctx.fillStyle = isDark ? 'rgba(126, 156, 127, 0.25)' : 'rgba(78, 104, 81, 0.12)';
@@ -149,7 +149,7 @@ export default function ShareCardModal({ isOpen, onClose, student, courses = [],
     if (!downloadUrl) return;
     const a = document.createElement('a');
     a.href = downloadUrl;
-    a.download = `xlflow_academic_pass_${student?.id || 'B25349'}.png`;
+    a.download = `xlflow_academic_pass_${student?.id || 'student'}.png`;
     a.click();
     firePassConfetti();
     toast.success('Academic Pass Downloaded!', {

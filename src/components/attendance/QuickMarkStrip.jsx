@@ -6,9 +6,8 @@ import { playTactileClick } from '../../services/soundEngine';
 /**
  * Classes that have already finished but carry no mark yet.
  *
- * This is the fast path: a student between lectures should be able to clear the
- * backlog with one thumb, without opening a modal or choosing a reason. Reasons
- * and notes live in the details modal for the rare absence that needs one.
+ * Fast path: A student between lectures clears the backlog with one thumb,
+ * without navigating away or opening modal dialogs.
  */
 function toDateTime(session, timeKey) {
   const time = session[timeKey] || '00:00:00';
@@ -52,106 +51,197 @@ export default function QuickMarkStrip({ sessions = [] }) {
     });
   };
 
-  const actionStyle = (bg, border, color) => ({
-    minWidth: '46px',
-    minHeight: '44px',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '10px',
-    backgroundColor: bg,
-    border: `1px solid ${border}`,
-    color,
-    cursor: 'pointer',
-    flexShrink: 0
-  });
-
   return (
     <section
       aria-label="Classes waiting to be marked"
+      className="editorial-slate"
       style={{
         backgroundColor: 'var(--card)',
         border: '1px solid var(--border)',
-        borderRadius: '14px',
-        overflow: 'hidden'
+        borderRadius: '4px',
+        overflow: 'hidden',
+        boxShadow: 'var(--shadow-sm)'
       }}
     >
+      {/* Header: Audit Title & Hanko Pending Stamp */}
       <div
         style={{
-          padding: '11px 14px',
+          padding: '10px 16px',
           borderBottom: '1px solid var(--border-soft)',
           display: 'flex',
-          alignItems: 'baseline',
+          alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '8px'
+          gap: '8px',
+          backgroundColor: 'var(--paper-subtle)'
         }}
       >
-        <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--ink)' }}>Were you there?</span>
-        <span style={{ fontSize: '11px', color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)' }}>
-          {sessions.length} to mark
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              color: 'var(--ink-faint)',
+              textTransform: 'uppercase'
+            }}
+          >
+            Self-Audit
+          </span>
+          <span style={{ color: 'var(--border)' }}>·</span>
+          <span
+            style={{
+              fontFamily: 'var(--font-brand)',
+              fontSize: '13px',
+              fontWeight: 700,
+              color: 'var(--ink)'
+            }}
+          >
+            Concluded Classes Awaiting Mark
+          </span>
+        </div>
+        <span
+          className="hanko-stamp"
+          style={{
+            color: 'var(--ochre)',
+            borderColor: 'rgba(var(--ochre-rgb), 0.45)',
+            backgroundColor: 'var(--wash-ochre)'
+          }}
+        >
+          {sessions.length} TO LOG
         </span>
       </div>
 
+      {/* Session Rows with Hairline Dividers */}
       {sessions.map((s, i) => (
         <div
           key={s.sessionId}
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
-            padding: '10px 14px',
+            justifyContent: 'space-between',
+            gap: '12px',
+            padding: '11px 16px',
             borderTop: i === 0 ? 'none' : '1px solid var(--border-soft)'
           }}
         >
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div
-              style={{
-                fontSize: '13px',
-                fontWeight: 700,
-                color: 'var(--ink)',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {s.courseCode} · {s.courseName}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  color: 'var(--ink)',
+                  flexShrink: 0
+                }}
+              >
+                {s.courseCode}
+              </span>
+              <span
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: 'var(--ink-soft)',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                {s.courseName}
+              </span>
             </div>
             <div
               style={{
-                fontSize: '11.5px',
-                color: 'var(--ink-faint)',
                 fontFamily: 'var(--font-mono)',
-                marginTop: '1px',
+                fontFeatureSettings: '"tnum"',
+                fontVariantNumeric: 'tabular-nums',
+                fontSize: '11px',
+                color: 'var(--ink-faint)',
+                marginTop: '2px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap'
               }}
             >
-              {relativeDay(s.classDate)} · {(s.startTime || '').slice(0, 5)} · {s.venue}
+              {relativeDay(s.classDate)} · {(s.startTime || '').slice(0, 5)}
+              {s.endTime ? `–${(s.endTime || '').slice(0, 5)}` : ''} · {s.venue || 'Classroom'}
             </div>
           </div>
 
           <div style={{ display: 'flex', gap: '6px', flexShrink: 0 }}>
             <button
+              className="btn-tactile"
               onClick={() => mark(s, 'present')}
               aria-label={`Mark ${s.courseCode} on ${s.classDate} as present`}
-              style={actionStyle('var(--wash-moss)', 'rgba(var(--moss-rgb), 0.4)', 'var(--moss-text)')}
+              title="Mark Present"
+              style={{
+                minWidth: '42px',
+                minHeight: '38px',
+                padding: '0 10px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                borderRadius: '4px',
+                backgroundColor: 'var(--wash-moss)',
+                border: '1px solid rgba(var(--moss-rgb), 0.35)',
+                color: 'var(--moss-text)',
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                fontWeight: 700
+              }}
             >
-              <Check size={18} />
+              <Check size={15} strokeWidth={2.5} />
+              <span>Present</span>
             </button>
             <button
+              className="btn-tactile"
               onClick={() => mark(s, 'absent')}
               aria-label={`Mark ${s.courseCode} on ${s.classDate} as absent`}
-              style={actionStyle('var(--wash-hanko)', 'rgba(var(--hanko-rgb), 0.4)', 'var(--hanko-text)')}
+              title="Mark Absent"
+              style={{
+                minWidth: '42px',
+                minHeight: '38px',
+                padding: '0 10px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                borderRadius: '4px',
+                backgroundColor: 'var(--wash-hanko)',
+                border: '1px solid rgba(var(--hanko-rgb), 0.35)',
+                color: 'var(--hanko-text)',
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                fontWeight: 700
+              }}
             >
-              <X size={18} />
+              <X size={15} strokeWidth={2.5} />
+              <span>Absent</span>
             </button>
             <button
+              className="btn-tactile"
               onClick={() => mark(s, 'cancelled')}
               aria-label={`Mark ${s.courseCode} on ${s.classDate} as cancelled`}
-              style={actionStyle('var(--paper)', 'var(--border)', 'var(--ink-faint)')}
+              title="Class Cancelled"
+              style={{
+                minWidth: '38px',
+                minHeight: '38px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '4px',
+                backgroundColor: 'var(--paper)',
+                border: '1px solid var(--border)',
+                color: 'var(--ink-faint)',
+                cursor: 'pointer'
+              }}
             >
-              <Ban size={17} />
+              <Ban size={14} strokeWidth={2} />
             </button>
           </div>
         </div>

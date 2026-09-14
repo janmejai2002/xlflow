@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "mcp": "bun mcp-server/stdio.js"
+    "mcp": "bun mcp-server/stdio.js",
+    "spark:dev": "bun --cwd spark-mcp-worker dev",
+    "spark:test": "bun test spark-mcp-worker/test/flow.test.ts",
+    "spark:deploy": "bun --cwd spark-mcp-worker deploy"
   },
   "dependencies": {
     "@capacitor/core": "^8.5.1",

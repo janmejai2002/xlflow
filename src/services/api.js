@@ -72,7 +72,7 @@ export async function fetchLiveStudentData(token) {
     }
 
     // Extract student roll / ID from email or profile
-    const extractedRoll = meData.email ? meData.email.split('@')[0].toUpperCase() : 'B25349';
+    const extractedRoll = meData.email ? meData.email.split('@')[0].toUpperCase() : null;
 
     // 2. Fetch Enrolled Courses
     let rawCourses = [];
@@ -194,8 +194,8 @@ export async function fetchLiveStudentData(token) {
     const fullPayload = {
       student: {
         id: extractedRoll,
-        name: `${meData.firstName || ''} ${meData.lastName || ''}`.trim() || 'Janmejai Singh',
-        email: meData.email || 'b25349@astra.xlri.ac.in',
+        name: `${meData.firstName || ''} ${meData.lastName || ''}`.trim() || 'Student',
+        email: meData.email || '',
         program: meData.program || 'PGDM-BMD',
         batch: '2025-2027',
         term: 'Term-5',

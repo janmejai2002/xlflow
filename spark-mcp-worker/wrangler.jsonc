@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "xlflow",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "SERVER_NAME": "XLFlow Student Assistant",
+    "JWT_SECRET": "xlflow-jwt-super-secret-key-change-in-prod",
+    "GAS_ENDPOINT_URL": "https://script.google.com/macros/s/AKfycbz_placeholder/exec",
+    "DEFAULT_ROLL": "DEMO-BMD"
+  }
+}

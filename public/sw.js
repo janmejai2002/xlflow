@@ -1,9 +1,12 @@
-// XL-Flow Offline Service Worker v2 (Network-First for HTML, Cache-First for Hashed Assets)
-const CACHE_NAME = 'xlflow-cache-v2';
+// XL-Flow Offline Service Worker v3 (Network-First HTML, Cache-First Static & Fonts)
+const CACHE_NAME = 'xlflow-cache-v3';
 
 const STATIC_ASSETS = [
+  './',
+  './index.html',
   './manifest.json',
-  './icon.svg'
+  './icon.svg',
+  './favicon.svg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -36,7 +39,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   // 1. Navigation / HTML requests: ALWAYS NETWORK-FIRST
-  // This guarantees laptop and desktop users never get trapped in stale index.html cache
+  // Guarantees laptop and desktop users get fresh updates while preserving offline fallback
   if (event.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname.endsWith('/')) {
     event.respondWith(
       fetch(event.request)
@@ -47,21 +50,24 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => {
-          // Offline fallback
-          return caches.match('./index.html') || caches.match('./');
+        .catch(async () => {
+          const cache = await caches.open(CACHE_NAME);
+          return (await cache.match(event.request)) || (await cache.match('./index.html')) || (await cache.match('./'));
         })
     );
     return;
   }
 
-  // 2. Hashed static assets (/assets/*): CACHE-FIRST with network fallback
-  if (url.pathname.includes('/assets/')) {
+  // 2. Hashed static assets (/assets/*) & Google Fonts: CACHE-FIRST with network fallback
+  const isHashedAsset = url.pathname.includes('/assets/');
+  const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
+
+  if (isHashedAsset || isFont) {
     event.respondWith(
       caches.match(event.request).then((cached) => {
         if (cached) return cached;
         return fetch(event.request).then((response) => {
-          if (response && response.status === 200) {
+          if (response && (response.status === 200 || response.type === 'opaque')) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
           }
@@ -76,7 +82,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetchPromise = fetch(event.request).then((response) => {
-        if (response && response.status === 200 && response.type === 'basic') {
+        if (response && response.status === 200 && (response.type === 'basic' || response.type === 'cors')) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         }

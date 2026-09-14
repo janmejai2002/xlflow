@@ -1,50 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Calendar, Flame, AlertCircle, Clock, Check, ChevronRight } from 'lucide-react';
-import { COURSE_COLORS } from '../data/rosterData';
+import { COURSE_COLORS } from '../data/courseColors';
 
 export default function HorizonHeatmap({ schedule = [], deadlines = [], onSelectDate }) {
   const [viewMode, setViewMode] = useState('load'); // 'load' | 'attendance'
   const [selectedDay, setSelectedDay] = useState(null);
 
-  // Group schedule by date
-  const dateMap = {};
-  for (const s of schedule) {
-    const d = s.classDate;
-    if (!dateMap[d]) {
-      dateMap[d] = {
-        classes: [],
-        hasEarly: false,
-        hasQuiz: false
-      };
-    }
-    dateMap[d].classes.push(s);
-    if (s.startTime && s.startTime.startsWith('08:')) {
-      dateMap[d].hasEarly = true;
-    }
-  }
-
-  // Check quizzes / deadlines
-  for (const dl of deadlines) {
-    if (dl.dueDate) {
-      const d = dl.dueDate.split('T')[0];
-      if (dateMap[d]) {
-        dateMap[d].hasQuiz = true;
+  // Group schedule by date and compute metrics with memoization
+  const { dateMap, totalClassDays, earlyStartsCount, quizDaysCount } = useMemo(() => {
+    const map = {};
+    for (const s of schedule) {
+      const d = s.classDate;
+      if (!map[d]) {
+        map[d] = {
+          classes: [],
+          hasEarly: false,
+          hasQuiz: false
+        };
+      }
+      map[d].classes.push(s);
+      if (s.startTime && s.startTime.startsWith('08:')) {
+        map[d].hasEarly = true;
       }
     }
-  }
+
+    // Check quizzes / deadlines
+    for (const dl of deadlines) {
+      if (dl.dueDate) {
+        const d = dl.dueDate.split('T')[0];
+        if (map[d]) {
+          map[d].hasQuiz = true;
+        }
+      }
+    }
+
+    const totalDays = Object.keys(map).length;
+    const early = Object.values(map).filter(d => d.hasEarly).length;
+    const quizzes = Object.values(map).filter(d => d.hasQuiz).length;
+
+    return {
+      dateMap: map,
+      totalClassDays: totalDays,
+      earlyStartsCount: early,
+      quizDaysCount: quizzes
+    };
+  }, [schedule, deadlines]);
 
   // Months to display: September 2026 & October 2026
-  const months = [
+  const months = useMemo(() => [
     { year: 2026, month: 8, name: 'September 2026', daysInMonth: 30, firstDayOfWeek: 2 }, // Sep 1, 2026 is Tuesday (2)
     { year: 2026, month: 9, name: 'October 2026', daysInMonth: 31, firstDayOfWeek: 4 }   // Oct 1, 2026 is Thursday (4)
-  ];
+  ], []);
 
   const daysOfWeek = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-
-  // Metrics
-  const totalClassDays = Object.keys(dateMap).length;
-  const earlyStartsCount = Object.values(dateMap).filter(d => d.hasEarly).length;
-  const quizDaysCount = Object.values(dateMap).filter(d => d.hasQuiz).length;
 
   const handleCellClick = (dStr) => {
     setSelectedDay(selectedDay === dStr ? null : dStr);

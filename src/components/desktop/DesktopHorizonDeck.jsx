@@ -7,7 +7,7 @@ import SectorBunkMeter from './sectors/SectorBunkMeter';
 import SectorTrips from './sectors/SectorTrips';
 import SectorDeadlines from './sectors/SectorDeadlines';
 import DesktopInspectorDock from './DesktopInspectorDock';
-import QuickTourModal from '../QuickTourModal';
+const QuickTourModal = React.lazy(() => import('../QuickTourModal'));
 import { playTactileClick } from '../../services/soundEngine';
 
 export default function DesktopHorizonDeck({
@@ -259,14 +259,18 @@ export default function DesktopHorizonDeck({
       />
 
       {/* 5. Interactive 30-Second Quick Tour */}
-      <QuickTourModal
-        isOpen={isQuickTourOpen}
-        onClose={() => {
-          localStorage.setItem('has_seen_quick_tour_v1', 'true');
-          setIsQuickTourOpen(false);
-        }}
-        onJumpToSector={jumpToSector}
-      />
+      {isQuickTourOpen && (
+        <React.Suspense fallback={null}>
+          <QuickTourModal
+            isOpen={isQuickTourOpen}
+            onClose={() => {
+              localStorage.setItem('has_seen_quick_tour_v1', 'true');
+              setIsQuickTourOpen(false);
+            }}
+            onJumpToSector={jumpToSector}
+          />
+        </React.Suspense>
+      )}
     </div>
   );
 }

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Compass, ShieldCheck, Calendar, Palmtree, CheckSquare } from 'lucide-react';
+import { IconRadar, IconBunkMeter, IconTimetable, IconTrips, IconDeadlines } from './icons';
 
 export default function Navigation({ activeTab, onSelectTab, warningCount, pendingDeadlinesCount }) {
   const tabs = [
-    { id: 'radar', label: 'Today', icon: Compass },
-    { id: 'bunkmeter', label: 'Attendance', icon: ShieldCheck, badge: warningCount > 0 ? warningCount : null, badgeColor: 'var(--hanko)' },
-    { id: 'timetable', label: 'Classes', icon: Calendar },
-    { id: 'trips', label: 'Trips', icon: Palmtree },
-    { id: 'deadlines', label: 'Deadlines', icon: CheckSquare, badge: pendingDeadlinesCount > 0 ? pendingDeadlinesCount : null, badgeColor: 'var(--ochre)' }
+    { id: 'radar', label: 'Today', icon: IconRadar },
+    { id: 'bunkmeter', label: 'Attendance', icon: IconBunkMeter, badge: warningCount > 0 ? warningCount : null, badgeColor: 'var(--hanko)' },
+    { id: 'timetable', label: 'Classes', icon: IconTimetable },
+    { id: 'trips', label: 'Trips', icon: IconTrips },
+    { id: 'deadlines', label: 'Deadlines', icon: IconDeadlines, badge: pendingDeadlinesCount > 0 ? pendingDeadlinesCount : null, badgeColor: 'var(--ochre)' }
   ];
 
   return (
@@ -42,6 +42,7 @@ export default function Navigation({ activeTab, onSelectTab, warningCount, pendi
             aria-current={isActive ? 'page' : undefined}
             role="tab"
             aria-selected={isActive}
+            className="btn-tactile"
             style={{
               position: 'relative',
               display: 'flex',
@@ -52,9 +53,9 @@ export default function Navigation({ activeTab, onSelectTab, warningCount, pendi
               padding: '6px 4px',
               minHeight: '48px',
               minWidth: '44px',
-              borderRadius: '10px',
-              background: isActive ? 'var(--wash-mizu)' : 'transparent',
-              border: 'none',
+              borderRadius: '6px',
+              background: isActive ? 'rgba(var(--mizu-rgb), 0.08)' : 'transparent',
+              border: isActive ? '1px solid rgba(var(--mizu-rgb), 0.22)' : '1px solid transparent',
               cursor: 'pointer',
               color: isActive ? 'var(--mizu-text)' : 'var(--ink-soft)',
               transition: 'all 0.15s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -63,7 +64,7 @@ export default function Navigation({ activeTab, onSelectTab, warningCount, pendi
             }}
           >
             <div style={{ position: 'relative' }}>
-              <Icon size={19} strokeWidth={isActive ? 2.3 : 1.8} />
+              <Icon size={19} strokeWidth={isActive ? 1.9 : 1.5} color={isActive ? 'var(--mizu)' : 'currentColor'} />
               {tab.badge && (
                 <span style={{
                   position: 'absolute',

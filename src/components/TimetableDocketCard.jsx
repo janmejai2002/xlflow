@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
-import { Clock, MapPin, Calendar, User, Copy, Check, ExternalLink, ShieldCheck, AlertTriangle, Sparkles } from 'lucide-react';
-import { COURSE_COLORS } from '../data/rosterData';
+import { COURSE_COLORS } from '../data/courseColors';
 import { getGoogleCalendarUrl } from '../services/calendarExport';
 import { playTactileClick } from '../services/soundEngine';
 import SelfAttendanceMarkPill from './attendance/SelfAttendanceMarkPill';
 import { toast } from 'sonner';
+import {
+  IconTimetable,
+  IconChronometer,
+  IconMapPin,
+  IconCopy,
+  IconCheckmark,
+  IconStatutoryShield,
+  IconHankoSafe,
+  IconHankoWarning,
+  IconHankoDanger
+} from './icons';
 
 /**
- * TimetableDocketCard: High-Aesthetic Academic Schedule Docket
- * Built following taste-design, responsive-ui-and-creative-engine, and waibi-sabi design tokens.
- * Features:
- * - Plus Jakarta Sans brand typography (--font-brand)
- * - Tabular monospace timing (--font-mono)
- * - Timeline spine connection node with course accent glow
- * - Dynamic academic safety margin pill (safe bunks remaining)
- * - Zero emojis (clean Lucide SVG icons)
- * - 1-click copy venue with tactile Sonner feedback
- * - 1-click Google Calendar sync
- * - Interactive tap to trigger ClassDetailDrawer
+ * TimetableDocketCard: 2026 Swiss/Japanese Departure Board Docket
+ *
+ * Designed to eliminate generic bubbly cards and establish an architectural
+ * lecture departure entry with hairline dividers, tabular monospace timing,
+ * 1-click room code copying, Japanese Hanko attendance safety stamps, and tactile mechanics.
  */
 export default function TimetableDocketCard({
   session,
@@ -40,27 +44,29 @@ export default function TimetableDocketCard({
 
   const handleCopyVenue = (e) => {
     e.stopPropagation();
+    playTactileClick(600);
     navigator.clipboard.writeText(session.venue || 'MCR');
     setIsCopied(true);
     toast.success(`Venue Copied: ${session.venue}`, {
-      description: 'Room code copied to clipboard'
+      description: 'Room designation copied to clipboard'
     });
     setTimeout(() => setIsCopied(false), 2000);
   };
 
   const handleSyncGCal = (e) => {
     e.stopPropagation();
-    // Default link behavior opens Google Calendar
+    playTactileClick(500);
   };
 
   // Compute attendance safety status if course data is available
   const stats = course?.stats;
-  const isSafe = stats ? stats.tier === 'safe' : true;
+  const tier = stats?.tier || 'safe';
+  const isSafe = tier === 'safe';
   const safeBunks = stats ? stats.safeBunksRemaining : null;
 
   return (
     <div
-      className="timetable-docket-card"
+      className="timetable-docket-card editorial-slate"
       onClick={() => {
         playTactileClick();
         onSelectSession?.(session);
@@ -68,128 +74,114 @@ export default function TimetableDocketCard({
       style={{
         backgroundColor: 'var(--card)',
         border: '1px solid var(--border)',
-        borderRadius: '16px',
-        padding: isCompact ? '12px 14px' : '16px',
-        boxShadow: isNextUp ? 'var(--shadow-md)' : 'var(--shadow-card)',
+        borderLeft: `3px solid ${colors.accent}`,
+        borderRadius: '6px',
+        padding: isCompact ? '10px 14px' : '13px 16px',
+        boxShadow: isNextUp ? 'var(--shadow-md)' : 'var(--shadow-sm)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '12px',
+        gap: '10px',
         position: 'relative',
         overflow: 'hidden',
         cursor: 'pointer',
-        transition: 'transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.18s ease'
+        transition: 'transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease, border-color 0.15s ease'
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.transform = 'translateY(-1px)';
         e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-        e.currentTarget.style.borderColor = colors.border;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = isNextUp ? 'var(--shadow-md)' : 'var(--shadow-card)';
-        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.boxShadow = isNextUp ? 'var(--shadow-md)' : 'var(--shadow-sm)';
       }}
     >
-      {/* 3px Top Brand Accent Ribbon */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '3px',
-          background: `linear-gradient(90deg, ${colors.accent}, transparent)`
-        }}
-      />
-
-      {/* Row 1: Time, Relative Badge & Course Chip */}
+      {/* Row 1: Departure Time, Duration, Next Up & Course Code */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {/* Time Badge in Tabular Monospace */}
+          {/* Time Badge in Bold Tabular Monospace */}
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '5px',
               fontFamily: 'var(--font-mono)',
-              fontSize: '13px',
+              fontFeatureSettings: '"tnum"',
+              fontVariantNumeric: 'tabular-nums',
+              fontSize: '12.5px',
               fontWeight: 800,
               color: 'var(--ink)',
               letterSpacing: '-0.02em',
               backgroundColor: 'var(--paper)',
-              padding: '3px 8px',
-              borderRadius: '7px',
+              padding: '2px 8px',
+              borderRadius: '4px',
               border: '1px solid var(--border)'
             }}
           >
-            <Clock size={13} color="var(--mizu)" />
-            <span>{session.startTime.slice(0, 5)} - {session.endTime.slice(0, 5)}</span>
+            <IconChronometer size={13} color="var(--mizu)" />
+            <span>{(session.startTime || '').slice(0, 5)} – {(session.endTime || '').slice(0, 5)}</span>
           </div>
 
           {/* 90-Min Duration Tag */}
           <span
             style={{
               fontSize: '10px',
-              fontWeight: 600,
+              fontWeight: 700,
               fontFamily: 'var(--font-mono)',
-              color: 'var(--ink-soft)',
+              fontFeatureSettings: '"tnum"',
+              color: 'var(--ink-faint)',
               padding: '2px 6px',
-              borderRadius: '4px',
-              backgroundColor: 'var(--card-hover)'
+              borderRadius: '3px',
+              backgroundColor: 'var(--paper-subtle)',
+              border: '1px solid var(--border-soft)',
+              letterSpacing: '0.04em'
             }}
           >
-            90 min
+            90 MIN
           </span>
 
-          {/* Next Up / Relative Time Pill */}
+          {/* Next Up / Departure Indicator */}
           {isNextUp && (
             <span
+              className="hanko-stamp"
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '3px',
-                fontSize: '10px',
-                fontWeight: 700,
-                color: 'var(--mizu-text)',
-                backgroundColor: 'var(--wash-mizu)',
-                border: '1px solid rgba(var(--mizu-rgb), 0.3)',
-                padding: '2px 7px',
-                borderRadius: '999px'
+                color: 'var(--mizu)',
+                borderColor: 'rgba(var(--mizu-rgb), 0.45)',
+                backgroundColor: 'var(--wash-mizu)'
               }}
             >
-              <Sparkles size={10} />
-              <span>Next Up</span>
+              NEXT UP
             </span>
           )}
 
           {!isNextUp && relativeTime && (
             <span
               style={{
-                fontSize: '10px',
-                fontWeight: 500,
-                color: 'var(--ink-soft)'
+                fontSize: '11px',
+                fontFamily: 'var(--font-mono)',
+                fontFeatureSettings: '"tnum"',
+                color: 'var(--ink-faint)'
               }}
             >
-              • {relativeTime}
+              · {relativeTime}
             </span>
           )}
         </div>
 
-        {/* Course Code Chip */}
+        {/* Course Code Monospace Chip */}
         <span
           style={{
             fontSize: '11px',
             fontWeight: 800,
             fontFamily: 'var(--font-mono)',
             padding: '2px 8px',
-            borderRadius: '6px',
+            borderRadius: '4px',
             backgroundColor: colors.wash,
             color: colors.accent,
             border: `1px solid ${colors.border}`,
             letterSpacing: '0.04em'
           }}
         >
-          {session.courseCode} • Sec {session.section}
+          {session.courseCode} · Sec {session.section}
         </span>
       </div>
 
@@ -198,32 +190,43 @@ export default function TimetableDocketCard({
         <h3
           style={{
             fontFamily: 'var(--font-brand)',
-            fontSize: isCompact ? '15px' : '17px',
+            fontSize: isCompact ? '14.5px' : '16px',
             fontWeight: 700,
-            letterSpacing: '-0.025em',
+            letterSpacing: '-0.02em',
             color: 'var(--ink)',
-            margin: '0 0 3px 0',
-            lineHeight: 1.25
+            margin: '0 0 2px 0',
+            lineHeight: 1.3
           }}
         >
           {session.courseName}
         </h3>
         <p
           style={{
-            fontSize: '12px',
+            fontSize: '11.5px',
             color: 'var(--ink-soft)',
             margin: 0,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'baseline',
             gap: '5px'
           }}
         >
-          <User size={12} color="var(--ink-faint)" />
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '10px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              color: 'var(--ink-faint)'
+            }}
+          >
+            Instructor:
+          </span>
           <span>{session.faculty}</span>
         </p>
       </div>
 
-      {/* Row 2.5: 1-Tap Self Attendance Marking */}
+      {/* Row 2.5: 1-Tap Sovereign Self-Attendance Marking */}
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
@@ -231,26 +234,35 @@ export default function TimetableDocketCard({
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '6px 10px',
-          backgroundColor: 'var(--paper)',
-          borderRadius: '10px',
-          border: '1px solid var(--border)',
+          backgroundColor: 'var(--paper-subtle)',
+          borderRadius: '4px',
+          border: '1px solid var(--border-soft)',
           gap: '8px'
         }}
       >
-        <span style={{ fontSize: '11px', color: 'var(--ink-soft)', fontWeight: 600 }}>
+        <span
+          style={{
+            fontSize: '10.5px',
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            color: 'var(--ink-muted)',
+            textTransform: 'uppercase'
+          }}
+        >
           Attendance Log:
         </span>
         <SelfAttendanceMarkPill session={session} isCompact={true} />
       </div>
 
-      {/* Row 3: Venue Pill, Academic Safety Context & Sync Action */}
+      {/* Row 3: Venue Pill with 1-Click Copy, Japanese Hanko Stamp & GCal Sync */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          paddingTop: '10px',
-          borderTop: '1px solid var(--border)',
+          paddingTop: '9px',
+          borderTop: '1px solid var(--border-soft)',
           gap: '8px',
           flexWrap: 'wrap'
         }}
@@ -258,6 +270,7 @@ export default function TimetableDocketCard({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           {/* Venue Pill with Tactile Copy */}
           <button
+            className="btn-tactile"
             onClick={handleCopyVenue}
             title="Click to copy room code"
             aria-label={`Copy venue ${session.venue}`}
@@ -265,54 +278,46 @@ export default function TimetableDocketCard({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '5px',
-              padding: '5px 9px',
-              borderRadius: '8px',
+              padding: '4px 8px',
+              borderRadius: '4px',
               backgroundColor: 'var(--paper)',
               border: '1px solid var(--border)',
               color: 'var(--ink)',
-              fontSize: '12px',
+              fontSize: '11.5px',
+              fontFamily: 'var(--font-mono)',
               fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
+              cursor: 'pointer'
             }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-hover)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--paper)'}
           >
-            <MapPin size={12} color="var(--mizu)" />
+            <IconMapPin size={13} color="var(--mizu)" />
             <span>{session.venue}</span>
             {isCopied ? (
-              <Check size={12} color="var(--moss)" />
+              <IconCheckmark size={12} color="var(--moss)" />
             ) : (
-              <Copy size={11} color="var(--ink-soft)" />
+              <IconCopy size={11} color="var(--ink-faint)" />
             )}
             {isCopied && (
-              <span style={{ fontSize: '10px', color: 'var(--moss-text)', fontWeight: 600 }}>Copied</span>
+              <span style={{ fontSize: '10px', color: 'var(--moss-text)', fontWeight: 700 }}>COPIED</span>
             )}
           </button>
 
-          {/* Academic Attendance Safety Margin Context */}
+          {/* Japanese Hanko Stamp Badge: Remaining Safe Bunks */}
           {safeBunks !== null && (
             <span
+              className="hanko-stamp"
+              title={`Statutory safe bunks remaining before 80% threshold: ${safeBunks}`}
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontSize: '11px',
-                fontFamily: 'var(--font-mono)',
-                fontWeight: 700,
-                color: isSafe ? 'var(--moss-text)' : 'var(--hanko-text)',
-                backgroundColor: isSafe ? 'var(--wash-moss)' : 'var(--wash-hanko)',
-                border: `1px solid ${isSafe ? 'rgba(var(--moss-rgb), 0.3)' : 'rgba(var(--hanko-rgb), 0.3)'}`,
-                padding: '3px 8px',
-                borderRadius: '6px'
+                color: isSafe ? 'var(--moss)' : 'var(--hanko)',
+                borderColor: isSafe ? 'rgba(var(--moss-rgb), 0.45)' : 'rgba(var(--hanko-rgb), 0.45)',
+                backgroundColor: isSafe ? 'var(--wash-moss)' : 'var(--wash-hanko)'
               }}
             >
               {isSafe ? (
-                <ShieldCheck size={11} color="var(--moss)" />
+                <IconHankoSafe size={11} color="var(--moss)" />
               ) : (
-                <AlertTriangle size={11} color="var(--hanko)" />
+                <IconHankoDanger size={11} color="var(--hanko)" />
               )}
-              <span>{isSafe ? `+${safeBunks} Safe` : '0 Buffer'}</span>
+              <span>{isSafe ? `+${safeBunks} SAFE BUNKS` : '0 BUFFER — COMPULSORY'}</span>
             </span>
           )}
         </div>
@@ -324,26 +329,25 @@ export default function TimetableDocketCard({
           target="_blank"
           rel="noopener noreferrer"
           title="Add to Google Calendar"
+          className="btn-tactile"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '4px',
-            padding: '5px 10px',
-            borderRadius: '8px',
+            gap: '5px',
+            padding: '4px 9px',
+            borderRadius: '4px',
             backgroundColor: 'var(--wash-mizu)',
-            border: '1px solid rgba(var(--mizu-rgb), 0.25)',
+            border: '1px solid rgba(var(--mizu-rgb), 0.3)',
             color: 'var(--mizu)',
             fontSize: '11px',
-            fontWeight: 600,
-            textDecoration: 'none',
-            transition: 'all 0.15s ease'
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            textDecoration: 'none'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(var(--mizu-rgb), 0.2)'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--wash-mizu)'}
         >
-          <Calendar size={12} />
-          <span>Sync GCal</span>
-          <ExternalLink size={10} />
+          <IconTimetable size={12} color="var(--mizu)" />
+          <span>SYNC GCAL</span>
         </a>
       </div>
     </div>

@@ -51,7 +51,7 @@ export default function SectorBunkMeter({ courses = [], schedule = [], student =
     const first = discrepancies[0];
     const emailText = `Subject: Academic Attendance Discrepancy & Official ERP Record Reconciliation - [${first.code}]
 To: Dean of Academics / Program Office (academics@xlri.ac.in)
-From: ${student?.name || 'Janmejai Singh'} (Roll No: ${student?.id || 'B25349'}, Section EF)
+From: ${student?.name || 'Student'} (Roll No: ${student?.id || '[Roll No]'}, Section ${student?.section || 'EF'})
 Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
 
 Dear Dean of Academics / Course Coordinator,
@@ -69,8 +69,8 @@ I have maintained complete punctuality and attended all designated class session
 Kindly initiate a review against the physical attendance roster sheet and update the academic database accordingly.
 
 Warm regards,
-${student?.name || 'Janmejai Singh'}
-Roll Number: ${student?.id || 'B25349'}
+${student?.name || 'Student'}
+Roll Number: ${student?.id || '[Roll No]'}
 XLRI Jamshedpur / Delhi-NCR`;
 
     navigator.clipboard.writeText(emailText);

@@ -58,7 +58,7 @@ export default function HorizonTopBar({
 
   const initials = student?.name
     ? student.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-    : 'JS';
+    : 'XL';
 
   return (
     <header style={{
@@ -72,8 +72,6 @@ export default function HorizonTopBar({
       position: 'relative',
       zIndex: 30,
       userSelect: 'none',
-      backdropFilter: 'blur(20px) saturate(180%)',
-      WebkitBackdropFilter: 'blur(20px) saturate(180%)',
       boxShadow: 'var(--shadow-sm)'
     }}>
       {/* 1. Left: Streamlined Brand & Clean Student Pill */}
@@ -91,13 +89,8 @@ export default function HorizonTopBar({
             alignItems: 'baseline'
           }}>
             <span>XL</span>
-            <span style={{ color: 'var(--mizu)', opacity: 0.6, margin: '0 0.5px', fontWeight: 600 }}>-</span>
-            <span style={{
-              background: 'linear-gradient(135deg, var(--moss) 0%, var(--mizu) 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontWeight: 800
-            }}>Flow</span>
+            <span style={{ color: 'var(--ink-faint)', margin: '0 1.5px', fontWeight: 600 }}>·</span>
+            <span style={{ color: 'var(--mizu)', fontWeight: 800 }}>Flow</span>
           </span>
           <span
             title="Connected to XLRI ERP & Local Cache"
@@ -117,7 +110,7 @@ export default function HorizonTopBar({
 
         {/* Student Profile Pill */}
         <div
-          title={`Student: ${student?.name || 'Janmejai Singh'} (${student?.id || 'B25349'}) • Term-5`}
+          title={`Student: ${student?.name || 'Student'} (${student?.id || '—'}) • Term-5`}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -146,7 +139,7 @@ export default function HorizonTopBar({
             {initials}
           </div>
           <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--ink)', whiteSpace: 'nowrap' }}>
-            {student?.name || 'Janmejai Singh'}
+            {student?.name || 'Student'}
           </span>
           <span style={{
             fontSize: '9.5px',
@@ -157,7 +150,7 @@ export default function HorizonTopBar({
             borderRadius: '3px',
             border: '1px solid var(--border)'
           }}>
-            {student?.id || 'B25349'}
+            {student?.id || '—'}
           </span>
         </div>
       </div>
@@ -177,6 +170,7 @@ export default function HorizonTopBar({
           schedule={schedule}
           courses={courses}
           deadlines={deadlines}
+          student={student}
           onInspectSession={onInspectSession}
           onSelectTab={onSelectTab}
           isCompact={false}

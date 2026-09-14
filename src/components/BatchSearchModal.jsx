@@ -75,7 +75,7 @@ export default function BatchSearchModal({ isOpen, onClose }) {
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search 178 batchmates by name or roll (e.g. 349, Janmejai)..."
+            placeholder="Search 178 batchmates by name or roll (e.g. 301, Sharma)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             style={{

@@ -1,0 +1,19 @@
+{
+  "name": "xlflow-spark-mcp",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker MCP Server connecting Gemini Spark to XLRI ERP",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.7.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250224.0",
+    "typescript": "^5.7.3",
+    "wrangler": "^3.109.2"
+  }
+}

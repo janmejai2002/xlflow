@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, RefreshCw, LogOut, Sparkles, Search, Share2, Flame, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
-import { fireStreakConfetti } from '../services/confetti';
+import { Sun, Moon, RefreshCw, LogOut, Search, Share2, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
 import { toast } from 'sonner';
 import XlFlowLogo from './XlFlowLogo';
 import DynamicAmbientIsland from './DynamicAmbientIsland';
@@ -56,7 +55,7 @@ export default function Header({
       <div style={{ display: 'flex', alignItems: 'center', gap: '9px', minWidth: 0 }}>
         <XlFlowLogo size={32} />
         <div style={{ minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'nowrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
             <span style={{
               fontFamily: 'var(--font-brand)',
               fontSize: '17px',
@@ -68,45 +67,15 @@ export default function Header({
               alignItems: 'baseline'
             }}>
               <span>XL</span>
-              <span style={{ color: 'var(--mizu)', opacity: 0.5, margin: '0 0.5px', fontWeight: 600 }}>-</span>
-              <span style={{
-                background: 'linear-gradient(135deg, var(--moss) 0%, var(--mizu) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontWeight: 800
-              }}>Flow</span>
+              <span style={{ color: 'var(--ink-faint)', margin: '0 1.5px', fontWeight: 600 }}>·</span>
+              <span style={{ color: 'var(--mizu)', fontWeight: 800 }}>Flow</span>
             </span>
-            <button
-              onClick={() => {
-                fireStreakConfetti();
-                toast.success('🔥 8-Day Attendance Streak Active!', {
-                  description: 'Zero unexcused absences. Academic momentum is high!'
-                });
-              }}
-              title="Click to celebrate streak!"
-              aria-label="Attendance streak: 8 days active"
-              className="hide-below-520"
-              style={{
-                fontSize: '10px',
-                fontWeight: 600,
-                padding: '2px 7px',
-                borderRadius: '9999px',
-                backgroundColor: 'var(--wash-moss)',
-                color: 'var(--moss-text)',
-                border: '1px solid rgba(var(--moss-rgb), 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3px',
-                cursor: 'pointer',
-                transition: 'transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.06)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            <span
+              className="hanko-stamp hide-below-520"
+              style={{ color: 'var(--moss)', borderColor: 'rgba(var(--moss-rgb), 0.45)' }}
             >
-              <Flame size={11} style={{ fill: 'currentColor' }} />
-              <span>8d Streak</span>
-            </button>
+              {student?.term || 'TERM-V'}
+            </span>
           </div>
           <p style={{ fontSize: '11px', color: 'var(--ink-soft)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {student?.term || 'Term-5'} • {student?.campus || 'XLRI Delhi-NCR'}
@@ -121,6 +90,7 @@ export default function Header({
           schedule={schedule}
           courses={courses}
           deadlines={deadlines}
+          student={student}
           onInspectSession={onInspectSession}
           onSelectTab={onSelectTab}
           isCompact={true}

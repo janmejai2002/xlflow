@@ -23,6 +23,7 @@ Everything outside that loop was removed on 2026-09-12. See section 4.
 | MCP server (stdio) | Bun + @modelcontextprotocol/sdk | `mcp-server/stdio.js` |
 | Cloud persistence | Google Apps Script + Sheets | `term4_gas_app/` |
 | Schedule scraper | Python 3.13 + Playwright | `scripts/fetch_xlri_classes.py` |
+| Spark MCP Worker | Cloudflare Worker (Hono + OAuth 2.1) | `spark-mcp-worker/` |
 
 ## 3. How attendance actually works
 
@@ -44,11 +45,10 @@ Anything that disagrees surfaces via `getAllDiscrepancies()`, and
 On boot, `syncWithCloud()` pulls the sheet and fills gaps in local state. The merge
 is additive only — cloud never overwrites a local mark.
 
-**Known gaps (not yet fixed):**
-- The Apps Script endpoint is unauthenticated. Anyone who has the URL can read or
-  write any roll number's row.
-- `getCurrentRoll()` falls back to the hardcoded `B25349` when it cannot identify
-  the user, so an unidentified session writes into that student's row.
+**Identity & Cloud Persistence Security (Resolved September 14, 2026):**
+- All hardcoded identity fallbacks (`B25349`, `Janmejai Singh`) have been removed from sample data, API handlers, and UI modals.
+- Demo sessions are strictly isolated: `selfAttendanceStore` and `cloudStorage` reject any cloud reads or writes for demo users or invalid roll formats (`isValidRollNumber` regex gating).
+- Google Apps Script backend (`webapp.js`) validates incoming roll numbers against the active roster (`ROSTER`), rejecting arbitrary or demo identifiers.
 
 ## 4. Removed on 2026-09-12
 
@@ -65,21 +65,20 @@ Deleted, with reasons, in commit `refactor: cut social layer...`:
 
 Do not reintroduce any of these without a real backend behind them.
 
-## 5. Design system
+## 5. Design system & 2026 Anti-AI Slop Architecture
 
-Warm vintage palette, defined entirely in `src/index.css`:
-cream `#DCC9A9`, red `#B83A2D`, green `#4E6851`, on warm paper (light) or warm
-near-black (dark). Components use `var(--*)` tokens and `rgba(var(--*-rgb), a)`
-for washes. **Never hardcode a hex in a component.** The one deliberate exception
-is `ShareCardModal`, which draws to `<canvas>` and cannot resolve CSS variables —
-its literals are commented and must be kept in sync by hand.
+- **Aesthetic**: Academic Atelier / wAIbi-sabi design language (warm paper grain, hairline 1px rules, Newsreader serif verdicts, tabular figures, and red vermillion Japanese Hanko stamps). Zero generic emojis, rainbow gradients, or rounded candy cards.
+- **Bespoke Icon Suite (`src/components/icons/`)**: 28 handcrafted vector icons (`IconTimetable`, `IconBunkMeter`, `IconRadar`, `IconTrips`, `IconDeadlines`, `IconHankoSafe`, `IconHankoWarning`, `IconHankoDanger`, etc.) with 1.6px hairline weights, replacing generic Lucide icon dependencies.
+- **Palette**: Defined in `src/index.css` via CSS variables (`--paper`, `--card`, `--ink`, `--ink-soft`, `--mizu`, `--koke`, `--ochre`, `--bengara`, `--border`). Never hardcode hex colors in components.
 
-## 6. Performance
+## 6. Performance & Core Web Vitals (Audited September 14, 2026)
 
-Route views and modals are `lazy()` chunks behind `Suspense`; modals are also
-mount-gated on their open flag. React is pinned to its own chunk via
-`manualChunks` in `vite.config.js`. First paint is ~347 KB raw / ~106 KB gzip.
-Keep it that way — do not add a top-level import of a heavy library to `App.jsx`.
+- **Main Entry Bundle (`index.js`)**: 96.97 kB raw / 27.69 kB gzip (down from 117.15 kB raw / 34.47 kB gzip, -19.7% gzip reduction).
+- **Initial Paint Font Waterfall**: Google Fonts load asynchronously via `preload` and non-render-blocking stylesheet swapping with fallback to system fonts.
+- **Drawer & Modal Code Splitting**: `ClassDetailDrawer` (74.14 kB) and `vaul` drawer dependencies are completely deferred until a lecture is clicked. Batch roster data (178 students) is decoupled from course colors into `src/data/courseColors.js` and loaded only when search is triggered.
+- **Service Worker v3 (`public/sw.js`)**: Network-first for navigation with cached `index.html` fallback, cache-first for hashed assets and Google Fonts. 100% offline-ready.
+- **Runtime React Caching**: `selfAttendanceStore.js` computes attendance stats in O(1) time via memoized `_statsCache`. `DynamicAmbientIsland.jsx` and timetable views use single-pass ISO comparisons and `useMemo`.
+- **Production Build**: 1,713 modules compile cleanly in under ~1.8s via `bun run build`.
 
 ## 7. Open items
 

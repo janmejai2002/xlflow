@@ -40,11 +40,22 @@ async function postToGas(payload) {
 }
 
 /**
+ * Strict validator to guarantee no invalid, demo, or unidentified sessions
+ * ever hit the Google Apps Script persistence backend.
+ */
+export function isValidRollNumber(rollNo) {
+  if (!rollNo || typeof rollNo !== 'string') return false;
+  const clean = rollNo.trim().toUpperCase();
+  if (clean.startsWith('DEMO')) return false;
+  return /^B25[0-9]{3}$/.test(clean);
+}
+
+/**
  * Fetches all cloud attendance marks recorded for a student's roll number.
  */
 export async function fetchCloudAttendance(rollNo) {
-  if (!rollNo) return {};
-  const res = await postToGas({ action: 'get', rollNo: rollNo.toUpperCase() });
+  if (!isValidRollNumber(rollNo)) return {};
+  const res = await postToGas({ action: 'get', rollNo: rollNo.trim().toUpperCase() });
   if (res && res.ok && res.data) {
     return res.data;
   }
@@ -55,10 +66,10 @@ export async function fetchCloudAttendance(rollNo) {
  * Persists an attendance mark for a specific session to Google Sheets.
  */
 export async function saveCloudAttendance(rollNo, skey, status, userSection = '') {
-  if (!rollNo || !skey) return { ok: false };
+  if (!isValidRollNumber(rollNo) || !skey) return { ok: false, error: 'Invalid or demo roll number' };
   return await postToGas({
     action: 'set',
-    rollNo: rollNo.toUpperCase(),
+    rollNo: rollNo.trim().toUpperCase(),
     skey: String(skey),
     status: status || '',
     userSection: userSection || '',
@@ -70,8 +81,8 @@ export async function saveCloudAttendance(rollNo, skey, status, userSection = ''
  * Fetches saved user preferences (courses, section, groups) from Google Sheets.
  */
 export async function fetchCloudPrefs(rollNo) {
-  if (!rollNo) return null;
-  const res = await postToGas({ action: 'getPrefs', rollNo: rollNo.toUpperCase() });
+  if (!isValidRollNumber(rollNo)) return null;
+  const res = await postToGas({ action: 'getPrefs', rollNo: rollNo.trim().toUpperCase() });
   if (res && res.ok && res.data) {
     return res.data;
   }
@@ -82,10 +93,10 @@ export async function fetchCloudPrefs(rollNo) {
  * Persists user preferences and enrolled courses to Google Sheets.
  */
 export async function saveCloudPrefs(rollNo, prefs = {}) {
-  if (!rollNo) return { ok: false };
+  if (!isValidRollNumber(rollNo)) return { ok: false, error: 'Invalid or demo roll number' };
   return await postToGas({
     action: 'setPrefs',
-    rollNo: rollNo.toUpperCase(),
+    rollNo: rollNo.trim().toUpperCase(),
     section: prefs.section || '',
     courses: prefs.courses || [],
     courseSections: prefs.courseSections || {},
@@ -97,10 +108,10 @@ export async function saveCloudPrefs(rollNo, prefs = {}) {
  * Logs user access for attendance audit and campus activity.
  */
 export async function logCloudUser(rollNo, name = '') {
-  if (!rollNo) return { ok: false };
+  if (!isValidRollNumber(rollNo)) return { ok: false, error: 'Invalid or demo roll number' };
   return await postToGas({
     action: 'logUser',
-    rollNo: rollNo.toUpperCase(),
+    rollNo: rollNo.trim().toUpperCase(),
     name: name || ''
   });
 }
@@ -110,8 +121,8 @@ export async function logCloudUser(rollNo, name = '') {
  * Restores attendance and preferences if local storage has been cleared.
  */
 export async function restoreFromCloud(rollNo) {
-  if (!rollNo) return null;
-  const cleanRoll = rollNo.toUpperCase();
+  if (!isValidRollNumber(rollNo)) return null;
+  const cleanRoll = rollNo.trim().toUpperCase();
 
   try {
     const [attData, prefsData] = await Promise.all([

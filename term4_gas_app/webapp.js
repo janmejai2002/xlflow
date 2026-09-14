@@ -464,9 +464,21 @@ function getCourseInfoCached_() { return getTimetable_().courses||{}; }
 // ============================================================
 //  SERVER  —  POST router + sheet IO
 // ============================================================
+function isValidBatchRoll_(roll) {
+  if (!roll || typeof roll !== "string") return false;
+  var clean = roll.trim().toUpperCase();
+  if (clean.indexOf("DEMO") === 0) return false;
+  if (!/^B25[0-9]{3}$/.test(clean)) return false;
+  if (typeof ROSTER !== "undefined" && ROSTER && !ROSTER[clean]) return false;
+  return true;
+}
+
 function doPost(e) {
   try {
     var d=JSON.parse(e.postData.contents);
+    if(d.rollNo && !isValidBatchRoll_(d.rollNo)) {
+      return json_({ok:false,error:"Invalid or unrecognized roll number"});
+    }
     if(d.action==="get")      return getAttendance_(d.rollNo);
     if(d.action==="set")      return setAttendance_(d);
     if(d.action==="getPrefs") return getPrefs_(d.rollNo);
@@ -1602,7 +1614,7 @@ body.no-scroll{overflow:hidden}
       <div class="ob-l" style="margin-bottom:8px">↩ Returning? Restore your setup</div>
       <div class="ob-restore-row">
         <div class="sug-wrap" style="flex:1;">
-          <input type="text" id="ob-restore-roll" class="ob-input" placeholder="B25349" autocomplete="off" oninput="renderSug('ob-restore-sug',this.value)" onfocus="trackOnboardFocus(this)" style="text-transform:uppercase;margin:0;width:100%">
+          <input type="text" id="ob-restore-roll" class="ob-input" placeholder="B25301" autocomplete="off" oninput="renderSug('ob-restore-sug',this.value)" onfocus="trackOnboardFocus(this)" style="text-transform:uppercase;margin:0;width:100%">
           <div id="ob-restore-sug" class="sug-box"></div>
         </div>
         <button class="ob-restore-btn" onclick="doRestore()">Restore</button>

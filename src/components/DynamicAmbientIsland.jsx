@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Clock,
   MapPin,
@@ -22,6 +22,7 @@ export default function DynamicAmbientIsland({
   schedule = [],
   courses = [],
   deadlines = [],
+  student = {},
   onInspectSession,
   onSelectTab,
   isCompact = false
@@ -29,7 +30,7 @@ export default function DynamicAmbientIsland({
   const [isOpen, setIsOpen] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
   const popoverRef = useRef(null);
-  const [, setStoreVer] = useState(0);
+  const [storeVer, setStoreVer] = useState(0);
 
   useEffect(() => {
     const unsub = selfAttendanceStore.subscribe(() => setStoreVer(v => v + 1));
@@ -49,27 +50,34 @@ export default function DynamicAmbientIsland({
     return () => document.removeEventListener('pointerdown', handleClickOutside);
   }, [isOpen]);
 
-  // Find next upcoming session
-  const now = new Date();
-  const sortedSessions = [...schedule].sort((a, b) => {
-    const timeA = new Date(`${a.classDate}T${a.startTime || '08:00:00'}`).getTime();
-    const timeB = new Date(`${b.classDate}T${b.startTime || '08:00:00'}`).getTime();
-    return timeA - timeB;
-  });
+  // Sort schedule chronologically (memoized with fast string comparison)
+  const sortedSessions = useMemo(() => {
+    return [...schedule].sort((a, b) => {
+      const timeA = `${a.classDate}T${a.startTime || '08:00:00'}`;
+      const timeB = `${b.classDate}T${b.startTime || '08:00:00'}`;
+      return timeA.localeCompare(timeB);
+    });
+  }, [schedule]);
 
-  const nextSession = sortedSessions.find(s => {
-    const sessionTime = new Date(`${s.classDate}T${s.endTime || '23:59:59'}`).getTime();
-    return sessionTime >= now.getTime();
-  }) || sortedSessions[0];
+  // Find next upcoming session
+  const nextSession = useMemo(() => {
+    if (!sortedSessions.length) return null;
+    const nowMs = Date.now();
+    return sortedSessions.find(s => {
+      const sessionTime = new Date(`${s.classDate}T${s.endTime || '23:59:59'}`).getTime();
+      return sessionTime >= nowMs;
+    }) || sortedSessions[0];
+  }, [sortedSessions]);
 
   // Calculate time remaining string
-  const getTimeRemaining = (session) => {
-    if (!session) return 'No Classes';
-    const sessionStart = new Date(`${session.classDate}T${session.startTime || '08:00:00'}`).getTime();
+  const timeRemainingStr = useMemo(() => {
+    if (!nextSession) return 'No Classes';
+    const now = new Date();
+    const sessionStart = new Date(`${nextSession.classDate}T${nextSession.startTime || '08:00:00'}`).getTime();
     const diffMs = sessionStart - now.getTime();
 
     if (diffMs < 0) {
-      const sessionEnd = new Date(`${session.classDate}T${session.endTime || '23:59:59'}`).getTime();
+      const sessionEnd = new Date(`${nextSession.classDate}T${nextSession.endTime || '23:59:59'}`).getTime();
       if (sessionEnd >= now.getTime()) return 'Ongoing Live';
       return 'Session Ended';
     }
@@ -84,23 +92,31 @@ export default function DynamicAmbientIsland({
     }
     if (diffHours > 0) return `In ${diffHours}h ${diffMins}m`;
     return `In ${diffMins}m`;
-  };
-
-  const timeRemainingStr = getTimeRemaining(nextSession);
+  }, [nextSession]);
 
   // Course standing, used by the expanded panel
-  const evaluatedCourses = courses.map(course => {
-    const recon = selfAttendanceStore.getCourseStats(course, schedule);
-    return {
-      ...course,
-      stats: recon ? recon.active : calculateBunkStats(course.attended, course.conducted, course.totalPlanned),
-      discrepancy: recon?.discrepancy
-    };
-  });
+  const evaluatedCourses = useMemo(() => {
+    return courses.map(course => {
+      const recon = selfAttendanceStore.getCourseStats(course, schedule);
+      return {
+        ...course,
+        stats: recon ? recon.active : calculateBunkStats(course.attended, course.conducted, course.totalPlanned),
+        discrepancy: recon?.discrepancy
+      };
+    });
+  }, [courses, schedule, storeVer]);
 
-  const dangerCourses = evaluatedCourses.filter(c => c.stats.tier === 'danger');
-  const warningCourses = evaluatedCourses.filter(c => c.stats.tier === 'warning');
-  const discrepancies = evaluatedCourses.filter(c => c.discrepancy?.hasDiscrepancy);
+  const { dangerCourses, warningCourses, discrepancies } = useMemo(() => {
+    const danger = [];
+    const warning = [];
+    const disc = [];
+    for (const c of evaluatedCourses) {
+      if (c.stats.tier === 'danger') danger.push(c);
+      else if (c.stats.tier === 'warning') warning.push(c);
+      if (c.discrepancy?.hasDiscrepancy) disc.push(c);
+    }
+    return { dangerCourses: danger, warningCourses: warning, discrepancies: disc };
+  }, [evaluatedCourses]);
 
   const copyRoomCode = (e) => {
     e?.stopPropagation();
@@ -120,7 +136,7 @@ export default function DynamicAmbientIsland({
     const firstDisc = discrepancies[0];
     const memo = `Subject: Academic Attendance Verification & ERP Discrepancy Reconciliation - ${firstDisc.code}
 To: Dean of Academics / Course Coordinator (${firstDisc.faculty || 'Office of Programs'})
-From: Janmejai Singh (Roll No. B25349, Section EF)
+From: ${student?.name || 'Student'} (Roll No. ${student?.id || '[Roll No]'}, Section ${student?.section || 'EF'})
 Date: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
 
 Respected Professor / Administration,
@@ -135,9 +151,9 @@ Upon cross-verifying my verified daily attendance log with the current ERP snaps
 I have attended all listed lectures punctually. Kindly verify the physical/biometric roster and update the ERP record accordingly to maintain accurate compliance with the statutory 80% attendance policy.
 
 Warm regards,
-Janmejai Singh
-Roll No: B25349
-BM Batch 2024-26 • XLRI Jamshedpur / Delhi-NCR`;
+${student?.name || 'Student'}
+Roll No: ${student?.id || '[Roll No]'}
+${student?.program || 'PGDM'} Batch • XLRI Jamshedpur / Delhi-NCR`;
 
     navigator.clipboard.writeText(memo);
     playHapticSuccess();

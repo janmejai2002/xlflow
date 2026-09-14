@@ -124,6 +124,7 @@
 
 body {
   background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.024'/%3E%3C/svg%3E");
   color: var(--ink);
   font-family: var(--font-sans);
   min-height: 100vh;
@@ -135,7 +136,7 @@ body {
 }
 
 [data-theme='dark'] body {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E");
 }
 
 /* WCAG SC 2.4.7 Focus Visible Implementation */
@@ -193,6 +194,62 @@ main.no-scrollbar::-webkit-scrollbar,
 .font-mono {
   font-family: var(--font-mono);
   font-feature-settings: "tnum";
+}
+
+/* Tactile Push Depression for Mechanical Ergonomics */
+button:active:not(:disabled),
+.btn-tactile:active:not(:disabled) {
+  transform: translateY(1px) !important;
+  transition: transform 0.05s cubic-bezier(0.2, 0, 0, 1) !important;
+}
+
+/* Japanese Hanko Stamp Indicator Badges */
+.hanko-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4.5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 2.5px 7px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  background: transparent;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+/* Editorial Ledger & Hairline Framework */
+.editorial-slate {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.editorial-divider-b {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.editorial-divider-r {
+  border-right: 1px solid var(--border-soft);
+}
+
+.editorial-verdict {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.mono-tabular {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
 }
 
 /* Pulse Animation for Live Radar */

@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Palmtree,
-  Calendar,
-  Compass,
-  ArrowRight,
-  CheckCircle2,
-  AlertTriangle,
-  Plane,
-  Sun,
-  Sparkles
-} from 'lucide-react';
+  IconTrips,
+  IconChronometer,
+  IconHankoSafe,
+  IconSharePass
+} from '../../icons';
 import { findNaturalGetaways } from '../../../services/tripPlanner';
 import { toast } from 'sonner';
 
@@ -80,7 +75,7 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
             justifyContent: 'center',
             boxShadow: '0 2px 8px rgba(var(--ochre-rgb), 0.15)'
           }}>
-            <Palmtree size={16} />
+            <IconTrips size={16} strokeWidth={1.6} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -114,7 +109,7 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
           alignItems: 'center',
           gap: '6px'
         }}>
-          <Sparkles size={12} />
+          <IconHankoSafe size={12} strokeWidth={1.6} />
           {naturalGetaways.length} Optimal Windows Detected
         </span>
       </div>
@@ -188,7 +183,7 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
                   padding: '3px 9px',
                   borderRadius: '6px'
                 }}>
-                  {isZeroBunk ? '🌴 Zero Bunk Cost' : `⚡ Bridge the Gap: Skip ${trip.classesMissed} → ${trip.durationDays} Days Off`}
+                  {isZeroBunk ? 'Statutory Pass: Zero Bunk Cost' : `Bridge Window: Skip ${trip.classesMissed} → ${trip.durationDays} Days Off`}
                 </span>
 
                 <span style={{
@@ -225,7 +220,7 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
                   color: 'var(--ink-soft)',
                   marginBottom: '8px'
                 }}>
-                  <Calendar size={13} color="var(--ink-soft)" />
+                  <IconChronometer size={13} color="var(--ink-soft)" strokeWidth={1.6} />
                   <span>{trip.startDate} – {trip.endDate}</span>
                 </div>
 
@@ -283,7 +278,7 @@ export default function SectorTrips({ schedule = [], deadlines = [], courses = [
                   gap: '6px'
                 }}
               >
-                <Plane size={13} />
+                <IconSharePass size={13} strokeWidth={1.6} />
                 <span>Bookmark Vacation Plan</span>
               </button>
 

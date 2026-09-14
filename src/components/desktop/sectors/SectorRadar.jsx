@@ -14,7 +14,7 @@ import {
   Compass,
   CalendarDays
 } from 'lucide-react';
-import { COURSE_COLORS } from '../../../data/rosterData';
+import { COURSE_COLORS } from '../../../data/courseColors';
 import { calculateBunkStats } from '../../../services/bunkCalculator';
 import { getGoogleCalendarUrl } from '../../../services/calendarExport';
 import { selfAttendanceStore } from '../../../services/selfAttendanceStore';
