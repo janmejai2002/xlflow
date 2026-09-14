@@ -25,6 +25,87 @@ import {
   fetchUpcomingImmediate
 } from "./erp.js";
 
+export const XLFLOW_SYSTEM_INSTRUCTIONS = `# XLFlow Academic Chief of Staff: Persona & Operational Protocol
+
+You are the personal academic chief of staff and ERP assistant for XLRI students, directly integrated with the institutional ERP.
+
+## 1. Core Persona & Tone
+- Sharp, concise, academic, grounded in XLRI realities (Section cohorts E/F/G, CR lecture halls, case preps, 80% statutory attendance).
+- Zero conversational filler (never start with pleasantries like "I hope you are having a great day").
+- High signal, low noise: lead directly with timings, venue, and statutory metrics.
+
+## 2. Daily Class Reminders (8 AM & 10 PM IST Protocol)
+- Current timezone: Indian Standard Time (IST, UTC+5:30).
+- If Morning run (~08:00 IST): Report TODAY's classes.
+- If Night run (~22:00 IST): Report TOMORROW's classes and explicitly state "tomorrow".
+- Output Format — Plain text, no markdown tables, no headers:
+  Today (Mon 14 Sep):
+  • 14:45–16:15 BDM — CR 07
+- If no classes: Single line: "No classes tomorrow (Sun 20 Sep)."
+- Strip any junk or placeholder tokens (never emit '[object Object]').
+- The entire reply MUST be under 6 lines.
+- Tool Chaining: Call 'get_daily_briefing'. If empty or unavailable, immediately fallback to 'get_student_schedule' for that IST date.
+
+## 3. XLRI Statutory Attendance Law (80.0% Threshold)
+- Mandatory minimum attendance across all courses is 80.0%.
+- Safe Margin: Always report exact safe bunks remaining (B_safe) and immediate safe bunks (B_now).
+- Danger Zone (< 80.0%): Alert immediately with recovery classes required (C_req) to prevent course debarment or grade drop penalties.
+
+## 4. Academic Deadlines & Getaways
+- Always cross-reference timetable with 'get_academic_deadlines' to guarantee zero quiz or exam conflicts before recommending weekend trips.
+`;
+
+export const MCP_PROMPTS = [
+  {
+    name: "class_reminder",
+    description: "Short daily class reminder for morning (today) or night (tomorrow) with CR rooms and timings under 6 lines.",
+    arguments: [
+      {
+        name: "timeOfDay",
+        description: "Optional: 'morning' (today's classes) or 'night' (tomorrow's classes).",
+        required: false
+      }
+    ]
+  },
+  {
+    name: "attendance_audit",
+    description: "Comprehensive statutory attendance review under XLRI's 80.0% rule.",
+    arguments: [
+      {
+        name: "courseCode",
+        description: "Optional course code filter (e.g. OMCR, BDM, B2B, IMCE, PEVC).",
+        required: false
+      }
+    ]
+  },
+  {
+    name: "plan_getaway",
+    description: "Discovers extended weekend trip opportunities with zero quiz or deadline conflicts.",
+    arguments: [
+      {
+        name: "minDays",
+        description: "Minimum trip duration in days (default 3).",
+        required: false
+      }
+    ]
+  }
+];
+
+export const MCP_RESOURCES = [
+  {
+    uri: "xlflow://policy/attendance",
+    name: "XLRI Statutory Attendance Policy (80% Rule)",
+    description: "Official attendance regulations, grade drop penalty tiers, and mathematical safe bunk formulas.",
+    mimeType: "text/markdown"
+  },
+  {
+    uri: "xlflow://persona/instructions",
+    name: "XLFlow Assistant Persona & Execution Rules",
+    description: "Core persona guidelines, time-of-day reminder constraints, and tool chaining rules.",
+    mimeType: "text/markdown"
+  }
+];
+
 export const MCP_TOOLS = [
   {
     name: "get_daily_briefing",
@@ -32,7 +113,8 @@ export const MCP_TOOLS = [
     inputSchema: {
       type: "object",
       properties: {
-        date: { type: "string", description: "Optional reference date in YYYY-MM-DD format (defaults to today)" }
+        date: { type: "string", description: "Optional reference date in YYYY-MM-DD format (defaults to today)" },
+        timeOfDay: { type: "string", description: "Optional: 'morning' (today's classes), 'night' (tomorrow's classes), or 'auto'" }
       }
     }
   },
@@ -142,11 +224,16 @@ export async function handleMcpRequest(
       id,
       result: {
         protocolVersion: "2024-11-05",
-        capabilities: { tools: {} },
+        capabilities: {
+          tools: {},
+          prompts: {},
+          resources: {}
+        },
         serverInfo: {
-          name: c.env.SERVER_NAME || "XLFlow ERP Spark Assistant",
-          version: "2.0.0"
-        }
+          name: c.env.SERVER_NAME || "XLFlow Academic Chief of Staff",
+          version: "2.1.0"
+        },
+        instructions: XLFLOW_SYSTEM_INSTRUCTIONS
       }
     });
   }
@@ -166,7 +253,128 @@ export async function handleMcpRequest(
     return c.json({ jsonrpc: "2.0", id, result: { tools: MCP_TOOLS } });
   }
 
-  // 5. tools/call
+  // 5. prompts/list
+  if (method === "prompts/list") {
+    return c.json({ jsonrpc: "2.0", id, result: { prompts: MCP_PROMPTS } });
+  }
+
+  // 6. prompts/get
+  if (method === "prompts/get") {
+    const promptName = params.name as string;
+    const promptArgs = (params.arguments || {}) as Record<string, string>;
+
+    if (promptName === "class_reminder") {
+      const tod = promptArgs.timeOfDay || "auto";
+      return c.json({
+        jsonrpc: "2.0",
+        id,
+        result: {
+          description: "Short daily class reminder under 6 lines",
+          messages: [
+            {
+              role: "user",
+              content: {
+                type: "text",
+                text: `Send me a short class reminder using the XLFlow MCP tools.\n` +
+                  `1. Determine current IST time (UTC+5:30).\n` +
+                  `2. Call get_daily_briefing${tod !== "auto" ? ` with timeOfDay='${tod}'` : ""}.\n` +
+                  `3. Report today's classes (if morning) or tomorrow's (if night). Format: '• HH:MM–HH:MM CourseCode — Room'.\n` +
+                  `4. If get_daily_briefing returns nothing, fallback to get_student_schedule.\n` +
+                  `5. Strip any '[object Object]' or faculty placeholders. Keep entire response under 6 lines.`
+              }
+            }
+          ]
+        }
+      });
+    }
+
+    if (promptName === "attendance_audit") {
+      const code = promptArgs.courseCode ? ` for course ${promptArgs.courseCode}` : "";
+      return c.json({
+        jsonrpc: "2.0",
+        id,
+        result: {
+          description: "Statutory attendance audit under 80% rule",
+          messages: [
+            {
+              role: "user",
+              content: {
+                type: "text",
+                text: `Run an attendance audit${code} using get_attendance_safety. Detail conducted, attended, safe bunks remaining before 80%, and immediate action items.`
+              }
+            }
+          ]
+        }
+      });
+    }
+
+    if (promptName === "plan_getaway") {
+      const minDays = promptArgs.minDays || "3";
+      return c.json({
+        jsonrpc: "2.0",
+        id,
+        result: {
+          description: "Weekend getaway planner with zero quiz conflicts",
+          messages: [
+            {
+              role: "user",
+              content: {
+                type: "text",
+                text: `Find upcoming weekend getaway windows for at least ${minDays} days using find_natural_getaways and get_academic_deadlines. Ensure zero quiz or case submission conflicts.`
+              }
+            }
+          ]
+        }
+      });
+    }
+
+    return c.json({ jsonrpc: "2.0", id, error: { code: -32602, message: `Prompt '${promptName}' not found` } }, 404);
+  }
+
+  // 7. resources/list
+  if (method === "resources/list") {
+    return c.json({ jsonrpc: "2.0", id, result: { resources: MCP_RESOURCES } });
+  }
+
+  // 8. resources/read
+  if (method === "resources/read") {
+    const uri = params.uri as string;
+    if (uri === "xlflow://policy/attendance") {
+      return c.json({
+        jsonrpc: "2.0",
+        id,
+        result: {
+          contents: [
+            {
+              uri,
+              mimeType: "text/markdown",
+              text: `# XLRI Statutory Attendance Policy\n\n- Mandatory Threshold: 80.0% attendance across all courses.\n- 70.0% - 79.9%: Grade drop penalty.\n- < 70.0%: Course debarment / 'F' grade.\n- Safe Bunk Formula: B_safe = min(U, max(0, floor((T - A) - (0.80 * T))))\n- Recovery Formula: C_req = ceil((0.80 * M - P) / 0.20)`
+            }
+          ]
+        }
+      });
+    }
+
+    if (uri === "xlflow://persona/instructions") {
+      return c.json({
+        jsonrpc: "2.0",
+        id,
+        result: {
+          contents: [
+            {
+              uri,
+              mimeType: "text/markdown",
+              text: XLFLOW_SYSTEM_INSTRUCTIONS
+            }
+          ]
+        }
+      });
+    }
+
+    return c.json({ jsonrpc: "2.0", id, error: { code: -32602, message: `Resource '${uri}' not found` } }, 404);
+  }
+
+  // 9. tools/call
   if (method === "tools/call") {
     const toolName = params.name as string;
     const args = (params.arguments || {}) as Record<string, unknown>;
@@ -190,35 +398,52 @@ export async function handleMcpRequest(
         }
 
         const isLive = Boolean(erpToken && upcoming);
-        resultText = `🌅 Good Morning! Daily Academic Briefing (${isLive ? "⚡ Live ERP Sync" : "📦 Cached Baseline"})\n\n`;
+        const formatLine = (s: any) => {
+          const code = s.course?.courseCode || s.courseCode || "CLASS";
+          const name = s.course?.courseName || s.courseName || "";
+          const time = s.startTime ? `${s.startTime.slice(0, 5)}–${s.endTime.slice(0, 5)}` : s.time || "TBA";
+          const room = typeof s.venue === "string" ? s.venue : (s.venue?.name || s.room || "CR-TBA");
+          const fac = typeof s.faculty === "string"
+            ? s.faculty
+            : (s.faculty?.name || [s.faculty?.prefix, s.faculty?.firstName, s.faculty?.lastName].filter(Boolean).join(" ") || "");
+          const facSuffix = fac ? ` — ${fac}` : "";
+          return `• ${time} ${code}${name ? ` (${name})` : ""} — ${room}${facSuffix}`;
+        };
 
-        resultText += `📅 TODAY'S CLASSES (${todaySessions.length}):\n`;
-        if (todaySessions.length === 0) {
-          resultText += `• No lectures scheduled for today. Enjoy your gap day!\n`;
+        const timeMode = ((args.timeOfDay as string) || "auto").toLowerCase();
+
+        if (timeMode === "morning") {
+          resultText = `Today's Classes (${todaySessions.length}):\n`;
+          if (todaySessions.length === 0) {
+            resultText += `No classes today.`;
+          } else {
+            resultText += todaySessions.map(formatLine).join("\n");
+          }
+        } else if (timeMode === "night") {
+          resultText = `Tomorrow's Classes (${tomorrowSessions.length}):\n`;
+          if (tomorrowSessions.length === 0) {
+            resultText += `No classes tomorrow.`;
+          } else {
+            resultText += tomorrowSessions.map(formatLine).join("\n");
+          }
         } else {
-          todaySessions.forEach((s: any) => {
-            const code = s.course?.courseCode || s.courseCode || "CLASS";
-            const name = s.course?.courseName || s.courseName || "";
-            const time = s.startTime ? `${s.startTime.slice(0, 5)} - ${s.endTime.slice(0, 5)}` : s.time || "TBA";
-            const room = s.venue?.name || s.room || "CR-TBA";
-            const faculty = s.faculty?.name || s.faculty || "";
-            resultText += `• ${time} | ${code} (${name}) in ${room} - ${faculty}\n`;
-          });
-        }
+          resultText = `🌅 Daily Academic Briefing (${isLive ? "⚡ Live ERP Sync" : "📦 Cached Baseline"})\n\n`;
+          resultText += `📅 TODAY'S CLASSES (${todaySessions.length}):\n`;
+          if (todaySessions.length === 0) {
+            resultText += `• No lectures scheduled for today.\n`;
+          } else {
+            resultText += todaySessions.map(formatLine).join("\n") + "\n";
+          }
 
-        resultText += `\n📅 TOMORROW'S CLASSES (${tomorrowSessions.length}):\n`;
-        if (tomorrowSessions.length === 0) {
-          resultText += `• No lectures scheduled for tomorrow.\n`;
-        } else {
-          tomorrowSessions.forEach((s: any) => {
-            const code = s.course?.courseCode || s.courseCode || "CLASS";
-            const time = s.startTime ? `${s.startTime.slice(0, 5)} - ${s.endTime.slice(0, 5)}` : s.time || "TBA";
-            const room = s.venue?.name || s.room || "CR-TBA";
-            resultText += `• ${time} | ${code} in ${room}\n`;
-          });
-        }
+          resultText += `\n📅 TOMORROW'S CLASSES (${tomorrowSessions.length}):\n`;
+          if (tomorrowSessions.length === 0) {
+            resultText += `• No lectures scheduled for tomorrow.\n`;
+          } else {
+            resultText += tomorrowSessions.map(formatLine).join("\n") + "\n";
+          }
 
-        resultText += `\n📌 REMINDER: Statutory minimum attendance is 80.0%. Ask me "Can I bunk [Course]?" anytime to check safe margins.`;
+          resultText += `\n📌 Statutory 80.0% Attendance Active. Safe bunks available.`;
+        }
       }
 
       // ── Tool 2: get_attendance_safety ──

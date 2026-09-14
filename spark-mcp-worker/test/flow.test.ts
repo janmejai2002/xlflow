@@ -152,6 +152,9 @@ describe("Gemini Spark Full Autonomous MCP Suite", () => {
     expect(res.status).toBe(200);
     const json = await res.json() as any;
     expect(json.result.serverInfo.name).toBe("XLFlow ERP Spark Assistant");
+    expect(json.result.instructions).toContain("XLFlow Academic Chief of Staff");
+    expect(json.result.capabilities.prompts).toBeDefined();
+    expect(json.result.capabilities.resources).toBeDefined();
   });
 
   it("10. POST /mcp responds to 'tools/list' with all 8 autonomous ERP tools", async () => {
@@ -300,5 +303,98 @@ describe("Gemini Spark Full Autonomous MCP Suite", () => {
     expect(res.status).toBe(200);
     const json = await res.json() as any;
     expect(json.result.content[0].text).toContain("Enrolled Courses for Term-5");
+  });
+
+  it("17. POST /mcp responds to 'prompts/list' and 'prompts/get'", async () => {
+    const listRes = await app.request("/mcp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 9,
+        method: "prompts/list"
+      })
+    }, env);
+    expect(listRes.status).toBe(200);
+    const listJson = await listRes.json() as any;
+    const promptNames = listJson.result.prompts.map((p: any) => p.name);
+    expect(promptNames).toContain("class_reminder");
+    expect(promptNames).toContain("attendance_audit");
+    expect(promptNames).toContain("plan_getaway");
+
+    const getRes = await app.request("/mcp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 10,
+        method: "prompts/get",
+        params: { name: "class_reminder", arguments: { timeOfDay: "morning" } }
+      })
+    }, env);
+    expect(getRes.status).toBe(200);
+    const getJson = await getRes.json() as any;
+    expect(getJson.result.messages[0].content.text).toContain("Send me a short class reminder");
+  });
+
+  it("18. POST /mcp responds to 'resources/list' and 'resources/read'", async () => {
+    const listRes = await app.request("/mcp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 11,
+        method: "resources/list"
+      })
+    }, env);
+    expect(listRes.status).toBe(200);
+    const listJson = await listRes.json() as any;
+    expect(listJson.result.resources.length).toBeGreaterThanOrEqual(2);
+
+    const readRes = await app.request("/mcp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 12,
+        method: "resources/read",
+        params: { uri: "xlflow://policy/attendance" }
+      })
+    }, env);
+    expect(readRes.status).toBe(200);
+    const readJson = await readRes.json() as any;
+    expect(readJson.result.contents[0].text).toContain("XLRI Statutory Attendance Policy");
+  });
+
+  it("19. POST /mcp executes 'get_daily_briefing' with timeOfDay='morning'", async () => {
+    const res = await app.request("/mcp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: 13,
+        method: "tools/call",
+        params: { name: "get_daily_briefing", arguments: { timeOfDay: "morning" } }
+      })
+    }, env);
+    expect(res.status).toBe(200);
+    const json = await res.json() as any;
+    expect(json.result.content[0].text).toContain("Today's Classes");
+    expect(json.result.content[0].text).not.toContain("[object Object]");
   });
 });
