@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sun, Moon, RefreshCw, LogOut, Search, Share2, BookOpen, MoreHorizontal, X, Monitor } from 'lucide-react';
+import { Sun, Moon, RefreshCw, LogOut, Search, Share2, BookOpen, MoreHorizontal, X, Monitor, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import XlFlowLogo from './XlFlowLogo';
 import DynamicAmbientIsland from './DynamicAmbientIsland';
@@ -221,7 +221,7 @@ export default function Header({
               <button
                 onClick={() => {
                   setIsMoreOpen(false);
-                  onOpenBooklet();
+                  onOpenBooklet?.();
                 }}
                 style={{
                   display: 'flex',
@@ -247,7 +247,7 @@ export default function Header({
               <button
                 onClick={() => {
                   setIsMoreOpen(false);
-                  onOpenShareCard();
+                  onOpenShareCard?.();
                 }}
                 style={{
                   display: 'flex',
@@ -267,7 +267,7 @@ export default function Header({
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 <Share2 size={15} style={{ color: 'var(--mizu)' }} />
-                <span>Share Academic Pass</span>
+                <span>Share Pass & Timetable</span>
               </button>
 
               <button
@@ -299,7 +299,7 @@ export default function Header({
               <button
                 onClick={() => {
                   setIsMoreOpen(false);
-                  onRefresh();
+                  onRefresh?.();
                 }}
                 disabled={isSyncing}
                 style={{
@@ -328,7 +328,7 @@ export default function Header({
               <button
                 onClick={() => {
                   setIsMoreOpen(false);
-                  onLogout();
+                  onLogout?.();
                 }}
                 style={{
                   display: 'flex',
