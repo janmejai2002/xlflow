@@ -80,14 +80,25 @@ Do not reintroduce any of these without a real backend behind them.
 - **Runtime React Caching**: `selfAttendanceStore.js` computes attendance stats in O(1) time via memoized `_statsCache`. `DynamicAmbientIsland.jsx` and timetable views use single-pass ISO comparisons and `useMemo`.
 - **Production Build**: 1,713 modules compile cleanly in under ~1.8s via `bun run build`.
 
-## 7. Open items
+## 7. Family & Friends Sharable Timetable Pass (Added September 14, 2026)
 
-- No automated tests. Playwright and axe-core are installed but unused.
+- **Sharable Route (`?share=timetable` or `?readOnly=true`)**:
+  - Automatically activates the Timetable view without onboarding or login popups.
+  - Suppresses self-attendance marking pills and cloud sync mutations for visitors.
+  - Features an informational top banner: "Family & Friends Timetable Pass: Viewing [Student]'s Term-5 schedule in read-only mode."
+  - Displays a prominent Calling Guide Ribbon highlighting optimal calling windows: daily lunch break (12:00 PM – 2:30 PM), evening free slots (after 4:30 PM), and lecture-free Wednesdays & Sundays.
+- **Dual-Mode Visual Pass Generator (`ShareCardModal.jsx`)**:
+  - **Weekly Timetable Routine Pass**: 1200×780 high-res canvas rendering 6-day columns (Mon–Sat) with room codes, lecture times, calling availability banner, and vermillion Hanko seal.
+  - **Academic & Attendance Pass**: 1080×608 canvas for statutory attendance policy clearance.
+  - 1-click sharing to WhatsApp, URL clipboard copying, and high-res PNG download.
+
+## 8. Open items
+
 - Apps Script endpoint needs auth (see section 3).
 - `term4_gas_app/webapp.js` is 4,964 lines and has never been reviewed.
 - Sample data shows blank faculty names for some courses.
 
-## 8. Quick start
+## 9. Quick start
 
 ```powershell
 cd c:\Users\Janmejai\Documents\antigravity\xlflow

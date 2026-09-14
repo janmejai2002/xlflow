@@ -47,13 +47,39 @@ function PaneFallback() {
 
 export default function App() {
   const { isDesktop, layoutPreference, toggleLayoutMode } = useBreakpoint();
-  const [activeTab, setActiveTab] = useState('radar');
+
+  // Parse URL query parameters for sharable view (?share=timetable or ?readOnly=true)
+  const isReadOnlyShare = useMemo(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('share') === 'timetable' || params.get('readOnly') === 'true';
+    } catch {
+      return false;
+    }
+  }, []);
+
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('share') === 'timetable' || params.get('readOnly') === 'true') {
+        return 'timetable';
+      }
+    } catch {}
+    return 'radar';
+  });
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [isShareCardModalOpen, setIsShareCardModalOpen] = useState(false);
+  const [shareCardInitialTab, setShareCardInitialTab] = useState('timetable');
   const [isBookletOpen, setIsBookletOpen] = useState(false);
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('share') === 'timetable' || params.get('readOnly') === 'true') {
+        return false;
+      }
+    } catch {}
     return !localStorage.getItem('has_seen_onboarding_v1');
   });
   const [isQuickTourOpen, setIsQuickTourOpen] = useState(false);
@@ -240,6 +266,16 @@ export default function App() {
     }
   });
 
+  const handleOpenShareTimetable = () => {
+    setShareCardInitialTab('timetable');
+    setIsShareCardModalOpen(true);
+  };
+
+  const handleOpenShareAcademic = () => {
+    setShareCardInitialTab('academic');
+    setIsShareCardModalOpen(true);
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -250,6 +286,49 @@ export default function App() {
       alignItems: 'center',
       position: 'relative'
     }}>
+      {/* Read-Only Family & Friends Timetable Pass Top Ribbon */}
+      {isReadOnlyShare && (
+        <div
+          style={{
+            width: '100%',
+            backgroundColor: 'var(--wash-mizu)',
+            borderBottom: '1px solid rgba(var(--mizu-rgb), 0.35)',
+            padding: '8px 18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            fontSize: '12.5px',
+            color: 'var(--ink)',
+            zIndex: 60,
+            boxSizing: 'border-box'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <span style={{ fontSize: '15px' }}>🗓️</span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <strong>Family & Friends Timetable Pass:</strong> Viewing {dataPayload.student?.name || 'XLRI Student'}'s Term-5 schedule in read-only mode.
+            </span>
+          </div>
+          <button
+            onClick={handleOpenShareTimetable}
+            className="btn-tactile"
+            style={{
+              padding: '4px 12px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--mizu)',
+              color: 'var(--paper)',
+              border: 'none',
+              fontSize: '11.5px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            Download Pass
+          </button>
+        </div>
+      )}
       
       {isDesktop ? (
         /* The Horizon Deck: Avant-Garde Horizontal Panoramic Spatial Dashboard */
@@ -263,7 +342,9 @@ export default function App() {
           onLogout={handleLogout}
           isSyncing={isSyncing}
           onOpenSearch={() => setIsSearchModalOpen(true)}
-          onOpenShareCard={() => setIsShareCardModalOpen(true)}
+          onOpenShareCard={handleOpenShareAcademic}
+          onOpenShareTimetable={handleOpenShareTimetable}
+          isReadOnly={isReadOnlyShare}
           onOpenBooklet={() => setIsBookletOpen(true)}
           onOpenShortcuts={() => setIsShortcutsModalOpen(true)}
           onSelectDateFromHeatmap={handleSelectDateFromHeatmap}
@@ -299,7 +380,7 @@ export default function App() {
             onLogout={handleLogout}
             isSyncing={isSyncing}
             onOpenSearch={() => setIsSearchModalOpen(true)}
-            onOpenShareCard={() => setIsShareCardModalOpen(true)}
+            onOpenShareCard={handleOpenShareTimetable}
             onOpenBooklet={() => setIsBookletOpen(true)}
             onOpenQuickTour={() => setIsQuickTourOpen(true)}
             onToggleLayoutMode={() => {
@@ -363,6 +444,9 @@ export default function App() {
                 schedule={dataPayload.schedule}
                 courses={dataPayload.courses}
                 selectedDateProp={timetableSelectedDate}
+                onOpenShareTimetable={handleOpenShareTimetable}
+                isReadOnly={isReadOnlyShare}
+                student={dataPayload.student}
               />
             )}
 
@@ -416,7 +500,7 @@ export default function App() {
         </Suspense>
       )}
 
-      {/* Social Academic Pass Modal */}
+      {/* Social Academic Pass & Timetable Routine Modal */}
       {isShareCardModalOpen && (
         <Suspense fallback={null}>
         <ShareCardModal
@@ -424,6 +508,8 @@ export default function App() {
           onClose={() => setIsShareCardModalOpen(false)}
           student={dataPayload.student}
           courses={dataPayload.courses}
+          schedule={dataPayload.schedule}
+          initialTab={shareCardInitialTab}
           theme={theme}
         />
         </Suspense>

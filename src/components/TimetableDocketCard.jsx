@@ -29,7 +29,8 @@ export default function TimetableDocketCard({
   isNextUp = false,
   relativeTime = null,
   onSelectSession,
-  isCompact = false
+  isCompact = false,
+  isReadOnly = false
 }) {
   const [isCopied, setIsCopied] = useState(false);
 
@@ -226,34 +227,36 @@ export default function TimetableDocketCard({
         </p>
       </div>
 
-      {/* Row 2.5: 1-Tap Sovereign Self-Attendance Marking */}
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '6px 10px',
-          backgroundColor: 'var(--paper-subtle)',
-          borderRadius: '4px',
-          border: '1px solid var(--border-soft)',
-          gap: '8px'
-        }}
-      >
-        <span
+      {/* Row 2.5: 1-Tap Sovereign Self-Attendance Marking (Hidden in Read-Only / Parent Mode) */}
+      {!isReadOnly && (
+        <div
+          onClick={(e) => e.stopPropagation()}
           style={{
-            fontSize: '10.5px',
-            fontFamily: 'var(--font-mono)',
-            fontWeight: 700,
-            letterSpacing: '0.06em',
-            color: 'var(--ink-muted)',
-            textTransform: 'uppercase'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '6px 10px',
+            backgroundColor: 'var(--paper-subtle)',
+            borderRadius: '4px',
+            border: '1px solid var(--border-soft)',
+            gap: '8px'
           }}
         >
-          Attendance Log:
-        </span>
-        <SelfAttendanceMarkPill session={session} isCompact={true} />
-      </div>
+          <span
+            style={{
+              fontSize: '10.5px',
+              fontFamily: 'var(--font-mono)',
+              fontWeight: 700,
+              letterSpacing: '0.06em',
+              color: 'var(--ink-muted)',
+              textTransform: 'uppercase'
+            }}
+          >
+            Attendance Log:
+          </span>
+          <SelfAttendanceMarkPill session={session} isCompact={true} />
+        </div>
+      )}
 
       {/* Row 3: Venue Pill with 1-Click Copy, Japanese Hanko Stamp & GCal Sync */}
       <div

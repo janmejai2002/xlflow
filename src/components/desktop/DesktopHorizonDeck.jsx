@@ -24,12 +24,17 @@ export default function DesktopHorizonDeck({
   onOpenShortcuts,
   onSelectDateFromHeatmap,
   onToggleLayoutMode,
-  isDesktop
+  isDesktop,
+  onOpenShareTimetable,
+  isReadOnly = false
 }) {
-  const [activeSectorIndex, setActiveSectorIndex] = useState(0);
+  const [activeSectorIndex, setActiveSectorIndex] = useState(() => {
+    return isReadOnly ? 1 : 0;
+  });
   const [selectedSession, setSelectedSession] = useState(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
   const [isQuickTourOpen, setIsQuickTourOpen] = useState(() => {
+    if (isReadOnly) return false;
     return !localStorage.getItem('has_seen_quick_tour_v1');
   });
 
@@ -162,6 +167,8 @@ export default function DesktopHorizonDeck({
               schedule={dataPayload.schedule}
               onSelectSession={handleSelectSession}
               selectedSessionId={selectedSession?.sessionId}
+              onOpenShareTimetable={onOpenShareTimetable}
+              isReadOnly={isReadOnly}
             />
           </section>
 

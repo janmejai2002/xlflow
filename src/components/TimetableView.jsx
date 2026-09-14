@@ -14,7 +14,8 @@ import { playTactileClick } from '../services/soundEngine';
 import { toast } from 'sonner';
 import {
   IconTimetable,
-  IconChronometer
+  IconChronometer,
+  IconSharePass
 } from './icons';
 
 /**
@@ -27,7 +28,14 @@ import {
  * - 1-click .ICS export with tactile feedback
  * - Deep drawer integration for session syllabus and attendance inspection
  */
-export default function TimetableView({ schedule = [], courses = [], selectedDateProp = null }) {
+export default function TimetableView({
+  schedule = [],
+  courses = [],
+  selectedDateProp = null,
+  onOpenShareTimetable,
+  isReadOnly = false,
+  student = null
+}) {
   const [selectedDate, setSelectedDate] = useState('all');
   const [selectedCourseFilter, setSelectedCourseFilter] = useState('all');
   const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'compact'
@@ -237,8 +245,75 @@ export default function TimetableView({ schedule = [], courses = [], selectedDat
             <Download size={12} />
             <span>EXPORT .ICS</span>
           </button>
+
+          <button
+            onClick={() => onOpenShareTimetable?.()}
+            className="btn-tactile"
+            title="Share weekly schedule with parents & friends"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '4px',
+              backgroundColor: 'var(--wash-mizu)',
+              color: 'var(--mizu)',
+              border: '1px solid rgba(var(--mizu-rgb), 0.35)',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            <IconSharePass size={12} strokeWidth={1.6} />
+            <span>SHARE TIMETABLE</span>
+          </button>
         </div>
       </div>
+
+      {/* 1.5 Family & Friends Calling Windows Ribbon (Active in Shared / Read-Only Mode) */}
+      {isReadOnly && (
+        <div
+          style={{
+            backgroundColor: 'var(--card)',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            boxShadow: 'var(--shadow-sm)'
+          }}
+        >
+          <div
+            style={{
+              width: '34px',
+              height: '34px',
+              borderRadius: '6px',
+              backgroundColor: 'var(--wash-ochre)',
+              border: '1px solid rgba(var(--ochre-rgb), 0.3)',
+              color: 'var(--ochre)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              fontSize: '16px'
+            }}
+          >
+            📞
+          </div>
+          <div style={{ flex: 1, fontSize: '12px', color: 'var(--ink)' }}>
+            <div style={{ fontWeight: 700, fontFamily: 'var(--font-brand)', color: 'var(--ink)', marginBottom: '2px' }}>
+              Family & Friends Calling Guide:
+            </div>
+            <div style={{ color: 'var(--ink-soft)', lineHeight: 1.4 }}>
+              Best times to call or connect: Daily lunch break <strong>12:00 PM – 2:30 PM</strong>, weekday evenings after class (after 4:30 PM), and full free days on <strong>Wednesdays & Sundays</strong>.
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 2. Quiet Single-Line Horizontal Ledger Strip with Hairline Dividers */}
       <div
@@ -650,6 +725,7 @@ export default function TimetableView({ schedule = [], courses = [], selectedDat
                           session={session}
                           course={course}
                           isNextUp={isNextUp}
+                          isReadOnly={isReadOnly}
                           onSelectSession={setSelectedDrawerSession}
                         />
                       </div>
@@ -674,6 +750,7 @@ export default function TimetableView({ schedule = [], courses = [], selectedDat
                 course={course}
                 isNextUp={isNextUp}
                 isCompact={true}
+                isReadOnly={isReadOnly}
                 onSelectSession={setSelectedDrawerSession}
               />
             );
